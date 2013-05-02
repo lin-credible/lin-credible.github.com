@@ -4,7 +4,7 @@
   <title><![CDATA[Category: linux-services | Lin's linux blog]]></title>
   <link href="http://lin-credible.github.io/blog/categories/linux-services/atom.xml" rel="self"/>
   <link href="http://lin-credible.github.io/"/>
-  <updated>2013-05-02T13:33:33+08:00</updated>
+  <updated>2013-05-02T16:49:24+08:00</updated>
   <id>http://lin-credible.github.io/</id>
   <author>
     <name><![CDATA[Taolinran]]></name>
@@ -12,6 +12,593 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Controlling the Nameserver]]></title>
+    <link href="http://lin-credible.github.io/blog/2013/05/02/controlling-the-nameserver/"/>
+    <updated>2013-05-02T14:24:00+08:00</updated>
+    <id>http://lin-credible.github.io/blog/2013/05/02/controlling-the-nameserver</id>
+    <content type="html"><![CDATA[<p>  Traditionally, administrators have controlled the BIND nameserver, named, with Unix signals. The nameserver interprets the receipt of certain
+signals as instructions to take particular actions, such as reloading all the primary zones that have changed. However, there are a limited number
+of signals available, and signals offer no means of passing along additional information such as the domain name of a particular zone to reload.</p>
+
+<p>  In BIND 8.2, the ISC introduced a method of controlling the nameserver by sending messages to it on a special control channel. The control channel
+can be either a Unix domain socket or a TCP port that the nameserver listens on for messages. Because the control channel isn't limited to a finite
+number of discrete signals, it's more flexible and powerful. The ISC says that the control channel is the way of the future and that administrators
+should use it, rather than signals, for all nameserver management.</p>
+
+<p>  You send messages to a nameserver via the control channel using a program called ndc (in BIND 8) or rndc (in BIND 9). Prior to BIND 8.2, ndc was
+simply a shell script that allowed you to substitute convenient arguments (such as reload) for signals (such as HUP).</p>
+
+<pre><code>my test structure
+</code></pre>
+
+<p><img src="/images/rndc.jpg" alt="alt text" /><br /></p>
+
+<!-- more -->
+
+
+<pre><code>my steps
+</code></pre>
+
+<h2>Master</h2>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>192.168.10.112/master - awesome.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'> <span class="o">[</span><span class="n">root</span><span class="vi">@master</span> <span class="n">etc</span><span class="o">]</span><span class="c1"># rndc-confgen</span>
+</span><span class='line'> <span class="sr">//</span> <span class="no">Start</span> <span class="n">of</span> <span class="n">rndc</span><span class="o">.</span><span class="n">conf</span>          <span class="sr">//</span> <span class="s2">&quot;//&quot;</span> <span class="o">&lt;-&gt;</span> <span class="s2">&quot;#&quot;</span>
+</span><span class='line'> <span class="n">key</span> <span class="s2">&quot;rndc-key&quot;</span> <span class="p">{</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;pre&gt;&lt;code&gt;     algorithm hmac-md5;</span>
+</span><span class='line'><span class="sr">     secret &quot;FOgSrUhEdprHOHlOgajsBQ==&quot;;</span>
+</span><span class='line'><span class="sr">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;</span><span class="sr">/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt; };&lt;/</span><span class="nb">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">p</span><span class="o">&gt;</span> <span class="n">options</span> <span class="p">{</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;pre&gt;&lt;code&gt;     default-key &quot;rndc-key&quot;;</span>
+</span><span class='line'><span class="sr">     default-server 127.0.0.1;</span>
+</span><span class='line'><span class="sr">     default-port 953;</span>
+</span><span class='line'><span class="sr">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;</span><span class="sr">/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt; };</span>
+</span><span class='line'><span class="sr"> /</span><span class="o">/</span> <span class="no">End</span> <span class="n">of</span> <span class="n">rndc</span><span class="o">.</span><span class="n">conf</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt; /</span><span class="o">/</span> <span class="no">Use</span> <span class="n">with</span> <span class="n">the</span> <span class="n">following</span> <span class="k">in</span> <span class="n">named</span><span class="o">.</span><span class="n">conf</span><span class="p">,</span> <span class="n">adjusting</span> <span class="n">the</span> <span class="n">allow</span> <span class="n">list</span> <span class="n">as</span> <span class="ss">needed</span><span class="p">:</span>
+</span><span class='line'> <span class="sr">//</span> <span class="n">key</span> <span class="s2">&quot;rndc-key&quot;</span> <span class="p">{</span>
+</span><span class='line'> <span class="sr">//</span>       <span class="n">algorithm</span> <span class="n">hmac</span><span class="o">-</span><span class="n">md5</span><span class="p">;</span>
+</span><span class='line'> <span class="sr">//</span>       <span class="n">secret</span> <span class="s2">&quot;FOgSrUhEdprHOHlOgajsBQ==&quot;</span><span class="p">;</span>
+</span><span class='line'> <span class="sr">//</span> <span class="p">};</span>
+</span><span class='line'> <span class="sr">//</span>
+</span><span class='line'> <span class="sr">//</span> <span class="n">controls</span> <span class="p">{</span>
+</span><span class='line'> <span class="sr">//</span>       <span class="n">inet</span> <span class="mi">127</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="mi">1</span> <span class="n">port</span> <span class="mi">953</span>
+</span><span class='line'> <span class="o">//</span>               <span class="n">allow</span> <span class="p">{</span> <span class="mi">127</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="mi">1</span><span class="p">;</span> <span class="p">}</span> <span class="n">keys</span> <span class="p">{</span> <span class="s2">&quot;rndc-key&quot;</span><span class="p">;</span> <span class="p">};</span>
+</span><span class='line'> <span class="sr">//</span> <span class="p">};</span>
+</span><span class='line'> <span class="sr">//</span> <span class="no">End</span> <span class="n">of</span> <span class="n">named</span><span class="o">.</span><span class="n">conf</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>Generating the master_rndc.key with the standard output of the "rndc-confgen".</h3>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>master_rndc.key - awesome.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'> <span class="o">[</span><span class="n">root</span><span class="vi">@master</span> <span class="n">etc</span><span class="o">]</span><span class="c1"># cat master_rndc.key |grep -v &quot;&lt;sup&gt;#&quot;&lt;/sup&gt;</span>
+</span><span class='line'> <span class="n">key</span> <span class="s2">&quot;master_rndc-key&quot;</span> <span class="p">{</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;pre&gt;&lt;code&gt;   algorithm hmac-md5;</span>
+</span><span class='line'><span class="sr">   secret &quot;FOgSrUhEdprHOHlOgajsBQ==&quot;;</span>
+</span><span class='line'><span class="sr">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;</span><span class="sr">/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt; };&lt;/</span><span class="nb">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">p</span><span class="o">&gt;</span> <span class="n">controls</span> <span class="p">{</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;pre&gt;&lt;code&gt;   inet 192.168.10.112 port 953</span>
+</span><span class='line'><span class="sr">           allow { 192.168.10.78; } keys { &quot;master_rndc-key&quot;; };</span>
+</span><span class='line'><span class="sr">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;</span><span class="sr">/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt; };</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>Change the key file's attributes</h3>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'> chown root:named master_rndc.key
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>named.conf/master - awesome.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'> <span class="o">[</span><span class="n">root</span><span class="vi">@master</span> <span class="n">etc</span><span class="o">]</span><span class="c1"># vim named.conf</span>
+</span><span class='line'> <span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">.</span>
+</span><span class='line'> <span class="kp">include</span> <span class="s2">&quot;/etc/master_rndc.key&quot;</span><span class="p">;</span>
+</span><span class='line'> <span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">.</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>Then, restart the nameserver and check.</h3>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>service named restart
+</span><span class='line'>lsof -i:953
+</span><span class='line'>netstat -ntpl |grep :953
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>Slave</h2>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>192.168.10.111/slave - awesome.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="o">[</span><span class="n">root</span><span class="vi">@slave</span> <span class="n">etc</span><span class="o">]</span><span class="c1"># rndc-confgen</span>
+</span><span class='line'><span class="sr">//</span> <span class="no">Start</span> <span class="n">of</span> <span class="n">rndc</span><span class="o">.</span><span class="n">conf</span>
+</span><span class='line'><span class="n">key</span> <span class="s2">&quot;rndc-key&quot;</span> <span class="p">{</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;pre&gt;&lt;code&gt;    algorithm hmac-md5;</span>
+</span><span class='line'><span class="sr">    secret &quot;0ul0jV/m</span><span class="n">jNh1vt0</span><span class="o">+</span><span class="no">Va4nfg</span><span class="o">==</span><span class="s2">&quot;;</span>
+</span><span class='line'><span class="s2">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s2">&lt;p&gt;};&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s2">&lt;p&gt;options {&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s2">&lt;pre&gt;&lt;code&gt;    default-key &quot;</span><span class="n">rndc</span><span class="o">-</span><span class="n">key</span><span class="s2">&quot;;</span>
+</span><span class='line'><span class="s2">    default-server 127.0.0.1;</span>
+</span><span class='line'><span class="s2">    default-port 953;</span>
+</span><span class='line'><span class="s2">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s2">&lt;p&gt;};</span>
+</span><span class='line'><span class="s2">// End of rndc.conf&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s2">&lt;p&gt;// Use with the following in named.conf, adjusting the allow list as needed:</span>
+</span><span class='line'><span class="s2">// key &quot;</span><span class="n">rndc</span><span class="o">-</span><span class="n">key</span><span class="s2">&quot; {</span>
+</span><span class='line'><span class="s2">//       algorithm hmac-md5;</span>
+</span><span class='line'><span class="s2">//       secret &quot;</span><span class="mi">0</span><span class="n">ul0jV</span><span class="o">/</span><span class="n">mjNh1vt0</span><span class="o">+</span><span class="no">Va4nfg</span><span class="o">==</span><span class="s2">&quot;;</span>
+</span><span class='line'><span class="s2">// };</span>
+</span><span class='line'><span class="s2">//</span>
+</span><span class='line'><span class="s2">// controls {</span>
+</span><span class='line'><span class="s2">//       inet 127.0.0.1 port 953</span>
+</span><span class='line'><span class="s2">//               allow { 127.0.0.1; } keys { &quot;</span><span class="n">rndc</span><span class="o">-</span><span class="n">key</span><span class="s2">&quot;; };</span>
+</span><span class='line'><span class="s2">// };</span>
+</span><span class='line'><span class="s2">// End of named.conf</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>Generating the slave_rndc.key with the standard output of the "rndc-confgen".</h3>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>slave_rndc.key - awesome.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="o">[</span><span class="n">root</span><span class="vi">@slave</span> <span class="n">etc</span><span class="o">]</span><span class="c1"># cat slave_rndc.key  |grep -v &quot;&lt;sup&gt;#&quot;&lt;/sup&gt;</span>
+</span><span class='line'> <span class="n">key</span> <span class="s2">&quot;slave_rndc-key&quot;</span> <span class="p">{</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;pre&gt;&lt;code&gt;   algorithm hmac-md5;</span>
+</span><span class='line'><span class="sr">   secret &quot;0ul0jV/m</span><span class="n">jNh1vt0</span><span class="o">+</span><span class="no">Va4nfg</span><span class="o">==</span><span class="s2">&quot;;</span>
+</span><span class='line'><span class="s2">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s2">&lt;p&gt; };&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s2">&lt;p&gt; controls {&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s2">&lt;pre&gt;&lt;code&gt;   inet 192.168.10.111 port 953</span>
+</span><span class='line'><span class="s2">           allow { 192.168.10.78; } keys { &quot;</span><span class="n">slave_rndc</span><span class="o">-</span><span class="n">key</span><span class="s2">&quot;; };</span>
+</span><span class='line'><span class="s2">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s2">&lt;p&gt; };</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>Same to the master, Here also need to change the key file's attributes</h3>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>chown root:named slave_rndc.key
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>named.conf/slave - awesome.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="o">[</span><span class="n">root</span><span class="vi">@slave</span> <span class="n">etc</span><span class="o">]</span><span class="c1"># vim named.conf</span>
+</span><span class='line'><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">.</span>
+</span><span class='line'><span class="kp">include</span> <span class="s2">&quot;/etc/slave_rndc.key&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">.</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>Then, restart the nameserver and check.</h3>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>service named restart
+</span><span class='line'>netstat -ntpl |grep 953
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>Controller</h2>
+
+<h3>prepare</h3>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>yum install -y <span class="nb">bind</span>
+</span><span class='line'>which rndc
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>make the rndc.conf file</h3>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>rndc.conf/controller - awesome.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="o">[</span><span class="n">root</span><span class="vi">@controller</span> <span class="n">named</span><span class="o">]</span><span class="c1"># vim /etc/rndc.conf</span>
+</span><span class='line'><span class="n">key</span> <span class="s2">&quot;master_rndc-key&quot;</span> <span class="p">{</span>                        <span class="sr">//</span><span class="no">The</span> <span class="n">first</span> <span class="n">part</span> <span class="n">of</span> <span class="n">the</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span><span class="n">_rndc_confgen</span><span class="s1">&#39;s output. Notice!&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s1">&lt;pre&gt;&lt;code&gt;    algorithm hmac-md5;</span>
+</span><span class='line'><span class="s1">    secret &quot;FOgSrUhEdprHOHlOgajsBQ==&quot;;</span>
+</span><span class='line'><span class="s1">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s1">&lt;p&gt;};</span>
+</span><span class='line'><span class="s1">key &quot;slave_rndc-key&quot; {                        //The first part of the 192.168.10.111_rndc_confgen&#39;</span><span class="n">s</span> <span class="n">output</span><span class="o">.</span> <span class="no">Notice</span><span class="o">!&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;pre&gt;&lt;code&gt;    algorithm hmac-md5;</span>
+</span><span class='line'><span class="sr">    secret &quot;0ul0jV/m</span><span class="n">jNh1vt0</span><span class="o">+</span><span class="no">Va4nfg</span><span class="o">==</span><span class="s2">&quot;;</span>
+</span><span class='line'><span class="s2">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s2">&lt;p&gt;};</span>
+</span><span class='line'><span class="s2">options {&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s2">&lt;pre&gt;&lt;code&gt;    default-key &quot;</span><span class="n">master_rndc</span><span class="o">-</span><span class="n">key</span><span class="s2">&quot;;</span>
+</span><span class='line'><span class="s2">    default-server 192.168.10.112;</span>
+</span><span class='line'><span class="s2">    default-port 953; </span>
+</span><span class='line'><span class="s2">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s2">&lt;p&gt;};&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s2">&lt;p&gt;server 192.168.10.112 {&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s2">&lt;pre&gt;&lt;code&gt;    key &quot;</span><span class="n">master_rndc</span><span class="o">-</span><span class="n">key</span><span class="s2">&quot;;</span>
+</span><span class='line'><span class="s2">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s2">&lt;p&gt;};</span>
+</span><span class='line'><span class="s2">server 192.168.10.111 {&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s2">&lt;pre&gt;&lt;code&gt;    key &quot;</span><span class="n">slave_rndc</span><span class="o">-</span><span class="n">key</span><span class="s2">&quot;;</span>
+</span><span class='line'><span class="s2">&lt;/code&gt;&lt;/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s2">&lt;p&gt;};</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>rndc help</h3>
+
+<p>```
+[root@controller named]# rndc -h
+Usage: rndc [-b address] [-c config] [-s server] [-p port]</p>
+
+<pre><code>    [-k key-file ] [-y key] [-V] command
+</code></pre>
+
+<p>command is one of the following:</p>
+
+<p>  reload        Reload configuration file and zones.
+  reload zone [class [view]]</p>
+
+<pre><code>            Reload a single zone.
+</code></pre>
+
+<p>  refresh zone [class [view]]</p>
+
+<pre><code>            Schedule immediate maintenance for a zone.
+</code></pre>
+
+<p>  retransfer zone [class [view]]</p>
+
+<pre><code>            Retransfer a single zone without checking serial number.
+</code></pre>
+
+<p>  freeze        Suspend updates to all dynamic zones.
+  freeze zone [class [view]]</p>
+
+<pre><code>            Suspend updates to a dynamic zone.
+</code></pre>
+
+<p>  thaw          Enable updates to all dynamic zones and reload them.
+  thaw zone [class [view]]</p>
+
+<pre><code>            Enable updates to a frozen dynamic zone and reload it.
+</code></pre>
+
+<p>  notify zone [class [view]]</p>
+
+<pre><code>            Resend NOTIFY messages for the zone.
+</code></pre>
+
+<p>  reconfig      Reload configuration file and new zones only.
+  sign zone [class [view]]</p>
+
+<pre><code>            Update zone keys, and sign as needed.
+</code></pre>
+
+<p>  loadkeys zone [class [view]]</p>
+
+<pre><code>            Update keys without signing immediately.
+</code></pre>
+
+<p>  stats         Write server statistics to the statistics file.
+  querylog      Toggle query logging.
+  dumpdb [-all|-cache|-zones] [view ...]</p>
+
+<pre><code>            Dump cache(s) to the dump file (named_dump.db).
+</code></pre>
+
+<p>  secroots [view ...]</p>
+
+<pre><code>            Write security roots to the secroots file.
+</code></pre>
+
+<p>  stop          Save pending updates to master files and stop the server.
+  stop -p       Save pending updates to master files and stop the server</p>
+
+<pre><code>            reporting process id.
+</code></pre>
+
+<p>  halt          Stop the server without saving pending updates.
+  halt -p       Stop the server without saving pending updates reporting</p>
+
+<pre><code>            process id.
+</code></pre>
+
+<p>  trace         Increment debugging level by one.
+  trace level   Change the debugging level.
+  notrace       Set debugging level to 0.
+  flush         Flushes all of the server's caches.
+  flush [view]  Flushes the server's cache for a view.
+  flushname name [view]</p>
+
+<pre><code>            Flush the given name from the server's cache(s)
+</code></pre>
+
+<p>  status        Display status of the server.
+  recursing     Dump the queries that are currently recursing (named.recursing)
+  tsig-list     List all currently active TSIG keys, including both statically</p>
+
+<pre><code>            configured and TKEY-negotiated keys.
+</code></pre>
+
+<p>  tsig-delete keyname [view]</p>
+
+<pre><code>            Delete a TKEY-negotiated TSIG key.
+</code></pre>
+
+<p>  validation newstate [view]</p>
+
+<pre><code>            Enable / disable DNSSEC validation.
+</code></pre>
+
+<p>  addzone ["file"] zone [class [view]] { zone-options }</p>
+
+<pre><code>            Add zone to given view. Requires new-zone-file option.
+</code></pre>
+
+<p>  delzone ["file"] zone [class [view]]</p>
+
+<pre><code>            Removes zone from given view. Requires new-zone-file option.
+</code></pre>
+
+<p>  *restart      Restart the server.</p>
+
+<ul>
+<li>== not yet implemented
+Version: 9.8.2rc1-RedHat-9.8.2-0.17.rc1.el6_4.4
+```</li>
+</ul>
+
+
+<h3>control the nameserver</h3>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>control it - awesome.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="o">[</span><span class="n">root</span><span class="vi">@controller</span> <span class="n">etc</span><span class="o">]</span><span class="c1"># rndc -s 192.168.10.112 status</span>
+</span><span class='line'><span class="ss">version</span><span class="p">:</span> <span class="mi">9</span><span class="o">.</span><span class="mi">8</span><span class="o">.</span><span class="mi">2</span><span class="n">rc1</span><span class="o">-</span><span class="no">RedHat</span><span class="o">-</span><span class="mi">9</span><span class="o">.</span><span class="mi">8</span><span class="o">.</span><span class="mi">2</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">17</span><span class="o">.</span><span class="n">rc1</span><span class="o">.</span><span class="n">el6_4</span><span class="o">.</span><span class="mi">4</span> <span class="p">(</span><span class="no">None</span> <span class="n">of</span> <span class="n">your</span> <span class="n">business</span><span class="p">)</span>
+</span><span class='line'><span class="no">CPUs</span> <span class="ss">found</span><span class="p">:</span> <span class="mi">1</span>
+</span><span class='line'><span class="n">worker</span> <span class="ss">threads</span><span class="p">:</span> <span class="mi">1</span>
+</span><span class='line'><span class="n">number</span> <span class="n">of</span> <span class="ss">zones</span><span class="p">:</span> <span class="mi">36</span>
+</span><span class='line'><span class="n">debug</span> <span class="ss">level</span><span class="p">:</span> <span class="mi">0</span>
+</span><span class='line'><span class="n">xfers</span> <span class="ss">running</span><span class="p">:</span> <span class="mi">0</span>
+</span><span class='line'><span class="n">xfers</span> <span class="ss">deferred</span><span class="p">:</span> <span class="mi">0</span>
+</span><span class='line'><span class="n">soa</span> <span class="n">queries</span> <span class="k">in</span> <span class="ss">progress</span><span class="p">:</span> <span class="mi">0</span>
+</span><span class='line'><span class="n">query</span> <span class="n">logging</span> <span class="n">is</span> <span class="no">OFF</span>
+</span><span class='line'><span class="n">recursive</span> <span class="ss">clients</span><span class="p">:</span> <span class="mi">0</span><span class="o">/</span><span class="mi">0</span><span class="o">/</span><span class="mi">1000</span>
+</span><span class='line'><span class="n">tcp</span> <span class="ss">clients</span><span class="p">:</span> <span class="mi">0</span><span class="o">/</span><span class="mi">100</span>
+</span><span class='line'><span class="n">server</span> <span class="n">is</span> <span class="n">up</span> <span class="ow">and</span> <span class="n">running</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;[root@controller etc]# rndc -s 192.168.10.112 reload</span>
+</span><span class='line'><span class="sr">server reload successful&lt;/</span><span class="nb">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">p</span><span class="o">&gt;[</span><span class="n">root</span><span class="vi">@controller</span> <span class="n">etc</span><span class="o">]</span><span class="c1"># rndc -s 192.168.10.111 reload</span>
+</span><span class='line'><span class="n">server</span> <span class="n">reload</span> <span class="n">successful</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;[root@controller etc]# rndc -s 192.168.10.112 dumpdb</span>
+</span><span class='line'><span class="sr">[root@controller etc]# rndc -s 192.168.10.111 dumpdb</span>
+</span><span class='line'><span class="sr">[root@controller etc]# rndc -s 192.168.10.112 stop</span>
+</span><span class='line'><span class="sr">[root@controller etc]# rndc -s 192.168.10.111 stop</span>
+</span><span class='line'><span class="sr">......</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<pre><code>Notice
+</code></pre>
+
+<h2>Time is so strict</h2>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>ntpdate time.windows.com
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>there is a nice thing. Find it.</h2>
+
+<p><code>
+[root@master etc]# ls
+...... rndc.key
+[root@master etc]# service named stop                ///The rndc.key file disappear.
+[root@master etc]# ls
+......  //no rndc.key file
+[root@master etc]# service named start
+[root@master etc]# ls
+...... rndc.key
+</code></p>
+
+<h2>Reference:</h2>
+
+<p><a href="http://www.amazon.com/DNS-BIND-5th-Cricket-Liu/dp/0596100574">OReilly DNS and BIND, 5th Edition.</a><br />
+Do you need it? It's so nice. Call me. <strong><em>linuxtaolinran@gmail.com</em></strong> <br />
+<a href="http://ftp.isc.org/isc/bind9/cur/9.9/doc/arm/Bv9ARM.pdf">BIND 9 Administrator Reference Manual</a></p>
+
+<h4>more......</h4>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[M/S Split DNS Based on TSIG]]></title>

@@ -9,7 +9,7 @@
   <meta name="author" content="Taolinran">
 
   
-  <meta name="description" content="The world is a book and those who do not travel read only one page! Life is the sum of all your choices. ">
+  <meta name="description" content="Traditionally, administrators have controlled the BIND nameserver, named, with Unix signals. The nameserver interprets the receipt of certain &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -86,6 +86,64 @@ $(document).bind('DOMNodeInserted', function(event) {
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/02/controlling-the-nameserver/">Controlling the Nameserver</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-02T14:24:00+08:00" pubdate data-updated="true">May 2<span>nd</span>, 2013</time>
+        
+         | <a href="/blog/2013/05/02/controlling-the-nameserver/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>  Traditionally, administrators have controlled the BIND nameserver, named, with Unix signals. The nameserver interprets the receipt of certain
+signals as instructions to take particular actions, such as reloading all the primary zones that have changed. However, there are a limited number
+of signals available, and signals offer no means of passing along additional information such as the domain name of a particular zone to reload.</p>
+
+<p>  In BIND 8.2, the ISC introduced a method of controlling the nameserver by sending messages to it on a special control channel. The control channel
+can be either a Unix domain socket or a TCP port that the nameserver listens on for messages. Because the control channel isn&#8217;t limited to a finite
+number of discrete signals, it&#8217;s more flexible and powerful. The ISC says that the control channel is the way of the future and that administrators
+should use it, rather than signals, for all nameserver management.</p>
+
+<p>  You send messages to a nameserver via the control channel using a program called ndc (in BIND 8) or rndc (in BIND 9). Prior to BIND 8.2, ndc was
+simply a shell script that allowed you to substitute convenient arguments (such as reload) for signals (such as HUP).</p>
+
+<pre><code>my test structure
+</code></pre>
+
+<p><img src="/images/rndc.jpg" alt="alt text" /><br /></p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/05/02/controlling-the-nameserver/">Continue &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -324,6 +382,10 @@ I&#8217;m a <strong>newbie</strong>! I love <strong>linux</strong> and there is 
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/05/02/controlling-the-nameserver/">Controlling the Nameserver</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/05/01/happy-51/">happy 51</a>
       </li>
     
@@ -342,24 +404,13 @@ I&#8217;m a <strong>newbie</strong>! I love <strong>linux</strong> and there is 
   </ul>
 </section>
 <iframe width="100%" height="550" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=550&fansRow=1&ptype=1&speed=300&skin=10&isTitle=1&noborder=1&isWeibo=1&isFans=0&uid=2116612302&verifier=c3e417d3&dpc=1"></iframe>
-<!--
-<section>
-  <h1>Categories</h1>
-  <ul id="categories">
-    <li class='category'><a href='/blog/categories/linux-services/'>linux-services (1)</a></li>
-<li class='category'><a href='/blog/categories/tittle-tattle/'>tittle-tattle (3)</a></li>
 
-  </ul>
-</section>
--->
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li class='category'><a href='/blog/categories/linux-services/'>linux-services (1)</a></li>
+    <ul id="category-list"><li class='category'><a href='/blog/categories/linux-services/'>linux-services (2)</a></li>
 <li class='category'><a href='/blog/categories/tittle-tattle/'>tittle-tattle (3)</a></li>
 </ul>
-</section>
-
-<section>
+</section><section>
   <h1>Friendly links</h1>
   <ul>
     <li>

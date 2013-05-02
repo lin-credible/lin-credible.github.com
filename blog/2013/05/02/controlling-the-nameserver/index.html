@@ -1,0 +1,878 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Controlling the Nameserver - Lin's linux blog</title>
+  <meta name="author" content="Taolinran">
+
+  
+  <meta name="description" content="Traditionally, administrators have controlled the BIND nameserver, named, with Unix signals. The nameserver interprets the receipt of certain &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://lin-credible.github.io/blog/2013/05/02/controlling-the-nameserver">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Lin's linux blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<!--<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+function addBlankTargetForLinks () {
+  $('a[href^="http"]').each(function(){
+      $(this).attr('target', '_blank');
+  });
+}
+$(document).bind('DOMNodeInserted', function(event) {
+  addBlankTargetForLinks();
+});
+-->
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-40050631-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Lin's linux blog</a></h1>
+  
+    <h2>^.+*oO0Oo0Oo0oO0o~Focus~Think and open mind~love linux, love~~55aa~$</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com.hk/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:lin-credible.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about">About me</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Controlling the Nameserver</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-02T14:24:00+08:00" pubdate data-updated="true">May 2<span>nd</span>, 2013</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>  Traditionally, administrators have controlled the BIND nameserver, named, with Unix signals. The nameserver interprets the receipt of certain
+signals as instructions to take particular actions, such as reloading all the primary zones that have changed. However, there are a limited number
+of signals available, and signals offer no means of passing along additional information such as the domain name of a particular zone to reload.</p>
+
+<p>  In BIND 8.2, the ISC introduced a method of controlling the nameserver by sending messages to it on a special control channel. The control channel
+can be either a Unix domain socket or a TCP port that the nameserver listens on for messages. Because the control channel isn&#8217;t limited to a finite
+number of discrete signals, it&#8217;s more flexible and powerful. The ISC says that the control channel is the way of the future and that administrators
+should use it, rather than signals, for all nameserver management.</p>
+
+<p>  You send messages to a nameserver via the control channel using a program called ndc (in BIND 8) or rndc (in BIND 9). Prior to BIND 8.2, ndc was
+simply a shell script that allowed you to substitute convenient arguments (such as reload) for signals (such as HUP).</p>
+
+<pre><code>my test structure
+</code></pre>
+
+<p><img src="/images/rndc.jpg" alt="alt text" /><br /></p>
+
+<!-- more -->
+
+
+<pre><code>my steps
+</code></pre>
+
+<h2>Master</h2>
+
+<figure class='code'><figcaption><span>192.168.10.112/master - awesome.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'> <span class="o">[</span><span class="n">root</span><span class="vi">@master</span> <span class="n">etc</span><span class="o">]</span><span class="c1"># rndc-confgen </span>
+</span><span class='line'> <span class="sr">//</span> <span class="no">Start</span> <span class="n">of</span> <span class="n">rndc</span><span class="o">.</span><span class="n">conf</span>          <span class="sr">//</span> <span class="s2">&quot;//&quot;</span> <span class="o">&lt;-&gt;</span> <span class="s2">&quot;#&quot;</span>
+</span><span class='line'> <span class="n">key</span> <span class="s2">&quot;rndc-key&quot;</span> <span class="p">{</span>
+</span><span class='line'>         <span class="n">algorithm</span> <span class="n">hmac</span><span class="o">-</span><span class="n">md5</span><span class="p">;</span>
+</span><span class='line'>         <span class="n">secret</span> <span class="s2">&quot;FOgSrUhEdprHOHlOgajsBQ==&quot;</span><span class="p">;</span>
+</span><span class='line'> <span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'> <span class="n">options</span> <span class="p">{</span>
+</span><span class='line'>         <span class="n">default</span><span class="o">-</span><span class="n">key</span> <span class="s2">&quot;rndc-key&quot;</span><span class="p">;</span>
+</span><span class='line'>         <span class="n">default</span><span class="o">-</span><span class="n">server</span> <span class="mi">127</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>         <span class="n">default</span><span class="o">-</span><span class="n">port</span> <span class="mi">953</span><span class="p">;</span>
+</span><span class='line'> <span class="p">};</span>
+</span><span class='line'> <span class="sr">//</span> <span class="no">End</span> <span class="n">of</span> <span class="n">rndc</span><span class="o">.</span><span class="n">conf</span>
+</span><span class='line'>
+</span><span class='line'> <span class="sr">//</span> <span class="no">Use</span> <span class="n">with</span> <span class="n">the</span> <span class="n">following</span> <span class="k">in</span> <span class="n">named</span><span class="o">.</span><span class="n">conf</span><span class="p">,</span> <span class="n">adjusting</span> <span class="n">the</span> <span class="n">allow</span> <span class="n">list</span> <span class="n">as</span> <span class="ss">needed</span><span class="p">:</span>
+</span><span class='line'> <span class="sr">//</span> <span class="n">key</span> <span class="s2">&quot;rndc-key&quot;</span> <span class="p">{</span>
+</span><span class='line'> <span class="sr">//</span>       <span class="n">algorithm</span> <span class="n">hmac</span><span class="o">-</span><span class="n">md5</span><span class="p">;</span>
+</span><span class='line'> <span class="sr">//</span>       <span class="n">secret</span> <span class="s2">&quot;FOgSrUhEdprHOHlOgajsBQ==&quot;</span><span class="p">;</span>
+</span><span class='line'> <span class="sr">//</span> <span class="p">};</span>
+</span><span class='line'> <span class="sr">//</span>
+</span><span class='line'> <span class="sr">//</span> <span class="n">controls</span> <span class="p">{</span>
+</span><span class='line'> <span class="sr">//</span>       <span class="n">inet</span> <span class="mi">127</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="mi">1</span> <span class="n">port</span> <span class="mi">953</span>
+</span><span class='line'> <span class="o">//</span>               <span class="n">allow</span> <span class="p">{</span> <span class="mi">127</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="mi">1</span><span class="p">;</span> <span class="p">}</span> <span class="n">keys</span> <span class="p">{</span> <span class="s2">&quot;rndc-key&quot;</span><span class="p">;</span> <span class="p">};</span>
+</span><span class='line'> <span class="sr">//</span> <span class="p">};</span>
+</span><span class='line'> <span class="sr">//</span> <span class="no">End</span> <span class="n">of</span> <span class="n">named</span><span class="o">.</span><span class="n">conf</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Generating the master_rndc.key with the standard output of the &#8220;rndc-confgen&#8221;.</h3>
+
+<figure class='code'><figcaption><span>master_rndc.key - awesome.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'> <span class="o">[</span><span class="n">root</span><span class="vi">@master</span> <span class="n">etc</span><span class="o">]</span><span class="c1"># cat master_rndc.key |grep -v &quot;^#&quot;</span>
+</span><span class='line'> <span class="n">key</span> <span class="s2">&quot;master_rndc-key&quot;</span> <span class="p">{</span>
+</span><span class='line'>       <span class="n">algorithm</span> <span class="n">hmac</span><span class="o">-</span><span class="n">md5</span><span class="p">;</span>
+</span><span class='line'>       <span class="n">secret</span> <span class="s2">&quot;FOgSrUhEdprHOHlOgajsBQ==&quot;</span><span class="p">;</span>
+</span><span class='line'> <span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'> <span class="n">controls</span> <span class="p">{</span>
+</span><span class='line'>       <span class="n">inet</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span> <span class="n">port</span> <span class="mi">953</span>
+</span><span class='line'>               <span class="n">allow</span> <span class="p">{</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">78</span><span class="p">;</span> <span class="p">}</span> <span class="n">keys</span> <span class="p">{</span> <span class="s2">&quot;master_rndc-key&quot;</span><span class="p">;</span> <span class="p">};</span>
+</span><span class='line'> <span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Change the key file&#8217;s attributes</h3>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'> chown root:named master_rndc.key
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>named.conf/master - awesome.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'> <span class="o">[</span><span class="n">root</span><span class="vi">@master</span> <span class="n">etc</span><span class="o">]</span><span class="c1"># vim named.conf</span>
+</span><span class='line'> <span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">.</span>
+</span><span class='line'> <span class="kp">include</span> <span class="s2">&quot;/etc/master_rndc.key&quot;</span><span class="p">;</span>
+</span><span class='line'> <span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">.</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Then, restart the nameserver and check.</h3>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>service named restart
+</span><span class='line'>lsof -i:953
+</span><span class='line'>netstat -ntpl |grep :953
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Slave</h2>
+
+<figure class='code'><figcaption><span>192.168.10.111/slave - awesome.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="o">[</span><span class="n">root</span><span class="vi">@slave</span> <span class="n">etc</span><span class="o">]</span><span class="c1"># rndc-confgen </span>
+</span><span class='line'><span class="sr">//</span> <span class="no">Start</span> <span class="n">of</span> <span class="n">rndc</span><span class="o">.</span><span class="n">conf</span>
+</span><span class='line'><span class="n">key</span> <span class="s2">&quot;rndc-key&quot;</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">algorithm</span> <span class="n">hmac</span><span class="o">-</span><span class="n">md5</span><span class="p">;</span>
+</span><span class='line'>        <span class="n">secret</span> <span class="s2">&quot;0ul0jV/mjNh1vt0+Va4nfg==&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">options</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">default</span><span class="o">-</span><span class="n">key</span> <span class="s2">&quot;rndc-key&quot;</span><span class="p">;</span>
+</span><span class='line'>        <span class="n">default</span><span class="o">-</span><span class="n">server</span> <span class="mi">127</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>        <span class="n">default</span><span class="o">-</span><span class="n">port</span> <span class="mi">953</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'><span class="sr">//</span> <span class="no">End</span> <span class="n">of</span> <span class="n">rndc</span><span class="o">.</span><span class="n">conf</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">//</span> <span class="no">Use</span> <span class="n">with</span> <span class="n">the</span> <span class="n">following</span> <span class="k">in</span> <span class="n">named</span><span class="o">.</span><span class="n">conf</span><span class="p">,</span> <span class="n">adjusting</span> <span class="n">the</span> <span class="n">allow</span> <span class="n">list</span> <span class="n">as</span> <span class="ss">needed</span><span class="p">:</span>
+</span><span class='line'><span class="sr">//</span> <span class="n">key</span> <span class="s2">&quot;rndc-key&quot;</span> <span class="p">{</span>
+</span><span class='line'><span class="sr">//</span>       <span class="n">algorithm</span> <span class="n">hmac</span><span class="o">-</span><span class="n">md5</span><span class="p">;</span>
+</span><span class='line'><span class="sr">//</span>       <span class="n">secret</span> <span class="s2">&quot;0ul0jV/mjNh1vt0+Va4nfg==&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="sr">//</span> <span class="p">};</span>
+</span><span class='line'><span class="sr">//</span>
+</span><span class='line'><span class="sr">//</span> <span class="n">controls</span> <span class="p">{</span>
+</span><span class='line'><span class="sr">//</span>       <span class="n">inet</span> <span class="mi">127</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="mi">1</span> <span class="n">port</span> <span class="mi">953</span>
+</span><span class='line'><span class="o">//</span>               <span class="n">allow</span> <span class="p">{</span> <span class="mi">127</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="mi">1</span><span class="p">;</span> <span class="p">}</span> <span class="n">keys</span> <span class="p">{</span> <span class="s2">&quot;rndc-key&quot;</span><span class="p">;</span> <span class="p">};</span>
+</span><span class='line'><span class="sr">//</span> <span class="p">};</span>
+</span><span class='line'><span class="sr">//</span> <span class="no">End</span> <span class="n">of</span> <span class="n">named</span><span class="o">.</span><span class="n">conf</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Generating the slave_rndc.key with the standard output of the &#8220;rndc-confgen&#8221;.</h3>
+
+<figure class='code'><figcaption><span>slave_rndc.key - awesome.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="o">[</span><span class="n">root</span><span class="vi">@slave</span> <span class="n">etc</span><span class="o">]</span><span class="c1"># cat slave_rndc.key  |grep -v &quot;^#&quot;</span>
+</span><span class='line'> <span class="n">key</span> <span class="s2">&quot;slave_rndc-key&quot;</span> <span class="p">{</span>
+</span><span class='line'>       <span class="n">algorithm</span> <span class="n">hmac</span><span class="o">-</span><span class="n">md5</span><span class="p">;</span>
+</span><span class='line'>       <span class="n">secret</span> <span class="s2">&quot;0ul0jV/mjNh1vt0+Va4nfg==&quot;</span><span class="p">;</span>
+</span><span class='line'> <span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'> <span class="n">controls</span> <span class="p">{</span>
+</span><span class='line'>       <span class="n">inet</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">111</span> <span class="n">port</span> <span class="mi">953</span>
+</span><span class='line'>               <span class="n">allow</span> <span class="p">{</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">78</span><span class="p">;</span> <span class="p">}</span> <span class="n">keys</span> <span class="p">{</span> <span class="s2">&quot;slave_rndc-key&quot;</span><span class="p">;</span> <span class="p">};</span>
+</span><span class='line'> <span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Same to the master, Here also need to change the key file&#8217;s attributes</h3>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>chown root:named slave_rndc.key
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>named.conf/slave - awesome.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="o">[</span><span class="n">root</span><span class="vi">@slave</span> <span class="n">etc</span><span class="o">]</span><span class="c1"># vim named.conf</span>
+</span><span class='line'><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">.</span>
+</span><span class='line'><span class="kp">include</span> <span class="s2">&quot;/etc/slave_rndc.key&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">.</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Then, restart the nameserver and check.</h3>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>service named restart
+</span><span class='line'>netstat -ntpl |grep 953
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Controller</h2>
+
+<h3>prepare</h3>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>yum install -y <span class="nb">bind</span>
+</span><span class='line'>which rndc
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>make the rndc.conf file</h3>
+
+<figure class='code'><figcaption><span>rndc.conf/controller - awesome.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="o">[</span><span class="n">root</span><span class="vi">@controller</span> <span class="n">named</span><span class="o">]</span><span class="c1"># vim /etc/rndc.conf</span>
+</span><span class='line'><span class="n">key</span> <span class="s2">&quot;master_rndc-key&quot;</span> <span class="p">{</span>                        <span class="sr">//</span><span class="no">The</span> <span class="n">first</span> <span class="n">part</span> <span class="n">of</span> <span class="n">the</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span><span class="n">_rndc_confgen</span><span class="s1">&#39;s output. Notice!</span>
+</span><span class='line'><span class="s1">        algorithm hmac-md5;</span>
+</span><span class='line'><span class="s1">        secret &quot;FOgSrUhEdprHOHlOgajsBQ==&quot;;</span>
+</span><span class='line'><span class="s1">};</span>
+</span><span class='line'><span class="s1">key &quot;slave_rndc-key&quot; {                       //The first part of the 192.168.10.111_rndc_confgen&#39;</span><span class="n">s</span> <span class="n">output</span><span class="o">.</span> <span class="no">Notice</span><span class="o">!</span>
+</span><span class='line'>        <span class="n">algorithm</span> <span class="n">hmac</span><span class="o">-</span><span class="n">md5</span><span class="p">;</span>
+</span><span class='line'>        <span class="n">secret</span> <span class="s2">&quot;0ul0jV/mjNh1vt0+Va4nfg==&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'><span class="n">options</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">default</span><span class="o">-</span><span class="n">key</span> <span class="s2">&quot;master_rndc-key&quot;</span><span class="p">;</span>
+</span><span class='line'>        <span class="n">default</span><span class="o">-</span><span class="n">server</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span><span class="p">;</span>
+</span><span class='line'>        <span class="n">default</span><span class="o">-</span><span class="n">port</span> <span class="mi">953</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">server</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">key</span> <span class="s2">&quot;master_rndc-key&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'><span class="n">server</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">111</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">key</span> <span class="s2">&quot;slave_rndc-key&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>rndc help</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@controller named]# rndc -h
+</span><span class='line'>Usage: rndc [-b address] [-c config] [-s server] [-p port]
+</span><span class='line'>        [-k key-file ] [-y key] [-V] command
+</span><span class='line'>
+</span><span class='line'>command is one of the following:
+</span><span class='line'>
+</span><span class='line'>  reload        Reload configuration file and zones.
+</span><span class='line'>  reload zone [class [view]]
+</span><span class='line'>                Reload a single zone.
+</span><span class='line'>  refresh zone [class [view]]
+</span><span class='line'>                Schedule immediate maintenance for a zone.
+</span><span class='line'>  retransfer zone [class [view]]
+</span><span class='line'>                Retransfer a single zone without checking serial number.
+</span><span class='line'>  freeze        Suspend updates to all dynamic zones.
+</span><span class='line'>  freeze zone [class [view]]
+</span><span class='line'>                Suspend updates to a dynamic zone.
+</span><span class='line'>  thaw          Enable updates to all dynamic zones and reload them.
+</span><span class='line'>  thaw zone [class [view]]
+</span><span class='line'>                Enable updates to a frozen dynamic zone and reload it.
+</span><span class='line'>  notify zone [class [view]]
+</span><span class='line'>                Resend NOTIFY messages for the zone.
+</span><span class='line'>  reconfig      Reload configuration file and new zones only.
+</span><span class='line'>  sign zone [class [view]]
+</span><span class='line'>                Update zone keys, and sign as needed.
+</span><span class='line'>  loadkeys zone [class [view]]
+</span><span class='line'>                Update keys without signing immediately.
+</span><span class='line'>  stats         Write server statistics to the statistics file.
+</span><span class='line'>  querylog      Toggle query logging.
+</span><span class='line'>  dumpdb [-all|-cache|-zones] [view ...]
+</span><span class='line'>                Dump cache(s) to the dump file (named_dump.db).
+</span><span class='line'>  secroots [view ...]
+</span><span class='line'>                Write security roots to the secroots file.
+</span><span class='line'>  stop          Save pending updates to master files and stop the server.
+</span><span class='line'>  stop -p       Save pending updates to master files and stop the server
+</span><span class='line'>                reporting process id.
+</span><span class='line'>  halt          Stop the server without saving pending updates.
+</span><span class='line'>  halt -p       Stop the server without saving pending updates reporting
+</span><span class='line'>                process id.
+</span><span class='line'>  trace         Increment debugging level by one.
+</span><span class='line'>  trace level   Change the debugging level.
+</span><span class='line'>  notrace       Set debugging level to 0.
+</span><span class='line'>  flush         Flushes all of the server's caches.
+</span><span class='line'>  flush [view]  Flushes the server's cache for a view.
+</span><span class='line'>  flushname name [view]
+</span><span class='line'>                Flush the given name from the server's cache(s)
+</span><span class='line'>  status        Display status of the server.
+</span><span class='line'>  recursing     Dump the queries that are currently recursing (named.recursing)
+</span><span class='line'>  tsig-list     List all currently active TSIG keys, including both statically
+</span><span class='line'>                configured and TKEY-negotiated keys.
+</span><span class='line'>  tsig-delete keyname [view]
+</span><span class='line'>                Delete a TKEY-negotiated TSIG key.
+</span><span class='line'>  validation newstate [view]
+</span><span class='line'>                Enable / disable DNSSEC validation.
+</span><span class='line'>  addzone ["file"] zone [class [view]] { zone-options }
+</span><span class='line'>                Add zone to given view. Requires new-zone-file option.
+</span><span class='line'>  delzone ["file"] zone [class [view]]
+</span><span class='line'>                Removes zone from given view. Requires new-zone-file option.
+</span><span class='line'>  *restart      Restart the server.
+</span><span class='line'>
+</span><span class='line'>* == not yet implemented
+</span><span class='line'>Version: 9.8.2rc1-RedHat-9.8.2-0.17.rc1.el6_4.4</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>control the nameserver</h3>
+
+<figure class='code'><figcaption><span>control it - awesome.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="o">[</span><span class="n">root</span><span class="vi">@controller</span> <span class="n">etc</span><span class="o">]</span><span class="c1"># rndc -s 192.168.10.112 status</span>
+</span><span class='line'><span class="ss">version</span><span class="p">:</span> <span class="mi">9</span><span class="o">.</span><span class="mi">8</span><span class="o">.</span><span class="mi">2</span><span class="n">rc1</span><span class="o">-</span><span class="no">RedHat</span><span class="o">-</span><span class="mi">9</span><span class="o">.</span><span class="mi">8</span><span class="o">.</span><span class="mi">2</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">17</span><span class="o">.</span><span class="n">rc1</span><span class="o">.</span><span class="n">el6_4</span><span class="o">.</span><span class="mi">4</span> <span class="p">(</span><span class="no">None</span> <span class="n">of</span> <span class="n">your</span> <span class="n">business</span><span class="p">)</span>
+</span><span class='line'><span class="no">CPUs</span> <span class="ss">found</span><span class="p">:</span> <span class="mi">1</span>
+</span><span class='line'><span class="n">worker</span> <span class="ss">threads</span><span class="p">:</span> <span class="mi">1</span>
+</span><span class='line'><span class="n">number</span> <span class="n">of</span> <span class="ss">zones</span><span class="p">:</span> <span class="mi">36</span>
+</span><span class='line'><span class="n">debug</span> <span class="ss">level</span><span class="p">:</span> <span class="mi">0</span>
+</span><span class='line'><span class="n">xfers</span> <span class="ss">running</span><span class="p">:</span> <span class="mi">0</span>
+</span><span class='line'><span class="n">xfers</span> <span class="ss">deferred</span><span class="p">:</span> <span class="mi">0</span>
+</span><span class='line'><span class="n">soa</span> <span class="n">queries</span> <span class="k">in</span> <span class="ss">progress</span><span class="p">:</span> <span class="mi">0</span>
+</span><span class='line'><span class="n">query</span> <span class="n">logging</span> <span class="n">is</span> <span class="no">OFF</span>
+</span><span class='line'><span class="n">recursive</span> <span class="ss">clients</span><span class="p">:</span> <span class="mi">0</span><span class="o">/</span><span class="mi">0</span><span class="o">/</span><span class="mi">1000</span>
+</span><span class='line'><span class="n">tcp</span> <span class="ss">clients</span><span class="p">:</span> <span class="mi">0</span><span class="o">/</span><span class="mi">100</span>
+</span><span class='line'><span class="n">server</span> <span class="n">is</span> <span class="n">up</span> <span class="ow">and</span> <span class="n">running</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">[</span><span class="n">root</span><span class="vi">@controller</span> <span class="n">etc</span><span class="o">]</span><span class="c1"># rndc -s 192.168.10.112 reload</span>
+</span><span class='line'><span class="n">server</span> <span class="n">reload</span> <span class="n">successful</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">[</span><span class="n">root</span><span class="vi">@controller</span> <span class="n">etc</span><span class="o">]</span><span class="c1"># rndc -s 192.168.10.111 reload</span>
+</span><span class='line'><span class="n">server</span> <span class="n">reload</span> <span class="n">successful</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">[</span><span class="n">root</span><span class="vi">@controller</span> <span class="n">etc</span><span class="o">]</span><span class="c1"># rndc -s 192.168.10.112 dumpdb</span>
+</span><span class='line'><span class="o">[</span><span class="n">root</span><span class="vi">@controller</span> <span class="n">etc</span><span class="o">]</span><span class="c1"># rndc -s 192.168.10.111 dumpdb</span>
+</span><span class='line'><span class="o">[</span><span class="n">root</span><span class="vi">@controller</span> <span class="n">etc</span><span class="o">]</span><span class="c1"># rndc -s 192.168.10.112 stop</span>
+</span><span class='line'><span class="o">[</span><span class="n">root</span><span class="vi">@controller</span> <span class="n">etc</span><span class="o">]</span><span class="c1"># rndc -s 192.168.10.111 stop</span>
+</span><span class='line'><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">.</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<pre><code>Notice
+</code></pre>
+
+<h2>Time is so strict</h2>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>ntpdate time.windows.com
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>there is a nice thing. Find it.</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@master etc]# ls
+</span><span class='line'>...... rndc.key
+</span><span class='line'>[root@master etc]# service named stop                ///The rndc.key file disappear.
+</span><span class='line'>[root@master etc]# ls
+</span><span class='line'>......  //no rndc.key file
+</span><span class='line'>[root@master etc]# service named start
+</span><span class='line'>[root@master etc]# ls
+</span><span class='line'>...... rndc.key</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Reference:</h2>
+
+<p><a href="http://www.amazon.com/DNS-BIND-5th-Cricket-Liu/dp/0596100574">OReilly DNS and BIND, 5th Edition.</a><br />
+Do you need it? It&#8217;s so nice. Call me. <strong><em>linuxtaolinran@gmail.com</em></strong> <br />
+<a href="http://ftp.isc.org/isc/bind9/cur/9.9/doc/arm/Bv9ARM.pdf">BIND 9 Administrator Reference Manual</a></p>
+
+<h4>more&#8230;&#8230;</h4>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Taolinran</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-02T14:24:00+08:00" pubdate data-updated="true">May 2<span>nd</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/linux-services/'>linux-services</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://lin-credible.github.io/blog/2013/05/02/controlling-the-nameserver/" data-via="linuxtaolinran" data-counturl="http://lin-credible.github.io/blog/2013/05/02/controlling-the-nameserver/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/05/01/happy-51/" title="Previous Post: happy 51">&laquo; happy 51</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><script type="text/javascript">
+/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+var disqus_shortname = 'linblog'; // required: replace example with your forum shortname
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function () {
+var s = document.createElement('script'); s.async = true;
+s.type = 'text/javascript';
+s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+}());
+</script> 
+
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/05/02/controlling-the-nameserver/">Controlling the Nameserver</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/01/happy-51/">happy 51</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/25/master-slash-slave-dns-server-base-on-tsig/">M/S Split DNS Based on TSIG</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/15/this-site/">about my site</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/12/a-newbie-here/">A newbie here</a>
+      </li>
+    
+  </ul>
+</section>
+<iframe width="100%" height="550" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=550&fansRow=1&ptype=1&speed=300&skin=10&isTitle=1&noborder=1&isWeibo=1&isFans=0&uid=2116612302&verifier=c3e417d3&dpc=1"></iframe><!--
+<section>
+  <h1>Categories</h1>
+  <ul id="categories">
+    <li class='category'><a href='/blog/categories/linux-services/'>linux-services (2)</a></li>
+<li class='category'><a href='/blog/categories/tittle-tattle/'>tittle-tattle (3)</a></li>
+
+  </ul>
+</section>
+-->
+<section>
+  <h1>Categories</h1>
+    <ul id="category-list"><li class='category'><a href='/blog/categories/linux-services/'>linux-services (2)</a></li>
+<li class='category'><a href='/blog/categories/tittle-tattle/'>tittle-tattle (3)</a></li>
+</ul>
+</section><section>
+  <h1>Friendly links</h1>
+  <ul>
+    <li>
+      <a href="http://coolshell.cn/" target="_blank">CoolShell</a>
+    </li>
+	<li>
+      <a href="http://blog.linuxhonker.com/" target="_blank">Linuxhonker</a>
+    </li>
+	<li>
+      <a href="http://blog.yufeng.info/" target="_blank">yufeng</a>
+    </li>
+    <li>
+      <a href="http://www.mysqlpub.com/forum.php" target="_blank">mysqlpub</a>
+    </li>
+	<li>
+      <a href="http://mindhacks.cn/" target="_blank">MIND HACKS</a>
+    </li>
+	<li>
+      <a href="http://www.jiagulun.com/space-uid-2.html" target="_blank">Oraunix</a>
+    </li>
+	<li>
+      <a href="http://blog.csdn.net/signmem" target="_blank">Terry Tsang</a>
+    </li>
+	<li>
+      <a href="http://kumu-linux.github.io/" target="_blank">Kumu linux</a>
+    </li>
+	<li>
+      <a href="http://blog.csdn.net/c__ilikeyouma" target="_blank"><img src="/images/weibo.jpg" /></a>
+    </li>
+	
+  </ul>
+</section>
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/113704455548006694120?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Taolinran -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'linblog';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://lin-credible.github.io/blog/2013/05/02/controlling-the-nameserver/';
+        var disqus_url = 'http://lin-credible.github.io/blog/2013/05/02/controlling-the-nameserver/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
