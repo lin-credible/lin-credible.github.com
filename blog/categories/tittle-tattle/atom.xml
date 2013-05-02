@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: tittle-tattle | Lin's linux blog]]></title>
+  <link href="http://lin-credible.github.io/blog/categories/tittle-tattle/atom.xml" rel="self"/>
+  <link href="http://lin-credible.github.io/"/>
+  <updated>2013-05-02T13:33:33+08:00</updated>
+  <id>http://lin-credible.github.io/</id>
+  <author>
+    <name><![CDATA[Taolinran]]></name>
+    <email><![CDATA[linuxtaolinran@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[happy 51]]></title>
+    <link href="http://lin-credible.github.io/blog/2013/05/01/happy-51/"/>
+    <updated>2013-05-01T15:35:00+08:00</updated>
+    <id>http://lin-credible.github.io/blog/2013/05/01/happy-51</id>
+    <content type="html"><![CDATA[<p>The world is a book and those who do not travel read only one page!<br />
+<img src="/images/sea.jpg" alt="alt text" /><br />
+Life is the sum of all your choices.<br /></p>
+
+<!-- more -->
+
+
+<p><img src="/images/you.jpg" alt="alt text" /><br />
+One of the best feelings in the world is when you're hugging the person you love, and they hug you back even tighter.<br />
+I apply to get into your life, now. <br />
+<img src="/images/nice.jpg" alt="alt text" /><br />
+The clock is running. Make the most of today. Time waits for no man. Yesterday is history. Tomorrow is a mystery. <strong><em>Today</em></strong> is a gift. That's why it is called the present.<br /></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[about my site]]></title>
+    <link href="http://lin-credible.github.io/blog/2013/04/15/this-site/"/>
+    <updated>2013-04-15T13:58:00+08:00</updated>
+    <id>http://lin-credible.github.io/blog/2013/04/15/this-site</id>
+    <content type="html"><![CDATA[<p><img src="/images/bash.jpg" alt="alt text" /><br />
+Firstly, thanks for <a href="http://kumu-linux.github.io/">Kumu-linux</a>! He is my good friend and he let me know something about this. Thanks so much.</p>
+
+<p>Secondly, I just want to share something about technology with you, and I hope you can teach me. I'm a newbie.</p>
+
+<p>Thirdly, I'm going to write my blog in English and go to great lengths to make you can understand me. My english is poor, so I want to make a change.</p>
+
+<p>Now I'd like to say something others.</p>
+
+<!-- more -->
+
+
+<p>Majored in computer science and technology in medical university.</p>
+
+<p><img src="/images/my_university.jpg" alt="alt text" /><br /></p>
+
+<p>I love computer. But I know I'm a newbie.</p>
+
+<p>I don't know how long I can use it freely, of course, hope permanently.</p>
+
+<p><a href="http://coolshell.cn/">Coolshell</a> is so nice. There are so many great site and blog that set a good example of me. I have learned so much from there.</p>
+
+<p>Doing something for the great <strong>Internet</strong> and <strong>open</strong> world is the goal of my life.</p>
+
+<p>Maybe I'm young, 91's, just live for my dream.  No money, but I have a dream.</p>
+
+<p>I'm so happy about this site! Thanks for <strong>github</strong> and <strong>octopress</strong>.</p>
+
+<p>I have to believe in myself when no one else does.</p>
+
+<h3>Think and open heart.</h3>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[A newbie here]]></title>
+    <link href="http://lin-credible.github.io/blog/2013/04/12/a-newbie-here/"/>
+    <updated>2013-04-12T16:11:00+08:00</updated>
+    <id>http://lin-credible.github.io/blog/2013/04/12/a-newbie-here</id>
+    <content type="html"><![CDATA[<h2>Hello, I'm Taolinran, a newbie. I'm coming!</h2>
+
+<p><img src="/images/me.jpg" alt="alt text" /><br />
+I'm a <strong>newbie</strong>! I love <strong>linux</strong> and there is my <a href="http://blog.csdn.net/c__ilikeyouma">csdn blog</a>!
+<code>
+$ Hello "login:root"
+$ Hello "help contents;"
+$ Hello "#/bin/bash"
+$ Hello vim /etc/*.conf
+$ Hello ^&amp;.+*#/%[{;@!$
+$ Hello \&lt;\s\w+*\&gt;
+$ Hello 8.8.8.8
+$ Hello :!r sample.conf
+$ Hello .
+$ Hello *
+</code></p>
+
+<h4>Love my girl, love my work</h4>
+
+<h3>Right here, right now, action ^C</h3>
+]]></content>
+  </entry>
+  
+</feed>
