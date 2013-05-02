@@ -1,0 +1,938 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>M/S Split DNS Based on TSIG - Lin's linux blog</title>
+  <meta name="author" content="Taolinran">
+
+  
+  <meta name="description" content="TSIG TSIG provides authentication and data integrity through the use of a special type of mathematical formula called a one-way hash function. A
+one- &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://lin-credible.github.io/blog/2013/04/25/master-slash-slave-dns-server-base-on-tsig">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Lin's linux blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<!--<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+function addBlankTargetForLinks () {
+  $('a[href^="http"]').each(function(){
+      $(this).attr('target', '_blank');
+  });
+}
+$(document).bind('DOMNodeInserted', function(event) {
+  addBlankTargetForLinks();
+});
+-->
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-40050631-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Lin's linux blog</a></h1>
+  
+    <h2>^.+*oO0Oo0Oo0oO0o~Focus~Think and open mind~love linux, love~~55aa~$</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com.hk/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:lin-credible.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about">About me</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">M/S Split DNS Based on TSIG</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-25T09:08:00+08:00" pubdate data-updated="true">Apr 25<span>th</span>, 2013</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><pre><code>TSIG
+</code></pre>
+
+<p>  <strong>TSIG</strong> provides authentication and data integrity through the use of a special type of mathematical formula called a one-way hash function. A
+one-way hash function, also known as a cryptographic checksum or message digest, computes a fixed-size hash value based on arbitrarily large input.
+The magic of a one-way hash function is that each bit of the hash value depends on each and every bit of the input. Change a single bit of the input,
+and the hash value changes dramatically and unpredictablyso unpredictably that it&#8217;s &#8220;computationally infeasible&#8221; to reverse the function and find an
+input that produces a given hash value.<br />
+  <strong>TSIG</strong> uses a one-way hash function called MD5. In particular, it uses a variant of MD5 called HMAC-MD5. HMAC-MD5 works in a keyed mode in which
+the 128-bit hash value depends not only on the input, but also on a key.</p>
+
+<pre><code>Running a Primary Nameserver
+</code></pre>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'> yum -y install <span class="nb">bind bind</span>-chroot <span class="nb">bind</span>-devel <span class="nb">bind</span>-libs <span class="nb">bind</span>-utils
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>   <strong>&#8230;</strong></p>
+
+<!-- more -->
+
+
+<pre><code>Running a Slave Nameserver
+</code></pre>
+
+<p>  You need to set up another nameserver for robustness. You can (and probably will eventually) set up <strong><em>more than two authoritative nameservers</em></strong>
+for your zones. Two nameservers are the minimum; if you have only one nameserver, and it goes down, no one can look up domain names. A second
+nameserver splits the load with the first server or handles the whole load if the first server is down. You could set up another primary
+nameserver, but we don&#8217;t recommend it. Instead, set up a slave nameserver. You can always change a slave nameserver to a primary nameserver if
+you decide to expend the extra effort it takes to run multiple primary nameservers.<br />
+  How does a server know if it&#8217;s the primary or a slave for a zone? The named.conf file tells the nameserver whether it is the primary or a slave
+on a per-zone basis. The NS records don&#8217;t tell us which server is the primary for a zone and which servers are slaves; they only say who the
+servers are. (Globally, DNS doesn&#8217;t care; as far as the actual name resolution goes, slave servers are as good as primary servers.)
+What&#8217;s the difference between a primary nameserver and a slave nameserver? The crucial difference is where the server gets its data. A primary
+nameserver reads its data from zone datafiles. A slave nameserver loads its data over the network from another nameserver. This process is called a
+<strong><em>zone transfer</em></strong>.<br />
+  A slave nameserver is not limited to loading zones from a primary nameserver; it can also load from another slave server.
+The big advantage of slave nameservers is that you maintain only one set of zone datafiles for a zone, the ones on the primary nameserver. You
+don&#8217;t have to worry about synchronizing the files among nameservers; the slaves do that for you. The caveat is that a slave does not resynchronize
+instantly: it polls to see if its zone data is current. The polling interval is one of those numbers in the SOA record that we haven&#8217;t explained yet.
+(BIND versions 8 and 9 support mechanisms to speed up the distribution of zone data, which we&#8217;ll describe later.)</p>
+
+<pre><code>Views
+</code></pre>
+
+<p>  BIND 9 introduced views, another mechanism that&#8217;s very useful in firewalled environments. Views allow you to present one nameserver configuration
+to one community of hosts and a different configuration to another community. This is particularly handy if you&#8217;re running a nameserver on a host
+that receives queries from both your internal hosts and hosts on the Internet</p>
+
+<pre><code>My test!
+</code></pre>
+
+<h3>structure.</h3>
+
+<p><img src="/images/structure_dns.jpg" alt="alt text" /><br />
+&#8220;&#8230;&#8230;&#8221; for Extensions.</p>
+
+<h3>Important steps and files.</h3>
+
+<h4>TSIG</h4>
+
+<figure class='code'><figcaption><span>TSIG - awesome.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'> <span class="o">[</span><span class="n">root</span><span class="vi">@master</span> <span class="n">etc</span><span class="o">]</span><span class="c1"># pwd</span>
+</span><span class='line'> <span class="sr">/var/n</span><span class="n">amed</span><span class="o">/</span><span class="n">chroot</span><span class="o">/</span><span class="n">etc</span>
+</span><span class='line'> <span class="o">[</span><span class="n">root</span><span class="vi">@master</span> <span class="n">etc</span><span class="o">]</span><span class="c1"># dnssec-keygen -a HMAC-MD5 -b 128 -n HOST lan192</span>
+</span><span class='line'> <span class="no">Klan192</span><span class="o">.</span><span class="n">+</span><span class="mi">157</span><span class="o">+</span><span class="mi">60759</span>
+</span><span class='line'> <span class="o">[</span><span class="n">root</span><span class="vi">@master</span> <span class="n">etc</span><span class="o">]</span><span class="c1"># dnssec-keygen -a HMAC-MD5 -b 128 -n HOST lan10</span>
+</span><span class='line'> <span class="no">Klan10</span><span class="o">.</span><span class="n">+</span><span class="mi">157</span><span class="o">+</span><span class="mi">57014</span>
+</span><span class='line'> <span class="o">[</span><span class="n">root</span><span class="vi">@master</span> <span class="n">etc</span><span class="o">]</span><span class="c1"># ls -lt</span>
+</span><span class='line'> <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'> <span class="o">-</span><span class="n">rw</span><span class="o">-------</span> <span class="mi">1</span> <span class="n">root</span> <span class="n">named</span>   <span class="mi">165</span> <span class="no">Apr</span> <span class="mi">24</span> <span class="mi">19</span><span class="p">:</span><span class="mi">54</span> <span class="no">Klan10</span><span class="o">.</span><span class="n">+</span><span class="mi">157</span><span class="o">+</span><span class="mi">57014</span><span class="o">.</span><span class="n">private</span>
+</span><span class='line'> <span class="o">-</span><span class="n">rw</span><span class="o">-------</span> <span class="mi">1</span> <span class="n">root</span> <span class="n">named</span>   <span class="mi">165</span> <span class="no">Apr</span> <span class="mi">24</span> <span class="mi">19</span><span class="p">:</span><span class="mi">53</span> <span class="no">Klan192</span><span class="o">.</span><span class="n">+</span><span class="mi">157</span><span class="o">+</span><span class="mi">60759</span><span class="o">.</span><span class="n">private</span>
+</span><span class='line'> <span class="o">-</span><span class="n">rw</span><span class="o">-------</span> <span class="mi">1</span> <span class="n">root</span> <span class="n">named</span>    <span class="mi">49</span> <span class="no">Apr</span> <span class="mi">24</span> <span class="mi">19</span><span class="p">:</span><span class="mi">50</span> <span class="no">Klan10</span><span class="o">.</span><span class="n">+</span><span class="mi">157</span><span class="o">+</span><span class="mi">57014</span><span class="o">.</span><span class="n">key</span>
+</span><span class='line'> <span class="o">-</span><span class="n">rw</span><span class="o">-------</span> <span class="mi">1</span> <span class="n">root</span> <span class="n">named</span>    <span class="mi">50</span> <span class="no">Apr</span> <span class="mi">24</span> <span class="mi">19</span><span class="p">:</span><span class="mi">46</span> <span class="no">Klan192</span><span class="o">.</span><span class="n">+</span><span class="mi">157</span><span class="o">+</span><span class="mi">60759</span><span class="o">.</span><span class="n">key</span>
+</span><span class='line'> <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'> <span class="o">[</span><span class="n">root</span><span class="vi">@master</span> <span class="n">etc</span><span class="o">]</span><span class="c1"># cat Klan192.+157+60759.private </span>
+</span><span class='line'> <span class="no">Private</span><span class="o">-</span><span class="n">key</span><span class="o">-</span><span class="nb">format</span><span class="p">:</span> <span class="n">v1</span><span class="o">.</span><span class="mi">3</span>
+</span><span class='line'> <span class="ss">Algorithm</span><span class="p">:</span> <span class="mi">157</span> <span class="p">(</span><span class="no">HMAC_MD5</span><span class="p">)</span>
+</span><span class='line'> <span class="ss">Key</span><span class="p">:</span> <span class="no">RQXeMPEXAj5Mx37pzJ044A</span><span class="o">==</span>   <span class="sr">//</span><span class="no">Notice</span> <span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;.</span>
+</span><span class='line'> <span class="ss">Bits</span><span class="p">:</span> <span class="no">AAA</span><span class="o">=</span>
+</span><span class='line'> <span class="ss">Created</span><span class="p">:</span> <span class="mi">20130424114602</span>
+</span><span class='line'> <span class="ss">Publish</span><span class="p">:</span> <span class="mi">20130424114602</span>
+</span><span class='line'> <span class="ss">Activate</span><span class="p">:</span> <span class="mi">20130424114602</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>master named.conf</h4>
+
+<figure class='code'><figcaption><span>(master)192.168.10.112/named.conf - awesome.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'> <span class="n">acl</span> <span class="n">zone1</span> <span class="p">{</span>
+</span><span class='line'> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">78</span><span class="p">;</span>
+</span><span class='line'> <span class="p">};</span>
+</span><span class='line'> <span class="n">acl</span> <span class="n">zone2</span> <span class="p">{</span>
+</span><span class='line'> <span class="mi">10</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">11</span><span class="p">;</span>
+</span><span class='line'> <span class="p">};</span>
+</span><span class='line'> <span class="n">key</span> <span class="n">lan192</span> <span class="p">{</span>
+</span><span class='line'>         <span class="n">algorithm</span> <span class="n">hmac</span><span class="o">-</span><span class="n">md5</span><span class="p">;</span>
+</span><span class='line'>         <span class="n">secret</span> <span class="s2">&quot;RQXeMPEXAj5Mx37pzJ044A==&quot;</span><span class="p">;</span>         <span class="sr">//</span><span class="no">Notice</span> <span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;.</span>
+</span><span class='line'> <span class="p">};</span>
+</span><span class='line'> <span class="n">key</span> <span class="n">lan10</span> <span class="p">{</span>
+</span><span class='line'>         <span class="n">algorithm</span> <span class="n">hmac</span><span class="o">-</span><span class="n">md5</span><span class="p">;</span>
+</span><span class='line'>         <span class="n">secret</span> <span class="s2">&quot;TUklzhkwYd6roL7tO4BE5Q==&quot;</span><span class="p">;</span>
+</span><span class='line'> <span class="p">};</span>
+</span><span class='line'> <span class="n">options</span>
+</span><span class='line'> <span class="p">{</span>
+</span><span class='line'>   <span class="n">listen</span><span class="o">-</span><span class="n">on</span> <span class="n">port</span> <span class="mi">53</span> <span class="p">{</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span><span class="p">;</span> <span class="p">};</span>
+</span><span class='line'>   <span class="n">directory</span> <span class="s2">&quot;/var/named&quot;</span><span class="p">;</span>
+</span><span class='line'>   <span class="n">dump</span><span class="o">-</span><span class="n">file</span> <span class="s2">&quot;/var/named/data/cache_dump.db&quot;</span><span class="p">;</span>
+</span><span class='line'>   <span class="n">statistics</span><span class="o">-</span><span class="n">file</span> <span class="s2">&quot;/var/named/data/named_stats.txt&quot;</span><span class="p">;</span>
+</span><span class='line'>   <span class="n">memstatistics</span><span class="o">-</span><span class="n">file</span> <span class="s2">&quot;/var/named/data/named_mem_stats.txt&quot;</span><span class="p">;</span>
+</span><span class='line'>   <span class="n">query</span><span class="o">-</span><span class="n">source</span> <span class="n">port</span> <span class="mi">53</span><span class="p">;</span>
+</span><span class='line'>   <span class="n">query</span><span class="o">-</span><span class="n">source</span><span class="o">-</span><span class="n">v6</span> <span class="n">port</span> <span class="mi">53</span><span class="p">;</span>
+</span><span class='line'>   <span class="n">allow</span><span class="o">-</span><span class="n">query</span> <span class="p">{</span> <span class="n">any</span><span class="p">;</span> <span class="p">};</span>
+</span><span class='line'>   <span class="n">allow</span><span class="o">-</span><span class="n">recursion</span> <span class="p">{</span> <span class="n">any</span><span class="p">;</span> <span class="p">};</span>
+</span><span class='line'>   <span class="n">version</span> <span class="s2">&quot;None of your business&quot;</span><span class="p">;</span>
+</span><span class='line'>   <span class="n">notify</span> <span class="n">yes</span><span class="p">;</span>
+</span><span class='line'> <span class="p">};</span>
+</span><span class='line'> <span class="n">view</span> <span class="s2">&quot;lan192&quot;</span> <span class="p">{</span>
+</span><span class='line'>         <span class="n">match</span><span class="o">-</span><span class="n">clients</span> <span class="p">{</span> <span class="n">key</span> <span class="n">lan192</span><span class="p">;</span><span class="n">zone1</span><span class="p">;</span> <span class="p">};</span>
+</span><span class='line'>         <span class="n">server</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">111</span> <span class="p">{</span> <span class="n">keys</span><span class="p">{</span><span class="n">lan192</span><span class="p">;};</span> <span class="p">};</span>
+</span><span class='line'>         <span class="n">zone</span> <span class="s2">&quot;test.cn&quot;</span> <span class="no">IN</span> <span class="p">{</span>
+</span><span class='line'>                         <span class="n">type</span> <span class="n">master</span><span class="p">;</span>
+</span><span class='line'>                         <span class="n">file</span> <span class="s2">&quot;test.cn.lan192&quot;</span><span class="p">;</span>
+</span><span class='line'>                         <span class="n">allow</span><span class="o">-</span><span class="n">transfer</span> <span class="p">{</span> <span class="n">key</span> <span class="n">lan192</span><span class="p">;</span> <span class="p">};</span>
+</span><span class='line'>                         <span class="n">also</span><span class="o">-</span><span class="n">notify</span> <span class="p">{</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">111</span><span class="p">;</span> <span class="p">};</span>
+</span><span class='line'>                 <span class="p">};</span>
+</span><span class='line'>         <span class="n">zone</span> <span class="s2">&quot;10.168.192.in-addr.arpa&quot;</span> <span class="no">IN</span> <span class="p">{</span>
+</span><span class='line'>                         <span class="n">type</span> <span class="n">master</span><span class="p">;</span>
+</span><span class='line'>                         <span class="n">file</span> <span class="s2">&quot;192.168.10.zone&quot;</span><span class="p">;</span>
+</span><span class='line'>                         <span class="n">allow</span><span class="o">-</span><span class="n">transfer</span> <span class="p">{</span> <span class="n">key</span> <span class="n">lan192</span><span class="p">;</span> <span class="p">};</span>
+</span><span class='line'>                         <span class="n">also</span><span class="o">-</span><span class="n">notify</span> <span class="p">{</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">111</span><span class="p">;</span> <span class="p">};</span>
+</span><span class='line'>                 <span class="p">};</span>
+</span><span class='line'> <span class="p">};</span>
+</span><span class='line'> <span class="n">view</span> <span class="s2">&quot;lan10&quot;</span> <span class="p">{</span>
+</span><span class='line'>         <span class="n">match</span><span class="o">-</span><span class="n">clients</span> <span class="p">{</span> <span class="n">key</span> <span class="n">lan10</span><span class="p">;</span><span class="n">zone2</span><span class="p">;</span> <span class="p">};</span>
+</span><span class='line'>         <span class="n">server</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">111</span> <span class="p">{</span> <span class="n">keys</span><span class="p">{</span><span class="n">lan10</span><span class="p">;};</span> <span class="p">};</span>
+</span><span class='line'>         <span class="n">zone</span> <span class="s2">&quot;test.cn&quot;</span> <span class="no">IN</span> <span class="p">{</span>
+</span><span class='line'>                         <span class="n">type</span> <span class="n">master</span><span class="p">;</span>
+</span><span class='line'>                         <span class="n">file</span> <span class="s2">&quot;test.cn.lan10&quot;</span><span class="p">;</span>
+</span><span class='line'>                         <span class="n">allow</span><span class="o">-</span><span class="n">transfer</span> <span class="p">{</span> <span class="n">key</span> <span class="n">lan10</span><span class="p">;</span> <span class="p">};</span>
+</span><span class='line'>                         <span class="n">also</span><span class="o">-</span><span class="n">notify</span> <span class="p">{</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">111</span><span class="p">;</span> <span class="p">};</span>
+</span><span class='line'>                 <span class="p">};</span>
+</span><span class='line'>         <span class="n">zone</span> <span class="s2">&quot;10.10.10.in-addr.arpa&quot;</span> <span class="no">IN</span> <span class="p">{</span>
+</span><span class='line'>                         <span class="n">type</span> <span class="n">master</span><span class="p">;</span>
+</span><span class='line'>                         <span class="n">file</span> <span class="s2">&quot;10.10.10.zone&quot;</span><span class="p">;</span>
+</span><span class='line'>                         <span class="n">allow</span><span class="o">-</span><span class="n">transfer</span> <span class="p">{</span> <span class="n">key</span> <span class="n">lan10</span><span class="p">;</span> <span class="p">};</span>
+</span><span class='line'>                         <span class="n">also</span><span class="o">-</span><span class="n">notify</span> <span class="p">{</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">111</span><span class="p">;</span> <span class="p">};</span>
+</span><span class='line'>                 <span class="p">};</span>
+</span><span class='line'> <span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>master zone files.</h4>
+
+<h5>test.cn.lan192</h5>
+
+<figure class='code'><figcaption><span>test.cn.lan192 - awesome.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'> <span class="vg">$TTL</span> <span class="mi">86400</span>
+</span><span class='line'> <span class="err">@</span>       <span class="no">IN</span> <span class="no">SOA</span>  <span class="n">taolr</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">cn</span><span class="o">.</span> <span class="n">taolr</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">cn</span> <span class="p">(</span>
+</span><span class='line'>                                         <span class="mi">20130424</span>        <span class="p">;</span> <span class="n">serial</span>
+</span><span class='line'>                                         <span class="mi">3</span><span class="n">H</span>      <span class="p">;</span> <span class="n">refresh</span>
+</span><span class='line'>                                         <span class="mi">15</span><span class="n">M</span>     <span class="p">;</span> <span class="k">retry</span>
+</span><span class='line'>                                         <span class="mi">1</span><span class="n">W</span>      <span class="p">;</span> <span class="n">expire</span>
+</span><span class='line'>                                         <span class="mi">1</span><span class="n">D</span> <span class="p">)</span>    <span class="p">;</span> <span class="n">minimum</span>
+</span><span class='line'> <span class="err">@</span>                                       <span class="no">IN</span> <span class="no">NS</span> <span class="n">taolr</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">cn</span><span class="o">.</span>
+</span><span class='line'>                                         <span class="no">IN</span> <span class="no">MX</span> <span class="mi">10</span> <span class="n">mail</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">cn</span><span class="o">.</span>
+</span><span class='line'> <span class="n">taolr</span>         <span class="no">IN</span> <span class="n">A</span>     <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>
+</span><span class='line'> <span class="n">bbs</span>           <span class="no">IN</span> <span class="n">A</span>     <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>
+</span><span class='line'> <span class="n">mail</span>          <span class="no">IN</span> <span class="n">A</span>     <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>
+</span><span class='line'> <span class="n">wordpress</span>     <span class="no">IN</span> <span class="n">A</span>     <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>
+</span><span class='line'> <span class="n">ftp</span>           <span class="no">IN</span> <span class="no">CNAME</span>    <span class="n">bbs</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h5>test.cn.lan10</h5>
+
+<figure class='code'><figcaption><span>test.cn.lan10 - awesome.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'> <span class="vg">$TTL</span> <span class="mi">86400</span>
+</span><span class='line'> <span class="err">@</span>       <span class="no">IN</span> <span class="no">SOA</span>  <span class="n">taolr</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">cn</span><span class="o">.</span> <span class="n">taolr</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">cn</span> <span class="p">(</span>
+</span><span class='line'>                                         <span class="mi">20130425</span>        <span class="p">;</span> <span class="n">serial</span>
+</span><span class='line'>                                         <span class="mi">3</span><span class="n">H</span>      <span class="p">;</span> <span class="n">refresh</span>
+</span><span class='line'>                                         <span class="mi">15</span><span class="n">M</span>     <span class="p">;</span> <span class="k">retry</span>
+</span><span class='line'>                                         <span class="mi">1</span><span class="n">W</span>      <span class="p">;</span> <span class="n">expire</span>
+</span><span class='line'>                                         <span class="mi">1</span><span class="n">D</span> <span class="p">)</span>    <span class="p">;</span> <span class="n">minimum</span>
+</span><span class='line'> <span class="err">@</span>                                       <span class="no">IN</span> <span class="no">NS</span> <span class="n">taolr</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">cn</span><span class="o">.</span>
+</span><span class='line'>                                         <span class="no">IN</span> <span class="no">MX</span> <span class="mi">10</span> <span class="n">mail</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">cn</span><span class="o">.</span>
+</span><span class='line'> <span class="n">taolr</span>           <span class="no">IN</span> <span class="n">A</span>       <span class="mi">10</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>
+</span><span class='line'> <span class="n">bbs</span>             <span class="no">IN</span> <span class="n">A</span>       <span class="mi">10</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>
+</span><span class='line'> <span class="n">mail</span>            <span class="no">IN</span> <span class="n">A</span>       <span class="mi">10</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>
+</span><span class='line'> <span class="n">wordpress</span>       <span class="no">IN</span> <span class="n">A</span>       <span class="mi">10</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>
+</span><span class='line'> <span class="n">ftp</span>             <span class="no">IN</span> <span class="no">CNAME</span>  <span class="n">bbs</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h5>192.168.10.zone</h5>
+
+<figure class='code'><figcaption><span>192.168.10.zone - awesome.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'> <span class="vg">$TTL</span> <span class="mi">86400</span>
+</span><span class='line'> <span class="err">@</span>       <span class="no">IN</span> <span class="no">SOA</span>  <span class="n">taolr</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">cn</span><span class="o">.</span> <span class="n">taolr</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">cn</span> <span class="p">(</span>
+</span><span class='line'>                                         <span class="mi">20130424</span>        <span class="p">;</span> <span class="n">serial</span>
+</span><span class='line'>                                         <span class="mi">3</span><span class="n">H</span>      <span class="p">;</span> <span class="n">refresh</span>
+</span><span class='line'>                                         <span class="mi">15</span><span class="n">M</span>     <span class="p">;</span> <span class="k">retry</span>
+</span><span class='line'>                                         <span class="mi">1</span><span class="n">W</span>      <span class="p">;</span> <span class="n">expire</span>
+</span><span class='line'>                                         <span class="mi">1</span><span class="n">D</span> <span class="p">)</span>    <span class="p">;</span> <span class="n">minimum</span>
+</span><span class='line'> <span class="err">@</span>                                       <span class="no">IN</span> <span class="no">NS</span> <span class="n">taolr</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">cn</span><span class="o">.</span>
+</span><span class='line'>                                         <span class="no">IN</span> <span class="no">MX</span> <span class="mi">11</span> <span class="n">taolr</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">cn</span><span class="o">.</span>
+</span><span class='line'> <span class="mi">112</span>                             <span class="no">IN</span> <span class="no">PTR</span> <span class="n">taolr</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">cn</span><span class="o">.</span>
+</span><span class='line'> <span class="mi">112</span>                             <span class="no">IN</span> <span class="no">PTR</span> <span class="n">bbs</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">cn</span><span class="o">.</span>
+</span><span class='line'> <span class="mi">112</span>                             <span class="no">IN</span> <span class="no">PTR</span> <span class="n">wordpress</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">cn</span><span class="o">.</span>
+</span><span class='line'> <span class="mi">112</span>                            <span class="no">IN</span> <span class="no">PTR</span> <span class="n">ftp</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">cn</span><span class="o">.</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h5>10.10.10.zone</h5>
+
+<figure class='code'><figcaption><span>10.10.10.zone - awesome.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'> <span class="vg">$TTL</span> <span class="mi">86400</span>
+</span><span class='line'> <span class="err">@</span>       <span class="no">IN</span> <span class="no">SOA</span>  <span class="n">taolr</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">cn</span><span class="o">.</span> <span class="n">taolr</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">cn</span> <span class="p">(</span>
+</span><span class='line'>                                         <span class="mi">20130424</span>        <span class="p">;</span> <span class="n">serial</span>
+</span><span class='line'>                                         <span class="mi">3</span><span class="n">H</span>      <span class="p">;</span> <span class="n">refresh</span>
+</span><span class='line'>                                         <span class="mi">15</span><span class="n">M</span>     <span class="p">;</span> <span class="k">retry</span>
+</span><span class='line'>                                         <span class="mi">1</span><span class="n">W</span>      <span class="p">;</span> <span class="n">expire</span>
+</span><span class='line'>                                         <span class="mi">1</span><span class="n">D</span> <span class="p">)</span>    <span class="p">;</span> <span class="n">minimum</span>
+</span><span class='line'> <span class="err">@</span>                                       <span class="no">IN</span> <span class="no">NS</span> <span class="n">taolr</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">cn</span><span class="o">.</span>
+</span><span class='line'>                                         <span class="no">IN</span> <span class="no">MX</span> <span class="mi">11</span> <span class="n">taolr</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">cn</span><span class="o">.</span>
+</span><span class='line'> <span class="mi">112</span>                             <span class="no">IN</span> <span class="no">PTR</span> <span class="n">taolr</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">cn</span><span class="o">.</span>
+</span><span class='line'> <span class="mi">112</span>                             <span class="no">IN</span> <span class="no">PTR</span> <span class="n">linbbs</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">cn</span><span class="o">.</span>
+</span><span class='line'> <span class="mi">112</span>                             <span class="no">IN</span> <span class="no">PTR</span> <span class="n">wordpress</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">cn</span><span class="o">.</span>
+</span><span class='line'> <span class="mi">112</span>                            <span class="no">IN</span> <span class="no">PTR</span> <span class="n">ftp</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">cn</span><span class="o">.</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>slave named.conf</h4>
+
+<figure class='code'><figcaption><span>(slave)192.168.10.111/named.conf - awesome.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'> <span class="n">acl</span> <span class="n">zone1</span> <span class="p">{</span>
+</span><span class='line'> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">78</span><span class="p">;</span>
+</span><span class='line'> <span class="p">};</span>
+</span><span class='line'> <span class="n">acl</span> <span class="n">zone2</span> <span class="p">{</span>
+</span><span class='line'> <span class="mi">10</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">11</span><span class="p">;</span>
+</span><span class='line'> <span class="p">};</span>
+</span><span class='line'> <span class="n">key</span> <span class="n">lan192</span> <span class="p">{</span>
+</span><span class='line'>         <span class="n">algorithm</span> <span class="n">hmac</span><span class="o">-</span><span class="n">md5</span><span class="p">;</span>
+</span><span class='line'>         <span class="n">secret</span> <span class="s2">&quot;RQXeMPEXAj5Mx37pzJ044A==&quot;</span><span class="p">;</span>
+</span><span class='line'> <span class="p">};</span>
+</span><span class='line'> <span class="n">key</span> <span class="n">lan10</span> <span class="p">{</span>
+</span><span class='line'>         <span class="n">algorithm</span> <span class="n">hmac</span><span class="o">-</span><span class="n">md5</span><span class="p">;</span>
+</span><span class='line'>         <span class="n">secret</span> <span class="s2">&quot;TUklzhkwYd6roL7tO4BE5Q==&quot;</span><span class="p">;</span>
+</span><span class='line'> <span class="p">};</span>
+</span><span class='line'> <span class="n">options</span>
+</span><span class='line'> <span class="p">{</span>
+</span><span class='line'>   <span class="n">listen</span><span class="o">-</span><span class="n">on</span> <span class="n">port</span> <span class="mi">53</span> <span class="p">{</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">111</span><span class="p">;</span> <span class="p">};</span>
+</span><span class='line'>   <span class="n">directory</span> <span class="s2">&quot;/var/named&quot;</span><span class="p">;</span>
+</span><span class='line'>   <span class="n">dump</span><span class="o">-</span><span class="n">file</span> <span class="s2">&quot;/var/named/data/cache_dump.db&quot;</span><span class="p">;</span>
+</span><span class='line'>   <span class="n">statistics</span><span class="o">-</span><span class="n">file</span> <span class="s2">&quot;/var/named/data/named_stats.txt&quot;</span><span class="p">;</span>
+</span><span class='line'>   <span class="n">memstatistics</span><span class="o">-</span><span class="n">file</span> <span class="s2">&quot;/var/named/data/named_mem_stats.txt&quot;</span><span class="p">;</span>
+</span><span class='line'>   <span class="n">query</span><span class="o">-</span><span class="n">source</span> <span class="n">port</span> <span class="mi">53</span><span class="p">;</span>
+</span><span class='line'>   <span class="n">query</span><span class="o">-</span><span class="n">source</span><span class="o">-</span><span class="n">v6</span> <span class="n">port</span> <span class="mi">53</span><span class="p">;</span>
+</span><span class='line'>   <span class="n">allow</span><span class="o">-</span><span class="n">query</span> <span class="p">{</span> <span class="n">any</span><span class="p">;</span> <span class="p">};</span>
+</span><span class='line'>   <span class="n">allow</span><span class="o">-</span><span class="n">recursion</span> <span class="p">{</span> <span class="n">any</span><span class="p">;</span> <span class="p">};</span>
+</span><span class='line'>   <span class="n">version</span> <span class="s2">&quot;None of your business&quot;</span><span class="p">;</span>
+</span><span class='line'>   <span class="n">notify</span> <span class="n">yes</span><span class="p">;</span>
+</span><span class='line'> <span class="p">};</span>
+</span><span class='line'> <span class="n">view</span> <span class="s2">&quot;lan192&quot;</span> <span class="p">{</span>
+</span><span class='line'>         <span class="n">match</span><span class="o">-</span><span class="n">clients</span> <span class="p">{</span> <span class="n">key</span> <span class="n">lan192</span><span class="p">;</span><span class="n">zone1</span><span class="p">;</span> <span class="p">};</span>
+</span><span class='line'>         <span class="n">server</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span> <span class="p">{</span> <span class="n">keys</span><span class="p">{</span><span class="n">lan192</span><span class="p">;};</span> <span class="p">};</span>
+</span><span class='line'>         <span class="n">zone</span> <span class="s2">&quot;test.cn&quot;</span> <span class="no">IN</span> <span class="p">{</span>
+</span><span class='line'>                         <span class="n">type</span> <span class="n">slave</span><span class="p">;</span>
+</span><span class='line'>                         <span class="n">file</span> <span class="s2">&quot;slaves/test.cn.lan192&quot;</span><span class="p">;</span>          <span class="sr">//</span><span class="no">Notice</span> <span class="n">the</span> <span class="no">PATH</span><span class="o">.</span>
+</span><span class='line'>                         <span class="n">masters</span> <span class="p">{</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span><span class="p">;</span> <span class="p">};</span>
+</span><span class='line'>                 <span class="p">};</span>
+</span><span class='line'>         <span class="n">zone</span> <span class="s2">&quot;10.168.192.in-addr.arpa&quot;</span> <span class="no">IN</span> <span class="p">{</span>
+</span><span class='line'>                         <span class="n">type</span> <span class="n">slave</span><span class="p">;</span>
+</span><span class='line'>                         <span class="n">file</span> <span class="s2">&quot;slaves/192.168.10.zone&quot;</span><span class="p">;</span>
+</span><span class='line'>                         <span class="n">masters</span> <span class="p">{</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span><span class="p">;</span> <span class="p">};</span>
+</span><span class='line'>                 <span class="p">};</span>
+</span><span class='line'> <span class="p">};</span>
+</span><span class='line'> <span class="n">view</span> <span class="s2">&quot;lan10&quot;</span> <span class="p">{</span>
+</span><span class='line'>         <span class="n">match</span><span class="o">-</span><span class="n">clients</span> <span class="p">{</span> <span class="n">key</span> <span class="n">lan10</span><span class="p">;</span><span class="n">zone2</span><span class="p">;</span> <span class="p">};</span>
+</span><span class='line'>         <span class="n">server</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span> <span class="p">{</span> <span class="n">keys</span><span class="p">{</span><span class="n">lan10</span><span class="p">;};</span> <span class="p">};</span>
+</span><span class='line'>         <span class="n">zone</span> <span class="s2">&quot;test.cn&quot;</span> <span class="no">IN</span> <span class="p">{</span>
+</span><span class='line'>                         <span class="n">type</span> <span class="n">slave</span><span class="p">;</span>
+</span><span class='line'>                         <span class="n">file</span> <span class="s2">&quot;slaves/test.cn.lan10&quot;</span><span class="p">;</span>
+</span><span class='line'>                         <span class="n">masters</span> <span class="p">{</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span><span class="p">;</span> <span class="p">};</span>
+</span><span class='line'>                 <span class="p">};</span>
+</span><span class='line'>         <span class="n">zone</span> <span class="s2">&quot;10.10.10.in-addr.arpa&quot;</span> <span class="no">IN</span> <span class="p">{</span>
+</span><span class='line'>                         <span class="n">type</span> <span class="n">slave</span><span class="p">;</span>
+</span><span class='line'>                         <span class="n">file</span> <span class="s2">&quot;slaves/10.10.10.zone&quot;</span><span class="p">;</span>
+</span><span class='line'>                         <span class="n">masters</span> <span class="p">{</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span><span class="p">;</span> <span class="p">};</span>
+</span><span class='line'>                 <span class="p">};</span>
+</span><span class='line'> <span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Finaly</h4>
+
+<p>restart the primary nameserver and slave server.
+Notice, if you do not familiar with the SElinux and Iptables.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'> setenforce 0
+</span><span class='line'> iptables -F
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then look:</p>
+
+<figure class='code'><figcaption><span>slaves/zonefiles - awesome.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'> <span class="o">[</span><span class="n">root</span><span class="vi">@slave</span> <span class="n">slaves</span><span class="o">]</span><span class="c1"># pwd</span>
+</span><span class='line'> <span class="sr">/var/n</span><span class="n">amed</span><span class="o">/</span><span class="n">chroot</span><span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">named</span><span class="o">/</span><span class="n">slaves</span>
+</span><span class='line'> <span class="o">[</span><span class="n">root</span><span class="vi">@slave</span> <span class="n">slaves</span><span class="o">]</span><span class="c1"># ls</span>
+</span><span class='line'> <span class="mi">10</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="n">zone</span>  <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="n">zone</span>  <span class="nb">test</span><span class="o">.</span><span class="n">cn</span><span class="o">.</span><span class="n">lan10</span>  <span class="nb">test</span><span class="o">.</span><span class="n">cn</span><span class="o">.</span><span class="n">lan192</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Check it with &#8220;nslookup&#8221;, &#8220;host&#8221; or &#8220;dig&#8221;.</h4>
+
+<p>eg:</p>
+
+<figure class='code'><figcaption><span>192.168.10.78/nslookup - awesome.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="o">[</span><span class="n">root</span><span class="vi">@client</span> <span class="sr">/]# nslookup</span>
+</span><span class='line'><span class="sr">&gt; server 192.168.10.112</span>
+</span><span class='line'><span class="sr">Default server: 192.168.10.112</span>
+</span><span class='line'><span class="sr">Address: 192.168.10.112#53</span>
+</span><span class='line'><span class="sr">&gt; set type=a</span>
+</span><span class='line'><span class="sr">&gt; bbs.test.cn</span>
+</span><span class='line'><span class="sr">Server:         192.168.10.112</span>
+</span><span class='line'><span class="sr">Address:        192.168.10.112#53</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">Name:   bbs.test.cn</span>
+</span><span class='line'><span class="sr">Address: 192.168.10.112</span>
+</span><span class='line'><span class="sr">&gt; ftp.test.cn</span>
+</span><span class='line'><span class="sr">Server:         192.168.10.112</span>
+</span><span class='line'><span class="sr">Address:        192.168.10.112#53</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">ftp.test.cn      canonical name = bbs.test.cn.</span>
+</span><span class='line'><span class="sr">Name:   bbs.test.cn</span>
+</span><span class='line'><span class="sr">Address: 192.168.10.112</span>
+</span><span class='line'><span class="sr">&gt; set type=ptr</span>
+</span><span class='line'><span class="sr">&gt; 192.168.10.112</span>
+</span><span class='line'><span class="sr">Server:         192.168.10.112</span>
+</span><span class='line'><span class="sr">Address:        192.168.10.112#53</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">112.10.168.192.in-addr.arpa     name = ftp.test.cn.</span>
+</span><span class='line'><span class="sr">112.10.168.192.in-addr.arpa     name = taolr.test.cn.</span>
+</span><span class='line'><span class="sr">112.10.168.192.in-addr.arpa     name = linbbs.test.cn.</span>
+</span><span class='line'><span class="sr">112.10.168.192.in-addr.arpa     name = wordpress.test.cn.</span>
+</span><span class='line'><span class="sr">&gt; exit</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>&#8230;&#8230;</h3>
+
+<h4>If you changed the primary zone files, and reload the file. The secondary nameserver will reload the zone files automatically!</h4>
+
+<h4>Reference:</h4>
+
+<p><a href="http://www.amazon.com/DNS-BIND-5th-Cricket-Liu/dp/0596100574">OReilly DNS and BIND, 5th Edition.</a><br />
+Do you need it? It&#8217;s so nice. <strong><em>linuxtaolinran@gmail.com</em></strong> <br />
+<a href="http://ftp.isc.org/isc/bind9/cur/9.9/doc/arm/Bv9ARM.pdf">BIND 9 Administrator Reference Manual</a></p>
+
+<h4>more&#8230;&#8230;</h4>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Taolinran</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-25T09:08:00+08:00" pubdate data-updated="true">Apr 25<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/linux-services/'>linux-services</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://lin-credible.github.io/blog/2013/04/25/master-slash-slave-dns-server-base-on-tsig/" data-via="linuxtaolinran" data-counturl="http://lin-credible.github.io/blog/2013/04/25/master-slash-slave-dns-server-base-on-tsig/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/04/15/this-site/" title="Previous Post: about my site">&laquo; about my site</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/05/01/happy-51/" title="Next Post: happy 51">happy 51 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><script type="text/javascript">
+/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+var disqus_shortname = 'linblog'; // required: replace example with your forum shortname
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function () {
+var s = document.createElement('script'); s.async = true;
+s.type = 'text/javascript';
+s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+}());
+</script> 
+
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/05/01/happy-51/">happy 51</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/25/master-slash-slave-dns-server-base-on-tsig/">M/S Split DNS Based on TSIG</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/15/this-site/">about my site</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/12/a-newbie-here/">A newbie here</a>
+      </li>
+    
+  </ul>
+</section>
+<iframe width="100%" height="550" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=550&fansRow=1&ptype=1&speed=300&skin=10&isTitle=1&noborder=1&isWeibo=1&isFans=0&uid=2116612302&verifier=c3e417d3&dpc=1"></iframe><!--
+<section>
+  <h1>Categories</h1>
+  <ul id="categories">
+    <li class='category'><a href='/blog/categories/linux-services/'>linux-services (1)</a></li>
+<li class='category'><a href='/blog/categories/tittle-tattle/'>tittle-tattle (3)</a></li>
+
+  </ul>
+</section>
+-->
+<section>
+  <h1>Categories</h1>
+    <ul id="category-list"><li class='category'><a href='/blog/categories/linux-services/'>linux-services (1)</a></li>
+<li class='category'><a href='/blog/categories/tittle-tattle/'>tittle-tattle (3)</a></li>
+</ul>
+</section><section>
+  <h1>Friendly links</h1>
+  <ul>
+    <li>
+      <a href="http://coolshell.cn/" target="_blank">CoolShell</a>
+    </li>
+	<li>
+      <a href="http://blog.linuxhonker.com/" target="_blank">Linuxhonker</a>
+    </li>
+	<li>
+      <a href="http://blog.yufeng.info/" target="_blank">yufeng</a>
+    </li>
+    <li>
+      <a href="http://www.mysqlpub.com/forum.php" target="_blank">mysqlpub</a>
+    </li>
+	<li>
+      <a href="http://mindhacks.cn/" target="_blank">MIND HACKS</a>
+    </li>
+	<li>
+      <a href="http://www.jiagulun.com/space-uid-2.html" target="_blank">Oraunix</a>
+    </li>
+	<li>
+      <a href="http://blog.csdn.net/signmem" target="_blank">Terry Tsang</a>
+    </li>
+	<li>
+      <a href="http://kumu-linux.github.io/" target="_blank">Kumu linux</a>
+    </li>
+	<li>
+      <a href="http://blog.csdn.net/c__ilikeyouma" target="_blank"><img src="/images/weibo.jpg" /></a>
+    </li>
+	
+  </ul>
+</section>
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/113704455548006694120?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Taolinran -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'linblog';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://lin-credible.github.io/blog/2013/04/25/master-slash-slave-dns-server-base-on-tsig/';
+        var disqus_url = 'http://lin-credible.github.io/blog/2013/04/25/master-slash-slave-dns-server-base-on-tsig/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
