@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: linux-services | Lin's linux blog]]></title>
+  <title><![CDATA[Category: linux-services | Lin's blog]]></title>
   <link href="http://lin-credible.github.io/blog/categories/linux-services/atom.xml" rel="self"/>
   <link href="http://lin-credible.github.io/"/>
-  <updated>2013-05-02T16:49:24+08:00</updated>
+  <updated>2013-05-03T18:55:06+08:00</updated>
   <id>http://lin-credible.github.io/</id>
   <author>
     <name><![CDATA[Taolinran]]></name>
@@ -568,16 +568,15 @@ Version: 9.8.2rc1-RedHat-9.8.2-0.17.rc1.el6_4.4
 </span><span class='line'><span class="sr">......</span>
 </span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
-<pre><code>Notice
-</code></pre>
+<h2>Notice</h2>
 
-<h2>Time is so strict</h2>
+<h3>Time is so strict</h3>
 
 <p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'>ntpdate time.windows.com
 </span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
-<h2>there is a nice thing. Find it.</h2>
+<h3>there is a nice thing. Find it.</h3>
 
 <p><code>
 [root@master etc]# ls
@@ -596,7 +595,7 @@ Version: 9.8.2rc1-RedHat-9.8.2-0.17.rc1.el6_4.4
 Do you need it? It's so nice. Call me. <strong><em>linuxtaolinran@gmail.com</em></strong> <br />
 <a href="http://ftp.isc.org/isc/bind9/cur/9.9/doc/arm/Bv9ARM.pdf">BIND 9 Administrator Reference Manual</a></p>
 
-<h4>more......</h4>
+<h3>more......</h3>
 ]]></content>
   </entry>
   
