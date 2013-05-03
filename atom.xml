@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Lin's linux blog]]></title>
+  <title><![CDATA[Lin's blog]]></title>
   <link href="http://lin-credible.github.io/atom.xml" rel="self"/>
   <link href="http://lin-credible.github.io/"/>
-  <updated>2013-05-02T16:49:24+08:00</updated>
+  <updated>2013-05-03T18:55:06+08:00</updated>
   <id>http://lin-credible.github.io/</id>
   <author>
     <name><![CDATA[Taolinran]]></name>
@@ -508,17 +508,16 @@ simply a shell script that allowed you to substitute convenient arguments (such 
 </span></code></pre></td></tr></table></div></figure>
 
 
-<pre><code>Notice
-</code></pre>
+<h2>Notice</h2>
 
-<h2>Time is so strict</h2>
+<h3>Time is so strict</h3>
 
 <figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'>ntpdate time.windows.com
 </span></code></pre></td></tr></table></div></figure>
 
 
-<h2>there is a nice thing. Find it.</h2>
+<h3>there is a nice thing. Find it.</h3>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -544,7 +543,7 @@ simply a shell script that allowed you to substitute convenient arguments (such 
 Do you need it? It&#8217;s so nice. Call me. <strong><em>linuxtaolinran@gmail.com</em></strong> <br />
 <a href="http://ftp.isc.org/isc/bind9/cur/9.9/doc/arm/Bv9ARM.pdf">BIND 9 Administrator Reference Manual</a></p>
 
-<h4>more&#8230;&#8230;</h4>
+<h3>more&#8230;&#8230;</h3>
 ]]></content>
   </entry>
   
