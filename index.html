@@ -5,11 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Lin-credible's blog</title>
+  <title>Lin's linux blog</title>
   <meta name="author" content="Taolinran">
 
   
-  <meta name="description" content="Traditionally, administrators have controlled the BIND nameserver, named, with Unix signals. The nameserver interprets the receipt of certain &hellip;">
+  <meta name="description" content="1. The theory of ping. 2. kernel about help doc 1
+yum install -y kernel-doc.noarch kernel-doc.noarch : Various documentation bits found in the kernel &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -21,7 +22,7 @@
   <link rel="canonical" href="http://lin-credible.github.io">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/atom.xml" rel="alternate" title="Lin-credible's blog" type="application/atom+xml">
+  <link href="/atom.xml" rel="alternate" title="Lin's linux blog" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
@@ -56,9 +57,9 @@ $(document).bind('DOMNodeInserted', function(event) {
 
 <body   >
   <header role="banner"><hgroup>
-  <h1><a href="/">Lin-credible's blog</a></h1>
+  <h1><a href="/">Lin's linux blog</a></h1>
   
-    <h2>^.+*oO0Oo0Oo0oO0o~Focus~Think and open mind~love linux, love~~55aa~$</h2>
+    <h2>^.+*~Focus~~oO0Oo0Oo0oO0o~~Think and open mind~love linux, love~~55aa~$</h2>
   
 </hgroup>
 
@@ -86,6 +87,66 @@ $(document).bind('DOMNodeInserted', function(event) {
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/07/the-art-of-banning-ping-command/">The Art of Banning Ping Command and SYN Flood</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-07T10:07:00+08:00" pubdate data-updated="true">May 7<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/05/07/the-art-of-banning-ping-command/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>1. The theory of ping.</h2>
+
+<p><img src="/images/ping.jpg" alt="alt text" /><br /></p>
+
+<h2>2. kernel about</h2>
+
+<h3>help doc</h3>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>yum install -y kernel-doc.noarch
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>kernel-doc.noarch : Various documentation bits found in the kernel source</p>
+
+<h3>/proc/sys/net/ipv4/</h3>
+
+<h4>My test environment</h4>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/05/07/the-art-of-banning-ping-command/">Continue &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -302,74 +363,9 @@ Firstly, thanks for <a href="http://kumu-linux.github.io/">Kumu-linux</a>! He is
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/04/12/a-newbie-here/">A Newbie Here</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-04-12T16:11:00+08:00" pubdate data-updated="true">Apr 12<span>th</span>, 2013</time>
-        
-         | <a href="/blog/2013/04/12/a-newbie-here/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2>Hello, I&#8217;m Taolinran, a newbie. I&#8217;m coming!</h2>
-
-<p><img src="/images/me.jpg" alt="alt text" /><br />
-I&#8217;m a <strong>newbie</strong>! I love <strong>linux</strong> and there is my <a href="http://blog.csdn.net/c__ilikeyouma">csdn blog</a>!</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ Hello "login:root"
-</span><span class='line'>$ Hello "help contents;"
-</span><span class='line'>$ Hello "#/bin/bash"
-</span><span class='line'>$ Hello vim /etc/*.conf
-</span><span class='line'>$ Hello ^&.+*#/%[{;@!$
-</span><span class='line'>$ Hello \&lt;\s\w+*\&gt;
-</span><span class='line'>$ Hello 8.8.8.8
-</span><span class='line'>$ Hello :!r sample.conf
-</span><span class='line'>$ Hello .
-</span><span class='line'>$ Hello *</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Love my girl, love my work</h4>
-
-<h3>Right here, right now, action ^C</h3>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
+    
+      <a class="prev" href="/blog/page/2/">&larr; Older</a>
     
     <a href="/blog/archives">Blog Archives</a>
     
@@ -378,10 +374,13 @@ I&#8217;m a <strong>newbie</strong>! I love <strong>linux</strong> and there is 
 <aside class="sidebar">
   
     <script charset="Shift_JIS" src="http://chabudai.sakura.ne.jp/blogparts/honehoneclock/honehone_clock_tr.js"></script>
-<iframe width="100%" height="550" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=550&fansRow=1&ptype=1&speed=300&skin=10&isTitle=1&noborder=1&isWeibo=1&isFans=0&uid=2116612302&verifier=c3e417d3&dpc=1"></iframe>
-<section>
+<iframe width="100%" height="550" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=550&fansRow=1&ptype=1&speed=300&skin=10&isTitle=1&noborder=1&isWeibo=1&isFans=0&uid=2116612302&verifier=c3e417d3&dpc=1"></iframe><section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/05/07/the-art-of-banning-ping-command/">The Art of Banning Ping Command and SYN Flood</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/05/02/controlling-the-nameserver/">Controlling the Nameserver</a>
@@ -399,16 +398,13 @@ I&#8217;m a <strong>newbie</strong>! I love <strong>linux</strong> and there is 
         <a href="/blog/2013/04/15/this-site/">about my site</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2013/04/12/a-newbie-here/">A newbie here</a>
-      </li>
-    
   </ul>
 </section>
 
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li class='category'><a href='/blog/categories/linux-services/'>linux-services (2)</a></li>
+    <ul id="category-list"><li class='category'><a href='/blog/categories/linux-security/'>linux-security (1)</a></li>
+<li class='category'><a href='/blog/categories/linux-services/'>linux-services (2)</a></li>
 <li class='category'><a href='/blog/categories/tittle-tattle/'>tittle-tattle (3)</a></li>
 </ul>
 </section><section>
@@ -439,6 +435,9 @@ I&#8217;m a <strong>newbie</strong>! I love <strong>linux</strong> and there is 
       <a href="http://blog.yufeng.info/" target="_blank"><img src="/images/logo/yufeng.jpg" /></a>
     </li>
 	<li>
+      <a href="http://www.commandlinefu.com/commands/browse" target="_blank"><img src="/images/logo/commandline.jpg" /></a>
+    </li>
+	<li>
       <a href="http://www.jiagulun.com/" target="_blank"><img src="/images/logo/jiagulun.jpg" /></a>
     </li>
 	<li>
@@ -448,10 +447,10 @@ I&#8217;m a <strong>newbie</strong>! I love <strong>linux</strong> and there is 
       <a href="http://kumu-linux.github.io/" target="_blank"><img src="/images/logo/kumulinux.jpg" /></a>
     </li>
 	<li>
-      <a href="http://blog.csdn.net/c__ilikeyouma" target="_blank"><img src="/images/logo/csdn.jpg" /></a>
+      <a href="http://blog.sina.com.cn/u/2116612302" target="_blank"><img src="/images/logo/sina.jpg" /></a>
     </li>
 	<li>
-      <a href="http://blog.sina.com.cn/u/2116612302" target="_blank"><img src="/images/logo/sina.jpg" /></a>
+      <a href="http://blog.csdn.net/c__ilikeyouma" target="_blank"><img src="/images/logo/csdn.jpg" /></a>
     </li>	
   </ul>
 </section>

