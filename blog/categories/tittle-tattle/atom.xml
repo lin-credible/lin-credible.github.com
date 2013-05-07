@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: tittle-tattle | Lin-credible's blog]]></title>
+  <title><![CDATA[Category: tittle-tattle | Lin's linux blog]]></title>
   <link href="http://lin-credible.github.io/blog/categories/tittle-tattle/atom.xml" rel="self"/>
   <link href="http://lin-credible.github.io/"/>
-  <updated>2013-05-05T12:45:25+08:00</updated>
+  <updated>2013-05-07T14:21:49+08:00</updated>
   <id>http://lin-credible.github.io/</id>
   <author>
     <name><![CDATA[Taolinran]]></name>
