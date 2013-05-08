@@ -4,7 +4,7 @@
   <title><![CDATA[Lin's linux blog]]></title>
   <link href="http://lin-credible.github.io/atom.xml" rel="self"/>
   <link href="http://lin-credible.github.io/"/>
-  <updated>2013-05-07T14:21:49+08:00</updated>
+  <updated>2013-05-08T18:14:17+08:00</updated>
   <id>http://lin-credible.github.io/</id>
   <author>
     <name><![CDATA[Taolinran]]></name>
@@ -12,6 +12,191 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[DNS and SELinux]]></title>
+    <link href="http://lin-credible.github.io/blog/2013/05/08/dns-and-selinux/"/>
+    <updated>2013-05-08T16:10:00+08:00</updated>
+    <id>http://lin-credible.github.io/blog/2013/05/08/dns-and-selinux</id>
+    <content type="html"><![CDATA[<h1>Nice SELinux</h1>
+
+<p><img src="http://lin-credible.github.io/images/selinux-penguin-new_medium.png" alt="alt text" /><br /></p>
+
+<h2>SELinux introduction</h2>
+
+<p><a href="http://wiki.centos.org/HowTos/SELinux">CentOS Wiki about SELinux</a><br /></p>
+
+<!-- more -->
+
+
+<p><img src="http://lin-credible.github.io/images/SELinux_Decision_Process.png" alt="alt text" /><br /></p>
+
+<h2>My Test Environment</h2>
+
+<p><img src="http://lin-credible.github.io/images/selinux_and_dns.jpg" alt="alt text" /><br /></p>
+
+<figure class='code'><figcaption><span>192.168.10.112/master - awesome.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'> <span class="o">[</span><span class="n">root</span><span class="vi">@_master_192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>  <span class="n">etc</span><span class="o">]</span><span class="err">$</span> <span class="n">uname</span> <span class="o">-</span><span class="n">srvmpio</span>
+</span><span class='line'> <span class="no">Linux</span> <span class="mi">2</span><span class="o">.</span><span class="mi">6</span><span class="o">.</span><span class="mi">32</span><span class="o">-</span><span class="mi">279</span><span class="o">.</span><span class="mi">14</span><span class="o">.</span><span class="mi">1</span><span class="o">.</span><span class="n">el6</span><span class="o">.</span><span class="n">x86_64</span> <span class="c1">#1 SMP Tue Nov 6 23:43:09 UTC 2012 x86_64 x86_64 x86_64 GNU/Linux</span>
+</span><span class='line'> <span class="o">[</span><span class="n">root</span><span class="vi">@_master_192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>  <span class="n">etc</span><span class="o">]</span><span class="err">$</span> <span class="n">cat</span> <span class="sr">/etc/issue</span>
+</span><span class='line'> <span class="no">CentOS</span> <span class="n">release</span> <span class="mi">6</span><span class="o">.</span><span class="mi">3</span> <span class="p">(</span><span class="no">Final</span><span class="p">)</span>
+</span><span class='line'> <span class="no">Kernel</span> <span class="p">\</span><span class="n">r</span> <span class="n">on</span> <span class="n">an</span> <span class="p">\</span><span class="n">m</span>
+</span><span class='line'> <span class="o">[</span><span class="n">root</span><span class="vi">@_master_192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>  <span class="n">etc</span><span class="o">]</span><span class="err">$</span> <span class="n">getenforce</span>
+</span><span class='line'> <span class="no">Enforcing</span>
+</span><span class='line'> <span class="o">[</span><span class="n">root</span><span class="vi">@_master_192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>  <span class="n">etc</span><span class="o">]</span><span class="err">$</span> <span class="n">named</span> <span class="o">-</span><span class="n">version</span>
+</span><span class='line'> <span class="no">BIND</span> <span class="mi">9</span><span class="o">.</span><span class="mi">8</span><span class="o">.</span><span class="mi">2</span><span class="n">rc1</span><span class="o">-</span><span class="no">RedHat</span><span class="o">-</span><span class="mi">9</span><span class="o">.</span><span class="mi">8</span><span class="o">.</span><span class="mi">2</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">17</span><span class="o">.</span><span class="n">rc1</span><span class="o">.</span><span class="n">el6_4</span><span class="o">.</span><span class="mi">4</span>
+</span><span class='line'> <span class="o">[</span><span class="n">root</span><span class="vi">@_master_192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>  <span class="n">etc</span><span class="o">]</span><span class="err">$</span> <span class="n">dig</span> <span class="n">txt</span> <span class="n">chaos</span> <span class="n">version</span><span class="o">.</span><span class="n">bind</span><span class="o">.</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong><em>Slave 192.168.10.111 is the same configuration.</em></strong>
+The test is based on <a href="http://lin-credible.github.io/blog/2013/04/25/master-slash-slave-dns-server-base-on-tsig/?=241520525">my previous done</a></p>
+
+<h2>named_selinux</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>man 8 named_selinux</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>File context</h3>
+
+<h4>named_conf_t</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Set files with the named_conf_t type, if you want to treat the files as named configuration data,
+</span><span class='line'>usually stored under the /etc directory.
+</span><span class='line'>
+</span><span class='line'>Paths:
+</span><span class='line'>    /var/named/chroot/etc/named.root.hints,     /var/named/chroot(/.*)?,      /var/named/named.ca,
+</span><span class='line'>    /etc/unbound(/.*)?,                       /var/named/chroot/etc/named.caching-nameserver.conf,
+</span><span class='line'>    /etc/named.root.hints,  /var/named/chroot/etc/named.rfc1912.zones,   /etc/named.rfc1912.zones,
+</span><span class='line'>    /etc/named.caching-nameserver.conf,   /etc/named.conf,   /var/named/chroot/var/named/named.ca,
+</span><span class='line'>    /var/named/chroot/etc/named.conf, /etc/rndc.*</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>named_zone_t</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Set files with the named_zone_t type, if you want to treat the files as named zone data.
+</span><span class='line'>
+</span><span class='line'>Paths:
+</span><span class='line'>    /var/named/chroot/var/named(/.*)?, /var/named(/.*)?</span></code></pre></td></tr></table></div></figure>
+
+
+<p>&#8230;&#8230;</p>
+
+<h3>master</h3>
+
+<figure class='code'><figcaption><span>192.168.10.112/master - awesome.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'> <span class="o">[</span><span class="n">root</span><span class="vi">@_master_192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>  <span class="n">etc</span><span class="o">]</span><span class="err">$</span> <span class="n">pwd</span>
+</span><span class='line'> <span class="sr">/var/n</span><span class="n">amed</span><span class="o">/</span><span class="n">chroot</span><span class="o">/</span><span class="n">etc</span>
+</span><span class='line'> <span class="o">[</span><span class="n">root</span><span class="vi">@_master_192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>  <span class="n">etc</span><span class="o">]</span><span class="err">$</span> <span class="n">ls</span> <span class="o">-</span><span class="n">Z</span> <span class="n">named</span><span class="o">.</span><span class="n">conf</span>
+</span><span class='line'> <span class="o">-</span><span class="n">rw</span><span class="o">-</span><span class="n">r</span><span class="o">--</span><span class="n">r</span><span class="o">--.</span> <span class="n">root</span> <span class="n">named</span> <span class="n">system_u</span><span class="ss">:object_r:named_conf_t:s0</span> <span class="n">named</span><span class="o">.</span><span class="n">conf</span>
+</span><span class='line'> <span class="o">[</span><span class="n">root</span><span class="vi">@_master_192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>  <span class="n">etc</span><span class="o">]</span><span class="err">$</span> <span class="n">ls</span> <span class="o">-</span><span class="n">Z</span> <span class="o">.</span><span class="n">.</span><span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">named</span><span class="o">/*</span>
+</span><span class='line'> <span class="o">-</span><span class="n">rw</span><span class="o">-</span><span class="n">r</span><span class="o">--</span><span class="n">r</span><span class="o">--.</span> <span class="n">named</span> <span class="n">named</span> <span class="n">system_u</span><span class="ss">:object_r:named_zone_t:s0</span> <span class="o">.</span><span class="n">.</span><span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">named</span><span class="o">/</span><span class="mi">10</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="n">zone</span>
+</span><span class='line'> <span class="o">-</span><span class="n">rw</span><span class="o">-</span><span class="n">r</span><span class="o">--</span><span class="n">r</span><span class="o">--.</span> <span class="n">named</span> <span class="n">named</span> <span class="n">system_u</span><span class="ss">:object_r:named_zone_t:s0</span> <span class="o">.</span><span class="n">.</span><span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">named</span><span class="o">/</span><span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="n">zone</span>
+</span><span class='line'> <span class="o">-</span><span class="n">rw</span><span class="o">-</span><span class="n">r</span><span class="o">--</span><span class="n">r</span><span class="o">--.</span> <span class="n">named</span> <span class="n">named</span> <span class="n">system_u</span><span class="ss">:object_r:named_conf_t:s0</span> <span class="o">.</span><span class="n">.</span><span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">named</span><span class="o">/</span><span class="n">named</span><span class="o">.</span><span class="n">ca</span>
+</span><span class='line'> <span class="o">-</span><span class="n">rw</span><span class="o">-</span><span class="n">r</span><span class="o">--</span><span class="n">r</span><span class="o">--.</span> <span class="n">named</span> <span class="n">named</span> <span class="n">system_u</span><span class="ss">:object_r:named_zone_t:s0</span> <span class="o">.</span><span class="n">.</span><span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">named</span><span class="o">/</span><span class="n">wondershare</span><span class="o">.</span><span class="n">cn</span><span class="o">.</span><span class="n">lan10</span>
+</span><span class='line'> <span class="o">-</span><span class="n">rw</span><span class="o">-</span><span class="n">r</span><span class="o">--</span><span class="n">r</span><span class="o">--.</span> <span class="n">named</span> <span class="n">named</span> <span class="n">system_u</span><span class="ss">:object_r:named_zone_t:s0</span> <span class="o">.</span><span class="n">.</span><span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">named</span><span class="o">/</span><span class="n">wondershare</span><span class="o">.</span><span class="n">cn</span><span class="o">.</span><span class="n">lan192</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Change the zone file&#8217;s serial number(add) and reload the named.</h4>
+
+<h3>Slave</h3>
+
+<figure class='code'><figcaption><span>192.168.10.112/master - awesome.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'> <span class="o">[</span><span class="n">root</span><span class="vi">@_slave_192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">111</span>  <span class="n">etc</span><span class="o">]</span><span class="err">$</span> <span class="n">pwd</span>
+</span><span class='line'> <span class="sr">/var/n</span><span class="n">amed</span><span class="o">/</span><span class="n">chroot</span><span class="o">/</span><span class="n">etc</span>
+</span><span class='line'> <span class="o">[</span><span class="n">root</span><span class="vi">@_slave_192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">111</span>  <span class="n">etc</span><span class="o">]</span><span class="err">$</span> <span class="n">ls</span> <span class="o">-</span><span class="n">Z</span> <span class="n">named</span><span class="o">.</span><span class="n">conf</span>
+</span><span class='line'> <span class="o">-</span><span class="n">rw</span><span class="o">-</span><span class="n">r</span><span class="o">-----.</span> <span class="n">root</span> <span class="n">named</span> <span class="n">system_u</span><span class="ss">:object_r:named_conf_t:s0</span> <span class="n">named</span><span class="o">.</span><span class="n">conf</span>
+</span><span class='line'> <span class="o">[</span><span class="n">root</span><span class="vi">@_slave_192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">111</span>  <span class="n">etc</span><span class="o">]</span><span class="err">$</span> <span class="n">ls</span> <span class="o">-</span><span class="n">Z</span> <span class="o">.</span><span class="n">.</span><span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">named</span><span class="o">/</span><span class="n">slaves</span><span class="o">/</span>
+</span><span class='line'> <span class="o">-</span><span class="n">rw</span><span class="o">-</span><span class="n">r</span><span class="o">--</span><span class="n">r</span><span class="o">--.</span> <span class="n">named</span> <span class="n">named</span> <span class="n">unconfined_u</span><span class="ss">:object_r:named_cache_t:s0</span> <span class="mi">10</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="n">zone</span>
+</span><span class='line'> <span class="o">-</span><span class="n">rw</span><span class="o">-</span><span class="n">r</span><span class="o">--</span><span class="n">r</span><span class="o">--.</span> <span class="n">named</span> <span class="n">named</span> <span class="n">unconfined_u</span><span class="ss">:object_r:named_cache_t:s0</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="n">zone</span>
+</span><span class='line'> <span class="o">-</span><span class="n">rw</span><span class="o">-</span><span class="n">r</span><span class="o">--</span><span class="n">r</span><span class="o">--.</span> <span class="n">named</span> <span class="n">named</span> <span class="n">unconfined_u</span><span class="ss">:object_r:named_cache_t:s0</span> <span class="n">wondershare</span><span class="o">.</span><span class="n">cn</span><span class="o">.</span><span class="n">lan10</span>
+</span><span class='line'> <span class="o">-</span><span class="n">rw</span><span class="o">-</span><span class="n">r</span><span class="o">--</span><span class="n">r</span><span class="o">--.</span> <span class="n">named</span> <span class="n">named</span> <span class="n">unconfined_u</span><span class="ss">:object_r:named_cache_t:s0</span> <span class="o">.</span><span class="n">/wondershare</span><span class="o">.</span><span class="n">cn</span><span class="o">.</span><span class="n">lan192</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Now, check the zone file&#8217;s serial number. The slave&#8217;s zone files just changed. It&#8217;s different from the former test.??</h4>
+
+<h3>Look</h3>
+
+<p><img src="http://lin-credible.github.io/images/named_write_master_zones.jpg" alt="alt text" /><br /></p>
+
+<h5>mine here.</h5>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@_master_192.168.10.112  named]$ getsebool -a |grep named
+</span><span class='line'>named_write_master_zones --&gt; off
+</span><span class='line'>[root@_slave_192.168.10.111  slaves]$ getsebool -a |grep named
+</span><span class='line'>named_write_master_zones --&gt; off</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>I do nothing, but enable the SELinux. And the name service just is still nice!</h3>
+
+<h2>Make a change.</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@_master_192.168.10.112  named]$ getsebool -a |grep named
+</span><span class='line'>named_write_master_zones --&gt; off
+</span><span class='line'>[root@_master_192.168.10.112  named]$ setsebool -P named_write_master_zones 1
+</span><span class='line'>[root@_master_192.168.10.112  named]$ getsebool -a |grep named               
+</span><span class='line'>named_write_master_zones --&gt; on</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>The M/S name servers still run well.</h3>
+
+<h4>Futher more &#8230;&#8230;</h4>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[The Art of Banning Ping Command and SYN Flood]]></title>
@@ -31,14 +216,16 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
+
+
+<!-- more -->
+
+
 <p>kernel-doc.noarch : Various documentation bits found in the kernel source</p>
 
 <h3>/proc/sys/net/ipv4/</h3>
 
 <h4>My test environment</h4>
-
-<!-- more -->
-
 
 <p><img src="http://lin-credible.github.io/images/ping_art.jpg" alt="alt text" /><br /></p>
 
