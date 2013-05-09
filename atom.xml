@@ -4,7 +4,7 @@
   <title><![CDATA[Lin's linux blog]]></title>
   <link href="http://lin-credible.github.io/atom.xml" rel="self"/>
   <link href="http://lin-credible.github.io/"/>
-  <updated>2013-05-08T18:14:17+08:00</updated>
+  <updated>2013-05-09T11:01:16+08:00</updated>
   <id>http://lin-credible.github.io/</id>
   <author>
     <name><![CDATA[Taolinran]]></name>
@@ -18,18 +18,11 @@
     <link href="http://lin-credible.github.io/blog/2013/05/08/dns-and-selinux/"/>
     <updated>2013-05-08T16:10:00+08:00</updated>
     <id>http://lin-credible.github.io/blog/2013/05/08/dns-and-selinux</id>
-    <content type="html"><![CDATA[<h1>Nice SELinux</h1>
-
-<p><img src="http://lin-credible.github.io/images/selinux-penguin-new_medium.png" alt="alt text" /><br /></p>
-
-<h2>SELinux introduction</h2>
-
-<p><a href="http://wiki.centos.org/HowTos/SELinux">CentOS Wiki about SELinux</a><br /></p>
+    <content type="html"><![CDATA[<p><img src="http://lin-credible.github.io/images/selinux.jpg" alt="alt text" /><br />
+<a href="http://wiki.centos.org/HowTos/SELinux">CentOS Wiki about SELinux</a><br /></p>
 
 <!-- more -->
 
-
-<p><img src="http://lin-credible.github.io/images/SELinux_Decision_Process.png" alt="alt text" /><br /></p>
 
 <h2>My Test Environment</h2>
 
