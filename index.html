@@ -9,8 +9,7 @@
   <meta name="author" content="Taolinran">
 
   
-  <meta name="description" content="
-CentOS Wiki about SELinux ">
+  <meta name="description" content="Systems Affected Domain Name System DNS servers Overview A Domain Name Server DNS Amplification attack is a popular form of Distributed Denial of &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -87,6 +86,57 @@ $(document).bind('DOMNodeInserted', function(event) {
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/09/dns-amplification-attacks/">DNS Amplification Attacks</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-09T10:10:00+08:00" pubdate data-updated="true">May 9<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/05/09/dns-amplification-attacks/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="/images/anonymous/anonymoushackers_a.jpg" alt="alt text" /><br /></p>
+
+<h3>Systems Affected</h3>
+
+<p>Domain Name System <strong><em>DNS</em></strong> servers</p>
+
+<h3>Overview</h3>
+
+<p>A Domain Name Server DNS Amplification attack is a popular form of Distributed Denial of Service DDoS that relies on the use of publically accessible open recursive DNS servers to overwhelm a victim system with DNS response traffic.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/05/09/dns-amplification-attacks/">Continue &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -291,68 +341,6 @@ Life is the sum of all your choices.<br /></p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/04/25/master-slash-slave-dns-server-base-on-tsig/">M/S Split DNS Based on TSIG</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-04-25T09:08:00+08:00" pubdate data-updated="true">Apr 25<span>th</span>, 2013</time>
-        
-         | <a href="/blog/2013/04/25/master-slash-slave-dns-server-base-on-tsig/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><pre><code>TSIG
-</code></pre>
-
-<p>  <strong>TSIG</strong> provides authentication and data integrity through the use of a special type of mathematical formula called a one-way hash function. A
-one-way hash function, also known as a cryptographic checksum or message digest, computes a fixed-size hash value based on arbitrarily large input.
-The magic of a one-way hash function is that each bit of the hash value depends on each and every bit of the input. Change a single bit of the input,
-and the hash value changes dramatically and unpredictablyso unpredictably that it&#8217;s &#8220;computationally infeasible&#8221; to reverse the function and find an
-input that produces a given hash value.<br />
-  <strong>TSIG</strong> uses a one-way hash function called MD5. In particular, it uses a variant of MD5 called HMAC-MD5. HMAC-MD5 works in a keyed mode in which
-the 128-bit hash value depends not only on the input, but also on a key.</p>
-
-<pre><code>Running a Primary Nameserver
-</code></pre>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'> yum -y install <span class="nb">bind bind</span>-chroot <span class="nb">bind</span>-devel <span class="nb">bind</span>-libs <span class="nb">bind</span>-utils
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>   <strong>&#8230;</strong></p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/04/25/master-slash-slave-dns-server-base-on-tsig/">Continue &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -367,6 +355,10 @@ the 128-bit hash value depends not only on the input, but also on a key.</p>
 <iframe width="100%" height="550" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=550&fansRow=1&ptype=1&speed=300&skin=10&isTitle=1&noborder=1&isWeibo=1&isFans=0&uid=2116612302&verifier=c3e417d3&dpc=1"></iframe><section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/05/09/dns-amplification-attacks/">DNS Amplification Attacks</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/05/08/dns-and-selinux/">DNS and SELinux</a>
@@ -384,16 +376,11 @@ the 128-bit hash value depends not only on the input, but also on a key.</p>
         <a href="/blog/2013/05/01/happy-51/">happy 51</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2013/04/25/master-slash-slave-dns-server-base-on-tsig/">M/S Split DNS Based on TSIG</a>
-      </li>
-    
   </ul>
 </section>
-
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li class='category'><a href='/blog/categories/linux-security/'>linux-security (2)</a></li>
+    <ul id="category-list"><li class='category'><a href='/blog/categories/linux-security/'>linux-security (3)</a></li>
 <li class='category'><a href='/blog/categories/linux-services/'>linux-services (2)</a></li>
 <li class='category'><a href='/blog/categories/tittle-tattle/'>tittle-tattle (3)</a></li>
 </ul>
@@ -401,7 +388,7 @@ the 128-bit hash value depends not only on the input, but also on a key.</p>
   <h1>Nice links</h1>
   <ul>
     <li>
-      <a href="http://www.anonymoushackers.org/blog" target="_blank"><img src="/images/anonymous/anonymoushackers.jpg" /></a>
+      <a href="http://www.anonymoushackers.org/blog" target="_blank"><img src="/images/logo/anonymous.jpg" /></a>
     </li>
     <li>
       <a href="http://coolshell.cn/" target="_blank"><img src="/images/logo/coolshell.jpg" /></a>
@@ -429,6 +416,9 @@ the 128-bit hash value depends not only on the input, but also on a key.</p>
     </li>
 	<li>
       <a href="http://www.commandlinefu.com/commands/browse" target="_blank"><img src="/images/logo/commandline.jpg" /></a>
+    </li>
+	<li>
+      <a href="http://dillinger.io/" target="_blank"><img src="/images/logo/dillinger.jpg" /></a>
     </li>
 	<li>
       <a href="http://www.jiagulun.com/" target="_blank"><img src="/images/logo/jiagulun.jpg" /></a>
