@@ -1,0 +1,899 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>DNS Amplification Attacks - Lin's linux blog</title>
+  <meta name="author" content="Taolinran">
+
+  
+  <meta name="description" content="Systems Affected Domain Name System DNS servers Overview A Domain Name Server DNS Amplification attack is a popular form of Distributed Denial of &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://lin-credible.github.io/blog/2013/05/09/dns-amplification-attacks">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Lin's linux blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<!--<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+function addBlankTargetForLinks () {
+  $('a[href^="http"]').each(function(){
+      $(this).attr('target', '_blank');
+  });
+}
+$(document).bind('DOMNodeInserted', function(event) {
+  addBlankTargetForLinks();
+});
+-->
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-40050631-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Lin's linux blog</a></h1>
+  
+    <h2>^.+*~Focus~~oO0Oo0Oo0oO0o~~Think and open mind~love linux, love~~55aa~$</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com.hk/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:lin-credible.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about">About me</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">DNS Amplification Attacks</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-09T10:10:00+08:00" pubdate data-updated="true">May 9<span>th</span>, 2013</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><img src="/images/anonymous/anonymoushackers_a.jpg" alt="alt text" /><br /></p>
+
+<h3>Systems Affected</h3>
+
+<p>Domain Name System <strong><em>DNS</em></strong> servers</p>
+
+<h3>Overview</h3>
+
+<p>A Domain Name Server DNS Amplification attack is a popular form of Distributed Denial of Service DDoS that relies on the use of publically accessible open recursive DNS servers to overwhelm a victim system with DNS response traffic.</p>
+
+<!-- more -->
+
+
+<h3>Description</h3>
+
+<p>A Domain Name Server <strong><em>DNS</em></strong> Amplification attack is a popular form of Distributed Denial of Service <strong><em>DDoS</em></strong> that relies on the use of
+publically accessible open recursive DNS servers to overwhelm a victim system with DNS response traffic. The basic attack technique consists of an attacker sending a DNS name lookup request to an open recursive DNS server with the source address spoofed to be the victim&#8217;s address. When the DNS server sends the DNS record response, it is sent instead to the victim. Attackers will typically submit a request for as much zone information as possible to maximize the amplification effect. Because the size of the response is typically considerably larger than the request, the attacker is able to amplify the volume of traffic directed at the victim. By leveraging a botnet to perform additional spoofed DNS queries, an attacker can produce an overwhelming amount of traffic with little effort. Additionally, because the responses are legitimate data coming from valid servers, it is especially difficult to block these types of attacks.</p>
+
+<p>While the attacks are difficult to prevent, network operators can implement several possible mitigation strategies. The primary element in the attack that is the focus of an effective long-term solution is the detection and elimination of open recursive DNS resolvers. These systems are typically legitimate DNS servers that have been improperly configured to respond to recursive queries on behalf of any system, rather than restricting recursive responses only to requests from local or authorized clients. By identifying these systems, an organization or network operator can reduce the number of potential resources that the attacker can employ in an attack.</p>
+
+<h3>Impact</h3>
+
+<p>A misconfigured Domain Name System <strong><em>DNS</em></strong> server can be exploited to participate in a Distributed Denial of Service <strong><em>DDoS</em></strong> attack.</p>
+
+<h3>Solution</h3>
+
+<h2>DETECTION</h2>
+
+<p>Several organizations offer free, web-based scanning tools that will search a network for vulnerable open DNS resolvers.  These tools will scan entire network ranges and list the address of any identified open resolvers.</p>
+
+<h3>Open DNS Resolver Project</h3>
+
+<p><a href="http://openresolverproject.org">openresolverproject.org</a>
+The Open DNS Resolver Project has compiled a list of DNS servers that are known to serve as globally accessible open resolvers.  The query interface allows network administrators to enter IP ranges in CIDR format <strong><em>1</em></strong> .</p>
+
+<h3>The Measurement Factory</h3>
+
+<p><a href="http://dns.measurement-factory.com">dns.measurement-factory.com</a>
+Like the Open DNS Resolver Project, the Measurement Factory maintains a list of Internet accessible DNS servers and allows administrators to search for open recursive resolvers <strong><em>2</em></strong> .  In addition, the Measurement Factory offers a free tool to directly test an individual DNS resolver to determine if it allows open recursion.  This will allow an administrator to determine if configuration changes are necessary and verify that configuration changes have been effective <strong><em>3</em></strong> .  Finally, the site offers statistics showing the number of open resolvers detected on the various Autonomous System <strong><em>AS</em></strong> networks, sorted by the highest number found <strong><em>4</em></strong> .</p>
+
+<p>DNSInspect
+<a href="http://www.dnsinspect.com">www.dnsinspect.com</a>
+Another freely available, web-based tool for testing DNS resolvers is DNSInspect.  This site is similar to The Measurement Factory&#8217;s ability to test a specific resolver for vulnerability, but offers the ability to test an entire DNS Zone for several other potential configuration and security issues <strong><em>5</em></strong> .</p>
+
+<h4>Indicators</h4>
+
+<p>In a typical recursive DNS query, a client sends a query request to a local DNS server requesting the resolution of a name or the reverse resolution of an IP address.  The DNS server performs the necessary queries on behalf of the client and returns a response packet with the requested information or an error .  The specification does not allow for unsolicited responses.  In a DNS amplification attack, the key indicator is a query response without a matching request.</p>
+
+<h2>MITIGATION</h2>
+
+<p>Unfortunately, due to the overwhelming traffic volume that can be produced by one of these attacks, there is often little that the victim can do to counter a large-scale DNS amplification-based distributed denial-of-service attack.  While the only effective means of eliminating this type of attack is to eliminate open recursive resolvers, this requires a large-scale effort by numerous parties.  According to the Open DNS Resolver Project, of the 27 million known DNS resolvers on the Internet, approximately <strong><em>25 million pose a significant threat</em></strong> of being used in an attack <strong><em>1</em></strong> .  However, several possible techniques are available to reduce the overall effectiveness of such attacks to the Internet community as a whole.  Where possible, configuration links have been provided to assist administrators with making the recommended changes.  The configuration information has been limited to BIND9 and Microsoft&#8217;s DNS Server, which are two widely deployed DNS servers.  If you are running a different DNS server, please see your vendor&#8217;s documentation for configuration details.</p>
+
+<h3>Source IP Verification</h3>
+
+<p>Because the DNS queries being sent by the attacker-controlled clients must have a source address spoofed to appear as the victim&#8217;s system, the first step to reducing the effectiveness of DNS amplification is for Internet Service Providers to deny any DNS traffic with spoofed addresses.  The Network Working Group of the Internet Engineering Task Force released a Best Current Practice document in May 2000 that describes how an Internet Service Provider can filter network traffic on their network to drop packets with source addresses not reachable via the actual packet&#8217;s path <strong><em>7</em></strong> . The changes recommended in this document would cause a routing device to test whether it is possible to reach the source address of the packet via the interface that transmitted the packet. If it is not possible, then the packet obviously has a spoofed source address. This configuration change would considerably reduce the potential for most current types of DDoS attacks.</p>
+
+<h3>Disabling Recursion on Authoritative Name Servers</h3>
+
+<p>Many of the DNS servers currently deployed on the Internet are exclusively intended to provide name resolution for a single domain.  These systems do not need to support resolution of other domains on behalf of a client, and therefore should be configured with recursion disabled.</p>
+
+<h4>Bind9</h4>
+
+<p>Add the following to the global options <strong><em>8</em></strong></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'> options {
+</span><span class='line'>     allow-query-cache { none; };
+</span><span class='line'>     recursion no;
+</span><span class='line'> };</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Microsoft DNS Server</h4>
+
+<p>In the Microsoft DNS console tool <strong><em>9</em></strong></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Right-click the DNS server and click Properties.
+</span><span class='line'>Click the Advanced tab.
+</span><span class='line'>In Server options, select the "Disable recursion" check box, and then click OK.</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Limiting Recursion to Authorized Clients</h3>
+
+<p>For DNS servers that are deployed within an organization or ISP to support name queries on behalf of a client, the resolver should be configured to only allow queries on behalf of authorized clients.  These requests should typically only come from clients within the organization&#8217;s network address range.</p>
+
+<h4>BIND9</h4>
+
+<p>In the global options, add the following <strong><em>10</em></strong></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'> acl corpnets { 192.168.1.0/24; 192.168.2.0/24; };
+</span><span class='line'> options {
+</span><span class='line'>  allow-query { corpnets; };
+</span><span class='line'>  allow-recursion { corpnets; };
+</span><span class='line'> };</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Microsoft DNS Server</h4>
+
+<p>It is not currently possible to restrict recursive DNS requests to a specific client address range in Microsoft DNS Server.  The most effective means of approximating this functionality is to configure the internal DNS server to forward queries to an external DNS server and restrict DNS traffic in the firewall to restrict port 53 UDP traffic to the internal server and the external forwarder <strong><em>11</em></strong> .</p>
+
+<h3>Rate Limiting Response of Recursive Name Servers</h3>
+
+<p>There is currently an experimental feature available as a set of patches for BIND9 that allows an administrator to restrict the number of responses per second being sent from the name server <strong><em>12</em></strong> .  This is intended to reduce the effectiveness of DNS amplification attacks by reducing the volume of traffic coming from any single resolver.</p>
+
+<h4>BIND9</h4>
+
+<p>There are currently patches available for 9.8.latest and 9.9.latest to support RRL on UNIX systems. Red Hat has made updated packages available for Red Hat Enterprise Linux 6 to provide the necessary changes in advisory RHSA-2013:0550-1. On BIND9 implementation running the <strong><em>RRL patches</em></strong> , add the following lines to the options block of the authoritative views <strong><em>13</em></strong>:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'> rate-limit {
+</span><span class='line'>    responses-per-second 5;
+</span><span class='line'>     window 5;
+</span><span class='line'> };</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Microsoft DNS Server</h4>
+
+<p>This option is currently not available for Microsoft DNS Server.</p>
+
+<h1>ut supra</h1>
+
+<p><img src="/images/us_cert.jpg" alt="alt text" /><br /></p>
+
+<h1>My TEST</h1>
+
+<h2>What can I do</h2>
+
+<p>If you operate a DNS server, please check the settings.</p>
+
+<h4>Recursive servers</h4>
+
+<p>should be restricted to your enterprise or customer IP ranges to prevent abuse. Directions on securing BIND and Microsoft nameservers can be found on the <a href="http://www.team-cymru.org/Services/Resolvers/instructions.html">Team CYMRU Website</a></p>
+
+<h4>Authoritative servers</h4>
+
+<p>should not offer recursion, but can still be used in an attack. Configure your Authoritative DNS servers to use DNS RRL <a href="http://www.redbarn.org/dns/ratelimits">Response Rate
+Limiting</a> Knot DNS and NLNetLabs NSD include this as a standard option now. BIND requires a patch.</p>
+
+<h4>Prevent spoofing on your network</h4>
+
+<p>Configure <strong><em>BCP38</em></strong> on all CPE and Datacenter equipment edges that have fixed IP ranges. This could be as simple as setting ip verify unicast source reachable_via rx on a router interface. Any staticly routed customer should receive this setting by default.</p>
+
+<h2>Test Environment</h2>
+
+<p><img src="/images/dns_atack_environ.jpg" alt="alt text" /><br />
+<a href="http://lin-credible.github.io/blog/2013/04/25/master-slash-slave-dns-server-base-on-tsig/">My Former Test</a><br />
+So weak&#8230;</p>
+
+<h2>Hands on</h2>
+
+<h3>Atacks my nameservers</h3>
+
+<p>The attacks can be divided into three types, repeating queries, varying queries and a distributed attack. All attacks require the ability to spoof IP address using UDP. Another requirement is that the response is larger than the request to create the amplication. This is often achieved by querying for ANY, DNSKEY, NS or RRSIG records.</p>
+
+<h4>Repeating query attack</h4>
+
+<p>A repeating query attack will request the same record <strong><em>set</em></strong> over and over again. Usually an ANY query is used. An ANY query returns all the records for a specic domain name regardless of the record type. When sent to a recursive server, the server will only return the records that it has cached. The server will have to reply, regardless of available recursion. This is currently the most common attack because the ANY requestusually returns a large collection of resource records, creating a high amplification ratio.</p>
+
+<h5>Repeating query attack</h5>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ [root@_Client1&Attacker_192.168.10.78 ~]$dig @192.168.10.112 wordpress.wondershare.cn ANY +stats +dnssec | grep -i "size"
+</span><span class='line'>$ ;; MSG SIZE  rcvd: 105</span></code></pre></td></tr></table></div></figure>
+
+
+<h5>TCP dump output udp port 53</h5>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ 14:44:11.916691 IP attack.wondershare.cn.59829 &gt; master.wondershare.cn.domain: 42592+ [1au] ANY? wordpress.wondershare.cn. (53)
+</span><span class='line'>$ 14:44:11.917935 IP master.wondershare.cn.domain &gt; attack.wondershare.cn.59829: 42592* 1/1/2 A 192.168.10.112 (105)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>From the example above notice that the request is 53 bytes and the response is 105 bytes. These attacks are usually easy to detect because the exact same queries are being re-used. This is uncommon behavior because the recursive DNS server is expected to cache the records. If ANY requests are blocked the attacker might switch to RRSIG, DNSKEY or any other query that generates a large response.</p>
+
+<h4>Varying query attack</h4>
+
+<p>When attackers notice that the attacks mentioned in section 2.1 are being mitigated they may have to switch to a more sophisticated attack. The varying query attack sends queries for varying domain names to the DNS server. By sending dieffrent unique requests the attacker tries to generate unique responses making the attack traffic less obvious and therefore harder to detect and counter. Even if the domain name cannot be resolved, an NXDOMAIN response is returned. An NXDOMAIN response is an error message indicating that domain name does not exist. When DNSSEC is congured the server also returns one or more NSEC <strong><em>3</em></strong> records which are used to prove that the requested domain name does not exist. Together with RRSIG signatures this generates a big amplification as well.</p>
+
+<h5>Response_size_with_NSEC</h5>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ [root@_Client1&Attacker_192.168.10.78 ~]$dig @192.168.10.112 random20130509.wondershare.cn A +stats +dnssec | grep -i "size"
+</span><span class='line'>$ ;; MSG SIZE  rcvd: 121</span></code></pre></td></tr></table></div></figure>
+
+
+<h5>tcp dump output</h5>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ 14:45:02.814151 IP attack.wondershare.cn.44930 &gt; master.wondershare.cn.domain: 57333+ [1au] A? random20130509.wondershare.cn. (58)
+</span><span class='line'>$ 14:45:02.815432 IP master.wondershare.cn.domain &gt; attack.wondershare.cn.44930: 57333 NXDomain* 0/1/1 (121)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>From the example above notice that the request is 63 bytes and the response is 1153 bytes. The response is as big as with the ANY request and it is also disturbing. When NSEC3 is used the amplification ratio is even larger.</p>
+
+<h5>About NSEC3</h5>
+
+<p>NSEC3 is an alternate version of <a href="https://www.dnssec-tools.org/wiki/index.php/NSEC">NSEC</a> proof of non-existence. A side effect of NSEC records is that a zone can be traversed from one end to the other and every record can be discovered. NSEC3, defined in
+<a href="http://www.rfc-editor.org/rfc/rfc5155.txt">RFC5155</a> solves this by publishing only hash records of zone names.</p>
+
+<h3>Distributed attacks</h3>
+
+<p><img src="/images/distributed_attacks.jpg" alt="alt text" /><br /></p>
+
+<h3>Another test</h3>
+
+<p>DNS queries are typically transmitted over UDP, meaning that, like ICMP queries used in a SMURF attack, they are fire and forget. As a result, their source attribute can be spoofed and the receiver has no way of determining its veracity before responding. DNS also is capable of generating a much larger response than query. For example, you can send the following <strong><em>tiny</em></strong> query <strong><em>where x.x.x.x is the IP of an open DNS resolver</em></strong> :</p>
+
+<h5>Share</h5>
+
+<p><img src="/images/smurf_attack.jpg" alt="alt text" /><br /></p>
+
+<h5>TEST AGAIN</h5>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ [root@_Client1&Attacker_192.168.10.78 ~]$dig ANY isc.org @192.168.10.112
+</span><span class='line'>$ ;; Truncated, retrying in TCP mode.
+</span><span class='line'>$ 
+</span><span class='line'>$ ; &lt;&lt;&gt;&gt; DiG 9.8.2rc1-RedHat-9.8.2-0.17.rc1.el6_4.4 &lt;&lt;&gt;&gt; ANY isc.org @192.168.10.112
+</span><span class='line'>$ ;; global options: +cmd
+</span><span class='line'>$ ;; Got answer:
+</span><span class='line'>$ ;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 48740
+</span><span class='line'>$ ;; flags: qr rd ra; QUERY: 1, ANSWER: 30, AUTHORITY: 4, ADDITIONAL: 12
+</span><span class='line'>$ 
+</span><span class='line'>$ ;; QUESTION SECTION:
+</span><span class='line'>$ ;isc.org.                       IN      ANY
+</span><span class='line'>$ 
+</span><span class='line'>$ ;; ANSWER SECTION:
+</span><span class='line'>$ isc.org.                3666    IN      RRSIG   SPF 5 2 7200 20130607053707 20130508053707 50012 isc.org. LKkjm3NP/b5j/j/AIfmannf06RRnit0McdxSNVWVMJpPmaUfXb/+bHhD 0ZkKXtxhtkWEzD8D0EyeH0Nj6jUREXBOb7vwuC+gm3QnbQdyJmpMwyV3 gbteTrF3b6UhGKuFw1w46kq/5oFGpU5+zLGYn9Ft6nHYUbvptmeHR4Km /Bg=
+</span><span class='line'>$ isc.org.                3666    IN      SPF     "v=spf1 a mx ip4:204.152.184.0/21 ip4:149.20.0.0/16 ip6:2001:04F8::0/32 ip6:2001:500:60::65/128 ~all"
+</span><span class='line'>$ isc.org.                3666    IN      RRSIG   DNSKEY 5 2 7200 20130607050128 20130508050128 12892 isc.org. fmX1V30pjHEpGkTMI1qBq7baX2fTtNpcwpxalb/zZVRg2/e0vrm10lNP j064HvkNbUuHYgFymwBxPdhOJAW1Aukq3CBP2pKUmhlxX1N1O7m8Qw9o RXqmuo/yhRw0M3sjFmXWtsiJRDuHo3xAS3/7Lf3jqHCzUCA/6EWFzOdF KTZ3irYb5T5YCu69rIo7OAh9WT5Ak3eVFroV+7oXJQlE+2ptI1v+E6+j udzDg9jcDWL2bR6img3GlZZR2nnSBpbxU5thsfGPQw71njy2yco4lyEM HNSIjZufbrcgxairKTF5LiIWeRrg0JrhMOu0sR1RHv/UvoVpB9Qj9h9C k7ib/Q==
+</span><span class='line'>$ isc.org.                3666    IN      RRSIG   DNSKEY 5 2 7200 20130607050128 20130508050128 50012 isc.org. jclOfqWm5aN7WKd4YrJJsAVbQIYcuBP/843lJAaAwEz3jkPYR2M2uBHs VXnN43r4uam0J4z40rXEKhQPGDWOj92g29a3ugABM3pcPm3N+POOcLry wL6zcKYjgvl0RBhuQdGrkkVr26Kie1aRClFlhafHJ5QRivbo/4pkfzw7 984=
+</span><span class='line'>$ isc.org.                3666    IN      DNSKEY  257 3 5 BEAAAAOhHQDBrhQbtphgq2wQUpEQ5t4DtUHxoMVFu2hWLDMvoOMRXjGr hhCeFvAZih7yJHf8ZGfW6hd38hXG/xylYCO6Krpbdojwx8YMXLA5/kA+ u50WIL8ZR1R6KTbsYVMf/Qx5RiNbPClw+vT+U8eXEJmO20jIS1ULgqy3 47cBB1zMnnz/4LJpA0da9CbKj3A254T515sNIMcwsB8/2+2E63/zZrQz Bkj0BrN/9Bexjpiks3jRhZatEsXn3dTy47R09Uix5WcJt+xzqZ7+ysyL KOOedS39Z7SDmsn2eA0FKtQpwA6LXeG2w+jxmw3oA8lVUgEf/rzeC/bB yBNsO70aEFTd
+</span><span class='line'>$ isc.org.                3666    IN      DNSKEY  256 3 5 BQEAAAABwuHz9Cem0BJ0JQTO7C/a3McR6hMaufljs1dfG/inaJpYv7vH XTrAOm/MeKp+/x6eT4QLru0KoZkvZJnqTI8JyaFTw2OM/ItBfh/hL2lm Cft2O7n3MfeqYtvjPnY7dWghYW4sVfH7VVEGm958o9nfi79532Qeklxh x8pXWdeAaRU=
+</span><span class='line'>$ isc.org.                66      IN      RRSIG   NSEC 5 2 3600 20130607053707 20130508053707 50012 isc.org. ggAmIaJhbKT0AoknAPlJgv5dpgJXs/9dZvG27ruO0e/265wHC10vXRof j486MozpfcKAdjCxUE6Hvtddety4DKcKudH9kI3YPKIxOVXsnSFBW7Nb jt6fUuaHF/QQmiAHpAPyEOi5ewBVBQmn30Lxa/Vq4SP+Cc8xxWGm/6eZ hVc=
+</span><span class='line'>$ isc.org.                66      IN      NSEC    _adsp._domainkey.isc.org. A NS SOA MX TXT AAAA NAPTR RRSIG NSEC DNSKEY SPF
+</span><span class='line'>$ isc.org.                3666    IN      RRSIG   NAPTR 5 2 7200 20130607053707 20130508053707 50012 isc.org. t1FQjqnoaX7AIvKyHBSbW86iElt1ltqsu9mD5ntLIiPfmyKn7UtGTXNH W1Y9EA7MyyCjkh1gBUylu+RUBobqeHoHIrSYDmiyVF4xv9Nyw6Jt++ie xbPEQN1K2WEjEPlgSX8yHZXKPmQ38lr4KE18JqgpD59jAXfpmLNLNAgG C0I=
+</span><span class='line'>$ isc.org.                3666    IN      NAPTR   20 0 "S" "SIP+D2U" "" _sip._udp.isc.org.
+</span><span class='line'>$ isc.org.                3666    IN      RRSIG   AAAA 5 2 7200 20130607053707 20130508053707 50012 isc.org. B6F3efmr1pwkFC1fBy78dbD5Zjk+q6RYezFWloU5ncdmF3OjMlt0C/HN Ilzz5FwIeCJ/BIO3oCKK9lRLFZovHzF0gf0hmEPjZqUWSB6cOLhI4s/n 9R+LbQqP0clIx897PSdQzRhzCho0HhdD82DIZTJutljvXRWVEpaDmMOU Fn0=
+</span><span class='line'>$ isc.org.                3666    IN      AAAA    2001:4f8:0:2::d
+</span><span class='line'>$ isc.org.                3666    IN      RRSIG   TXT 5 2 7200 20130607053707 20130508053707 50012 isc.org. mrWC9EO13woVVMICI49/MfN9Jcrp4klwOKysVim4DWDADezbpvhvuBM5 Wwc3ghH6+WMGZ5CBPt/mqyVKjpmn2U+Qnrz7CPSB1cET1uuDHkYJD0A3 BRXLoiNewuSZELHVuMxpofpMxq33XZIL24T471Td+0fJZEmbJovess/o Vuk=
+</span><span class='line'>$ isc.org.                3666    IN      TXT     "v=spf1 a mx ip4:204.152.184.0/21 ip4:149.20.0.0/16 ip6:2001:04F8::0/32 ip6:2001:500:60::65/128 ~all"
+</span><span class='line'>$ isc.org.                3666    IN      TXT     "$Id: isc.org,v 1.1801 2013-05-08 00:18:57 plosher Exp $"
+</span><span class='line'>$ isc.org.                3666    IN      RRSIG   MX 5 2 7200 20130607053707 20130508053707 50012 isc.org. s8XqhJ7tiZr+rjQiW0Vk5ecEM9AYn4K0u/VUsXR4cqmJTz8i1UE1is/C ZI54O8Co+HENgCZ9WJoOkG19FVhoieWoMLe3i/zNt5825/k4PZ4CeCV0 guNicMrM71fcCj0zlqNMWJMz/22NBQoKMonKg1gPmzl2mQ9mf+YpHt1R /pU=
+</span><span class='line'>$ isc.org.                3666    IN      MX      10 mx.pao1.isc.org.
+</span><span class='line'>$ isc.org.                3666    IN      MX      10 mx.ams1.isc.org.
+</span><span class='line'>$ isc.org.                3666    IN      RRSIG   A 5 2 7200 20130607053707 20130508053707 50012 isc.org. qmKTEu6axRFlobhc3KEPmjz8AE81n1dzRPRVDwGwfkDRGtJ844nxDlu8 6Nv4GHHsCt4nnJQfFUjbnexeejOulPRT2AIfkHt4QA4EySF/EcNZ+ABd 4a6bHEpzxyjTJOFb5Vet39i77rI2OH27aDQhdnc0/LFm/zGJWyCfT21T P1Q=
+</span><span class='line'>$ isc.org.                3666    IN      A       149.20.64.42
+</span><span class='line'>$ isc.org.                3666    IN      RRSIG   NS 5 2 7200 20130607053707 20130508053707 50012 isc.org. WJkcxWdClQlyHiDH6kjlUAZcYNJoBhCuK7a9LNCN5d45SZfXsc5vgiBz R9MrVdfFy9KFAU7d4AUCMdxgKyFVYGhfCYzkCzDBPNGsQ8s9FtxilvPG X0NhHkVeyG7pEObTT3t2HBhw1Ma66p2RSLq1LuXGYm7NDAgQlsZ3q84j XVc=
+</span><span class='line'>$ isc.org.                3666    IN      RRSIG   SOA 5 2 7200 20130607053707 20130508053707 50012 isc.org. S3wOp5HlTGP2jC3xGtnAgnzRrh77Oh0cxVAKwWKdce/08v5qQrp4uEiY 2CdITjoFJSp3Ae2BTYRo8s1m1SQFEWtG5F3c5yH0YmeNjcB2X0iq4l0L vMJx7UaPmlqjSPnqNIBfO6qz6HUDU42cmKSpHc4O14Iyznw4mGIGp4RM 9pY=
+</span><span class='line'>$ isc.org.                3666    IN      SOA     ns-int.isc.org. hostmaster.isc.org. 2013050801 7200 3600 24796800 3600
+</span><span class='line'>$ isc.org.                82865   IN      RRSIG   DS 7 2 86400 20130522155545 20130501145545 42353 org. FQUDUk8uYeurMJGihi+DxtQtPaoT7bFHgD89cNyv7UwgXBhh6SEUgF1h bJuxrQaYUNeM28UZcdfqui2CIU0nac1NPkZ/a1Lovfrd3wOQprv4A97T FqYLhpZnOHDo2rEhS/pgF+qf+dgJfrLAZX9BJSaIn/sP4luZtyd+Loi5 lS4=
+</span><span class='line'>$ isc.org.                82865   IN      DS      12892 5 2 F1E184C0E1D615D20EB3C223ACED3B03C773DD952D5F0EB5C777586D E18DA6B5
+</span><span class='line'>$ isc.org.                82865   IN      DS      12892 5 1 982113D08B4C6A1D9F6AEE1E2237AEF69F3F9759
+</span><span class='line'>$ isc.org.                3666    IN      NS      ams.sns-pb.isc.org.
+</span><span class='line'>$ isc.org.                3666    IN      NS      ns.isc.afilias-nst.info.
+</span><span class='line'>$ isc.org.                3666    IN      NS      sfba.sns-pb.isc.org.
+</span><span class='line'>$ isc.org.                3666    IN      NS      ord.sns-pb.isc.org.
+</span><span class='line'>$ 
+</span><span class='line'>$ ;; AUTHORITY SECTION:
+</span><span class='line'>$ isc.org.                3666    IN      NS      sfba.sns-pb.isc.org.
+</span><span class='line'>$ isc.org.                3666    IN      NS      ns.isc.afilias-nst.info.
+</span><span class='line'>$ isc.org.                3666    IN      NS      ord.sns-pb.isc.org.
+</span><span class='line'>$ isc.org.                3666    IN      NS      ams.sns-pb.isc.org.
+</span><span class='line'>$ 
+</span><span class='line'>$ ;; ADDITIONAL SECTION:
+</span><span class='line'>$ mx.ams1.isc.org.        66      IN      A       199.6.1.65
+</span><span class='line'>$ mx.ams1.isc.org.        66      IN      AAAA    2001:500:60::65
+</span><span class='line'>$ mx.pao1.isc.org.        66      IN      A       149.20.64.53
+</span><span class='line'>$ mx.pao1.isc.org.        66      IN      AAAA    2001:4f8:0:2::2b
+</span><span class='line'>$ sfba.sns-pb.isc.org.    82865   IN      A       149.20.64.3
+</span><span class='line'>$ sfba.sns-pb.isc.org.    82865   IN      AAAA    2001:4f8:0:2::19
+</span><span class='line'>$ ams.sns-pb.isc.org.     82865   IN      A       199.6.1.30
+</span><span class='line'>$ ams.sns-pb.isc.org.     82865   IN      AAAA    2001:500:60::30
+</span><span class='line'>$ ns.isc.afilias-nst.info. 82867  IN      A       199.254.63.254
+</span><span class='line'>$ ns.isc.afilias-nst.info. 82867  IN      AAAA    2001:500:2c::254
+</span><span class='line'>$ ord.sns-pb.isc.org.     82865   IN      A       199.6.0.30
+</span><span class='line'>$ ord.sns-pb.isc.org.     82865   IN      AAAA    2001:500:71::30
+</span><span class='line'>$ 
+</span><span class='line'>$ ;; Query time: 2 msec
+</span><span class='line'>$ ;; SERVER: 192.168.10.112#53(192.168.10.112)
+</span><span class='line'>$ ;; WHEN: Thu May  9 14:29:52 2013
+</span><span class='line'>$ ;; MSG SIZE  rcvd: 3620</span></code></pre></td></tr></table></div></figure>
+
+
+<h5>tcp_dump_output</h5>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ [root@_master_192.168.10.112  etc]$ tcpdump udp port 53
+</span><span class='line'>$ tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+</span><span class='line'>$ listening on eth0, link-type EN10MB (Ethernet), capture size 65535 bytes
+</span><span class='line'>$ 14:40:59.357353 IP attack.wondershare.cn.34223 &gt; master.wondershare.cn.domain: 24623+ ANY? isc.org. (25)
+</span><span class='line'>$ 14:40:59.358522 IP master.wondershare.cn.domain &gt; attack.wondershare.cn.34223: 24623| 2/0/0 RRSIG, SPF (304)
+</span><span class='line'>$ [root@_master_192.168.10.112  etc]$ tcpdump tcp port 53
+</span><span class='line'>$ tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+</span><span class='line'>$ listening on eth0, link-type EN10MB (Ethernet), capture size 65535 bytes
+</span><span class='line'>$ 14:40:59.359333 IP attack.wondershare.cn.39772 &gt; master.wondershare.cn.domain: Flags [S], seq 1455644106, win 14600, options [mss 1460,sackOK,TS val 83179159 ecr 0,nop,wscale 7], length 0
+</span><span class='line'>$ 14:40:59.359389 IP master.wondershare.cn.domain &gt; attack.wondershare.cn.39772: Flags [S.], seq 1716101542, ack 1455644107, win 14480, options [mss 1460,sackOK,TS val 82842604 ecr 83179159,nop,wscale 7], length 0
+</span><span class='line'>$ 14:40:59.359656 IP attack.wondershare.cn.39772 &gt; master.wondershare.cn.domain: Flags [.], ack 1, win 115, options [nop,nop,TS val 83179159 ecr 82842604], length 0
+</span><span class='line'>$ 14:40:59.359693 IP attack.wondershare.cn.39772 &gt; master.wondershare.cn.domain: Flags [P.], seq 1:28, ack 1, win 115, options [nop,nop,TS val 83179159 ecr 82842604], length 2728735+ ANY? isc.org. (25)
+</span><span class='line'>$ 14:40:59.359705 IP master.wondershare.cn.domain &gt; attack.wondershare.cn.39772: Flags [.], ack 28, win 114, options [nop,nop,TS val 82842604 ecr 83179159], length 0
+</span><span class='line'>$ 14:40:59.360556 IP master.wondershare.cn.domain &gt; attack.wondershare.cn.39772: Flags [.], seq 1:2897, ack 28, win 114, options [nop,nop,TS val 82842605 ecr 83179159], length 289628735 28/4/8 RRSIG, SPF, RRSIG, RRSIG, DNSKEY, DNSKEY, RRSIG, NAPTR, RRSIG, AAAA 2001:4f8:0:2::d, RRSIG, TXT "v=spf1 a mx ip4:204.152.184.0/21 ip4:149.20.0.0/16 ip6:2001:04F8::0/32 ip6:2001:500:60::65/128 ~all", TXT "$Id: isc.org,v 1.1801 2013-05-08 00:18:57 plosher Exp $", RRSIG, MX mx.pao1.isc.org. 10, MX mx.ams1.isc.org. 10, RRSIG, A 149.20.64.42, RRSIG, RRSIG, SOA, RRSIG[|domain]
+</span><span class='line'>$ 14:40:59.360593 IP master.wondershare.cn.domain &gt; attack.wondershare.cn.39772: Flags [P.], seq 2897:3315, ack 28, win 114, options [nop,nop,TS val 82842605 ecr 83179159], length 41811977 updateMA*-| [11008q],,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,[|domain]
+</span><span class='line'>$ 14:40:59.360857 IP attack.wondershare.cn.39772 &gt; master.wondershare.cn.domain: Flags [.], ack 1449, win 137, options [nop,nop,TS val 83179160 ecr 82842605], length 0
+</span><span class='line'>$ 14:40:59.360875 IP attack.wondershare.cn.39772 &gt; master.wondershare.cn.domain: Flags [.], ack 2897, win 160, options [nop,nop,TS val 83179160 ecr 82842605], length 0
+</span><span class='line'>$ 14:40:59.360881 IP attack.wondershare.cn.39772 &gt; master.wondershare.cn.domain: Flags [.], ack 3315, win 182, options [nop,nop,TS val 83179160 ecr 82842605], length 0
+</span><span class='line'>$ 14:40:59.362728 IP attack.wondershare.cn.39772 &gt; master.wondershare.cn.domain: Flags [F.], seq 28, ack 3315, win 182, options [nop,nop,TS val 83179162 ecr 82842605], length 0
+</span><span class='line'>$ 14:40:59.362875 IP master.wondershare.cn.domain &gt; attack.wondershare.cn.39772: Flags [F.], seq 3315, ack 29, win 114, options [nop,nop,TS val 82842608 ecr 83179162], length 0
+</span><span class='line'>$ 14:40:59.363453 IP attack.wondershare.cn.39772 &gt; master.wondershare.cn.domain: Flags [.], ack 3316, win 182, options [nop,nop,TS val 83179163 ecr 82842608], length 0</span></code></pre></td></tr></table></div></figure>
+
+
+<p>That&#8217;s a 64 byte query that resulted in a 3,620 byte response.
+And there are UDP and TCP.</p>
+
+<p>You can find this test from <a href="http://blog.cloudflare.com/deep-inside-a-dns-amplification-ddos-attack">Deep Inside a DNS Amplification DDoS Attack</a>.</p>
+
+<h1>My test nameserver is going to make a change</h1>
+
+<h2>Backup my former configure files</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'> [root@_master_192.168.10.112  etc]$ pwd
+</span><span class='line'> /var/named/chroot/etc
+</span><span class='line'> [root@_master_192.168.10.112  etc]$ cp -P named.conf named.conf.20130509
+</span><span class='line'> [root@_slave_192.168.10.111  etc]$ cp -P named.conf named.conf.20130509</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Change the configuration files</h2>
+
+<h3>Recursiver</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'> ...
+</span><span class='line'> Options {
+</span><span class='line'> ...
+</span><span class='line'> //  allow-query { any; };
+</span><span class='line'> //  allow-recursion { any; };
+</span><span class='line'>   recursion no;
+</span><span class='line'>   additional-from-cache no;
+</span><span class='line'>   allow-query { none; };
+</span><span class='line'>   version "None of your business";
+</span><span class='line'> ...
+</span><span class='line'> }
+</span><span class='line'> ...
+</span><span class='line'> view "lan192" {
+</span><span class='line'>   match-clients { key lan192;zone1; };
+</span><span class='line'>   allow-query { zone1; };
+</span><span class='line'>   recursion yes;
+</span><span class='line'>   additional-from-cache yes;
+</span><span class='line'> }
+</span><span class='line'> view "lan10" {
+</span><span class='line'>   match-clients { key lan10;zone2; };
+</span><span class='line'>   allow-query { zone2; };
+</span><span class='line'>   recursion yes;
+</span><span class='line'>   additional-from-cache yes;
+</span><span class='line'> ...
+</span><span class='line'> }
+</span><span class='line'> ...</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Check named.conf file and restart the server.</h4>
+
+<h4>Slave also</h4>
+
+<p>.Did it.</p>
+
+<h3>Response Rate Limiting</h3>
+
+<p>http://www.redbarn.org/dns/ratelimits <a href="http://www.redbarn.org/dns/ratelimits">link1</a><br />
+http://ss.vix.su/~vjs/rrlrpz.html <a href="http://ss.vix.su/~vjs/rrlrpz.html">link2</a><br />
+I&#8217;m going to do it later&#8230;&#8230;</p>
+
+<h3>References</h3>
+
+<ol>
+<li><a href="http://openresolverproject.org/">Open DNS Resolver Project</a><br /></li>
+<li><a href="http://dns.measurement-factory.com/cgi-bin/openresolverquery.pl">The Measurement Factory List Open Resolvers on Your Network</a><br /></li>
+<li><a href="http://dns.measurement-factory.com/cgi-bin/openresolvercheck.pl">The Measurement Factory Open Resolver Test</a><br /></li>
+<li><a href="http://dns.measurement-factory.com/surveys/openresolvers/ASN-reports/latest.html">The Measurement Factory Open Resolvers for Each Autonomous System</a><br /></li>
+<li><a href="http://www.dnsinspect.com/">DNSInspect com</a><br /></li>
+<li><a href="http://tools.ietf.org/html/rfc1034">RFC 1034 DOMAIN NAMES  CONCEPTS AND FACILITIES</a><br /></li>
+<li><a href="http://tools.ietf.org/html/bcp38">BCP 38 Network Ingress Filtering Defeating Denial of Service Attacks which employ IP Source Address Spoofing</a><br /></li>
+<li><a href="http://ftp.isc.org/isc/bind9/cur/9.9/doc/arm/Bv9ARM.ch03.html#id2567992">Chapter 3 Name Server Configuration</a><br /></li>
+<li><a href="http://technet.microsoft.com/en-us/library/cc787602.aspx">Disable recursion on the DNS server</a><br /></li>
+<li><a href="http://ftp.isc.org/isc/bind9/cur/9.9/doc/arm/Bv9ARM.ch07.html#Access_Control_Lists">Chapter 7 BIND 9 Security Considerations</a><br /></li>
+<li><a href="http://technet.microsoft.com/en-us/library/cc754941.aspx">Configure a DNS Server to Use Forwarders</a><br /></li>
+<li><a href="http://ss.vix.su/~vixie/isc-tn-2012-1.txt">DNS Response Rate Limiting DNS RRL</a><br /></li>
+<li><a href="http://www.redbarn.org/dns/ratelimits">Response Rate Limiting in the Domain Name System DNS RRL</a><br /></li>
+</ol>
+
+
+<h2>God bless my servers&#8230;</h2>
+
+<h3>more&#8230;&#8230;</h3>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Taolinran</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-09T10:10:00+08:00" pubdate data-updated="true">May 9<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/linux-security/'>linux-security</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://lin-credible.github.io/blog/2013/05/09/dns-amplification-attacks/" data-via="linuxtaolinran" data-counturl="http://lin-credible.github.io/blog/2013/05/09/dns-amplification-attacks/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/05/08/dns-and-selinux/" title="Previous Post: DNS and SELinux">&laquo; DNS and SELinux</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><script type="text/javascript">
+/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+var disqus_shortname = 'linblog'; // required: replace example with your forum shortname
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function () {
+var s = document.createElement('script'); s.async = true;
+s.type = 'text/javascript';
+s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+}());
+</script> 
+
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <script charset="Shift_JIS" src="http://chabudai.sakura.ne.jp/blogparts/honehoneclock/honehone_clock_tr.js"></script>
+<iframe width="100%" height="550" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=550&fansRow=1&ptype=1&speed=300&skin=10&isTitle=1&noborder=1&isWeibo=1&isFans=0&uid=2116612302&verifier=c3e417d3&dpc=1"></iframe><section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/05/09/dns-amplification-attacks/">DNS Amplification Attacks</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/08/dns-and-selinux/">DNS and SELinux</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/07/the-art-of-banning-ping-command/">The Art of Banning Ping Command and SYN Flood</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/02/controlling-the-nameserver/">Controlling the Nameserver</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/01/happy-51/">happy 51</a>
+      </li>
+    
+  </ul>
+</section>
+<!--
+<section>
+  <h1>Categories</h1>
+  <ul id="categories">
+    <li class='category'><a href='/blog/categories/linux-security/'>linux-security (3)</a></li>
+<li class='category'><a href='/blog/categories/linux-services/'>linux-services (2)</a></li>
+<li class='category'><a href='/blog/categories/tittle-tattle/'>tittle-tattle (3)</a></li>
+
+  </ul>
+</section>
+-->
+<section>
+  <h1>Categories</h1>
+    <ul id="category-list"><li class='category'><a href='/blog/categories/linux-security/'>linux-security (3)</a></li>
+<li class='category'><a href='/blog/categories/linux-services/'>linux-services (2)</a></li>
+<li class='category'><a href='/blog/categories/tittle-tattle/'>tittle-tattle (3)</a></li>
+</ul>
+</section><section>
+  <h1>Nice links</h1>
+  <ul>
+    <li>
+      <a href="http://www.anonymoushackers.org/blog" target="_blank"><img src="/images/logo/anonymous.jpg" /></a>
+    </li>
+    <li>
+      <a href="http://coolshell.cn/" target="_blank"><img src="/images/logo/coolshell.jpg" /></a>
+    </li>
+	<li>
+      <a href="http://www.infoq.com/" target="_blank"><img src="/images/logo/infoQ.jpg" /></a>
+    </li>
+    <li>
+      <a href="http://dbanotes.net/" target="_blank"><img src="/images/logo/dbanotes.jpg" /></a>
+    </li>
+	<li>
+      <a href="http://www.dbthink.com/" target="_blank"><img src="/images/logo/dbthink.jpg" /></a>
+    </li>
+	 <li>
+      <a href="http://www.mysqlpub.com/forum.php" target="_blank"><img src="/images/logo/mysqlpub.jpg" /></a>
+    </li>
+	<li>
+      <a href="http://mindhacks.cn/" target="_blank"><img src="/images/logo/mindhacks.jpg" /></a>
+    </li>
+	<li>
+      <a href="http://blog.linuxhonker.com/" target="_blank"><img src="/images/logo/linuxhonker.jpg" /></a>
+    </li>
+	<li>
+      <a href="http://blog.yufeng.info/" target="_blank"><img src="/images/logo/yufeng.jpg" /></a>
+    </li>
+	<li>
+      <a href="http://www.commandlinefu.com/commands/browse" target="_blank"><img src="/images/logo/commandline.jpg" /></a>
+    </li>
+	<li>
+      <a href="http://dillinger.io/" target="_blank"><img src="/images/logo/dillinger.jpg" /></a>
+    </li>
+	<li>
+      <a href="http://www.jiagulun.com/" target="_blank"><img src="/images/logo/jiagulun.jpg" /></a>
+    </li>
+	<li>
+      <a href="http://blog.csdn.net/signmem" target="_blank"><img src="/images/logo/TerryTsang.jpg" /></a>
+    </li>
+	<li>
+      <a href="http://kumu-linux.github.io/" target="_blank"><img src="/images/logo/kumulinux.jpg" /></a>
+    </li>
+	<li>
+      <a href="http://blog.sina.com.cn/u/2116612302" target="_blank"><img src="/images/logo/sina.jpg" /></a>
+    </li>
+	<li>
+      <a href="http://blog.csdn.net/c__ilikeyouma" target="_blank"><img src="/images/logo/csdn.jpg" /></a>
+    </li>	
+  </ul>
+</section>
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/113704455548006694120?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Taolinran -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'linblog';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://lin-credible.github.io/blog/2013/05/09/dns-amplification-attacks/';
+        var disqus_url = 'http://lin-credible.github.io/blog/2013/05/09/dns-amplification-attacks/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
