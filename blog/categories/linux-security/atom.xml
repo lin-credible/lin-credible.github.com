@@ -4,7 +4,7 @@
   <title><![CDATA[Category: linux-security | Lin's linux blog]]></title>
   <link href="http://lin-credible.github.io/blog/categories/linux-security/atom.xml" rel="self"/>
   <link href="http://lin-credible.github.io/"/>
-  <updated>2013-05-10T14:08:26+08:00</updated>
+  <updated>2013-05-10T17:54:32+08:00</updated>
   <id>http://lin-credible.github.io/</id>
   <author>
     <name><![CDATA[Taolinran]]></name>
@@ -66,7 +66,7 @@ Another freely available, web-based tool for testing DNS resolvers is DNSInspect
 
 <p>In a typical recursive DNS query, a client sends a query request to a local DNS server requesting the resolution of a name or the reverse resolution of an IP address.  The DNS server performs the necessary queries on behalf of the client and returns a response packet with the requested information or an error .  The specification does not allow for unsolicited responses.  In a DNS amplification attack, the key indicator is a query response without a matching request.</p>
 
-<h2>MITIGATION</h2>
+<h2>Mitigation</h2>
 
 <p>Unfortunately, due to the overwhelming traffic volume that can be produced by one of these attacks, there is often little that the victim can do to counter a large-scale DNS amplification-based distributed denial-of-service attack.  While the only effective means of eliminating this type of attack is to eliminate open recursive resolvers, this requires a large-scale effort by numerous parties.  According to the Open DNS Resolver Project, of the 27 million known DNS resolvers on the Internet, approximately <strong><em>25 million pose a significant threat</em></strong> of being used in an attack <strong><em>1</em></strong> .  However, several possible techniques are available to reduce the overall effectiveness of such attacks to the Internet community as a whole.  Where possible, configuration links have been provided to assist administrators with making the recommended changes.  The configuration information has been limited to BIND9 and Microsoft's DNS Server, which are two widely deployed DNS servers.  If you are running a different DNS server, please see your vendor's documentation for configuration details.</p>
 
@@ -80,16 +80,26 @@ Another freely available, web-based tool for testing DNS resolvers is DNSInspect
 
 <h4>Bind9</h4>
 
-<p>Add the following to the global options <strong><em>8</em></strong>
-```
- options {</p>
+<p>Add the following to the global options <strong><em>8</em></strong></p>
 
-<pre><code> allow-query-cache { none; };
- recursion no;
-</code></pre>
-
-<p> };
-```</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>named.conf - awesome.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'> <span class="sr">/&lt;em&gt; ... &lt;/em</span><span class="o">&gt;</span><span class="sr">/</span>
+</span><span class='line'><span class="sr"> options {&lt;/</span><span class="nb">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span> <span class="n">allow</span><span class="o">-</span><span class="n">query</span><span class="o">-</span><span class="n">cache</span> <span class="p">{</span> <span class="n">none</span><span class="p">;</span> <span class="p">};</span>
+</span><span class='line'> <span class="n">recursion</span> <span class="n">no</span><span class="p">;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="sr">/code&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">p</span><span class="o">&gt;</span> <span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h4>Microsoft DNS Server</h4>
 
@@ -107,13 +117,20 @@ In Server options, select the "Disable recursion" check box, and then click OK.
 <h4>BIND9</h4>
 
 <p>In the global options, add the following <strong><em>10</em></strong>
-<code>
- acl corpnets { 192.168.1.0/24; 192.168.2.0/24; };
- options {
-  allow-query { corpnets; };
-  allow-recursion { corpnets; };
- };
-</code></p>
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>named.conf - awesome.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'> <span class="sr">/&lt;em&gt; ... &lt;/em</span><span class="o">&gt;</span><span class="sr">/</span>
+</span><span class='line'><span class="sr"> acl corpnets { 192.168.1.0/</span><span class="mi">24</span><span class="p">;</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">2</span><span class="o">.</span><span class="mi">0</span><span class="o">/</span><span class="mi">24</span><span class="p">;</span> <span class="p">};</span>
+</span><span class='line'> <span class="n">options</span> <span class="p">{</span>
+</span><span class='line'>  <span class="n">allow</span><span class="o">-</span><span class="n">query</span> <span class="p">{</span> <span class="n">corpnets</span><span class="p">;</span> <span class="p">};</span>
+</span><span class='line'>  <span class="n">allow</span><span class="o">-</span><span class="n">recursion</span> <span class="p">{</span> <span class="n">corpnets</span><span class="p">;</span> <span class="p">};</span>
+</span><span class='line'> <span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h4>Microsoft DNS Server</h4>
 
@@ -127,15 +144,28 @@ In Server options, select the "Disable recursion" check box, and then click OK.
 
 <p>There are currently patches available for 9.8.latest and 9.9.latest to support RRL on UNIX systems. Red Hat has made updated packages available for Red Hat Enterprise Linux 6 to provide the necessary changes in advisory RHSA-2013:0550-1. On BIND9 implementation running the <strong><em>RRL patches</em></strong> , add the following lines to the options block of the authoritative views <strong><em>13</em></strong>:</p>
 
-<p>```
- rate-limit {</p>
-
-<pre><code>responses-per-second 5;
- window 5;
-</code></pre>
-
-<p> };
-```</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>named.conf - awesome.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'> <span class="n">options</span> <span class="p">{</span>
+</span><span class='line'> <span class="sr">/&lt;em&gt; ... &lt;/em</span><span class="o">&gt;</span><span class="sr">/</span>
+</span><span class='line'><span class="sr">   rate-limit {&lt;/</span><span class="nb">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>  <span class="n">responses</span><span class="o">-</span><span class="n">per</span><span class="o">-</span><span class="n">second</span> <span class="mi">5</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">window</span> <span class="mi">5</span><span class="p">;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="sr">/code&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">p</span><span class="o">&gt;</span>   <span class="p">};</span>
+</span><span class='line'> <span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h4>Microsoft DNS Server</h4>
 
@@ -183,15 +213,15 @@ So weak...</p>
 <h5>Repeating query attack</h5>
 
 <p><code>
-$ [root@_Client1&amp;Attacker_192.168.10.78 ~]$dig @192.168.10.112 wordpress.wondershare.cn ANY +stats +dnssec | grep -i "size"
+$ [root@_Client1&amp;Attacker_192.168.10.78 ~]$dig @192.168.10.112 wordpress.test.cn ANY +stats +dnssec | grep -i "size"
 $ ;; MSG SIZE  rcvd: 105
 </code></p>
 
 <h5>TCP dump output udp port 53</h5>
 
 <p><code>
-$ 14:44:11.916691 IP attack.wondershare.cn.59829 &gt; master.wondershare.cn.domain: 42592+ [1au] ANY? wordpress.wondershare.cn. (53)
-$ 14:44:11.917935 IP master.wondershare.cn.domain &gt; attack.wondershare.cn.59829: 42592* 1/1/2 A 192.168.10.112 (105)
+$ 14:44:11.916691 IP attack.test.cn.59829 &gt; master.test.cn.domain: 42592+ [1au] ANY? wordpress.test.cn. (53)
+$ 14:44:11.917935 IP master.test.cn.domain &gt; attack.test.cn.59829: 42592* 1/1/2 A 192.168.10.112 (105)
 </code></p>
 
 <p>From the example above notice that the request is 53 bytes and the response is 105 bytes. These attacks are usually easy to detect because the exact same queries are being re-used. This is uncommon behavior because the recursive DNS server is expected to cache the records. If ANY requests are blocked the attacker might switch to RRSIG, DNSKEY or any other query that generates a large response.</p>
@@ -203,15 +233,15 @@ $ 14:44:11.917935 IP master.wondershare.cn.domain &gt; attack.wondershare.cn.598
 <h5>Response_size_with_NSEC</h5>
 
 <p><code>
-$ [root@_Client1&amp;Attacker_192.168.10.78 ~]$dig @192.168.10.112 random20130509.wondershare.cn A +stats +dnssec | grep -i "size"
+$ [root@_Client1&amp;Attacker_192.168.10.78 ~]$dig @192.168.10.112 random20130509.test.cn A +stats +dnssec | grep -i "size"
 $ ;; MSG SIZE  rcvd: 121
 </code></p>
 
 <h5>tcp dump output</h5>
 
 <p><code>
-$ 14:45:02.814151 IP attack.wondershare.cn.44930 &gt; master.wondershare.cn.domain: 57333+ [1au] A? random20130509.wondershare.cn. (58)
-$ 14:45:02.815432 IP master.wondershare.cn.domain &gt; attack.wondershare.cn.44930: 57333 NXDomain* 0/1/1 (121)
+$ 14:45:02.814151 IP attack.test.cn.44930 &gt; master.test.cn.domain: 57333+ [1au] A? random20130509.test.cn. (58)
+$ 14:45:02.815432 IP master.test.cn.domain &gt; attack.test.cn.44930: 57333 NXDomain* 0/1/1 (121)
 </code></p>
 
 <p>From the example above notice that the request is 63 bytes and the response is 1153 bytes. The response is as big as with the ANY request and it is also disturbing. When NSEC3 is used the amplification ratio is even larger.</p>
@@ -312,24 +342,24 @@ $ ;; MSG SIZE  rcvd: 3620
 $ [root@_master_192.168.10.112  etc]$ tcpdump udp port 53
 $ tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
 $ listening on eth0, link-type EN10MB (Ethernet), capture size 65535 bytes
-$ 14:40:59.357353 IP attack.wondershare.cn.34223 &gt; master.wondershare.cn.domain: 24623+ ANY? isc.org. (25)
-$ 14:40:59.358522 IP master.wondershare.cn.domain &gt; attack.wondershare.cn.34223: 24623| 2/0/0 RRSIG, SPF (304)
+$ 14:40:59.357353 IP attack.test.cn.34223 &gt; master.test.cn.domain: 24623+ ANY? isc.org. (25)
+$ 14:40:59.358522 IP master.test.cn.domain &gt; attack.test.cn.34223: 24623| 2/0/0 RRSIG, SPF (304)
 $ [root@_master_192.168.10.112  etc]$ tcpdump tcp port 53
 $ tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
 $ listening on eth0, link-type EN10MB (Ethernet), capture size 65535 bytes
-$ 14:40:59.359333 IP attack.wondershare.cn.39772 &gt; master.wondershare.cn.domain: Flags [S], seq 1455644106, win 14600, options [mss 1460,sackOK,TS val 83179159 ecr 0,nop,wscale 7], length 0
-$ 14:40:59.359389 IP master.wondershare.cn.domain &gt; attack.wondershare.cn.39772: Flags [S.], seq 1716101542, ack 1455644107, win 14480, options [mss 1460,sackOK,TS val 82842604 ecr 83179159,nop,wscale 7], length 0
-$ 14:40:59.359656 IP attack.wondershare.cn.39772 &gt; master.wondershare.cn.domain: Flags [.], ack 1, win 115, options [nop,nop,TS val 83179159 ecr 82842604], length 0
-$ 14:40:59.359693 IP attack.wondershare.cn.39772 &gt; master.wondershare.cn.domain: Flags [P.], seq 1:28, ack 1, win 115, options [nop,nop,TS val 83179159 ecr 82842604], length 2728735+ ANY? isc.org. (25)
-$ 14:40:59.359705 IP master.wondershare.cn.domain &gt; attack.wondershare.cn.39772: Flags [.], ack 28, win 114, options [nop,nop,TS val 82842604 ecr 83179159], length 0
-$ 14:40:59.360556 IP master.wondershare.cn.domain &gt; attack.wondershare.cn.39772: Flags [.], seq 1:2897, ack 28, win 114, options [nop,nop,TS val 82842605 ecr 83179159], length 289628735 28/4/8 RRSIG, SPF, RRSIG, RRSIG, DNSKEY, DNSKEY, RRSIG, NAPTR, RRSIG, AAAA 2001:4f8:0:2::d, RRSIG, TXT "v=spf1 a mx ip4:204.152.184.0/21 ip4:149.20.0.0/16 ip6:2001:04F8::0/32 ip6:2001:500:60::65/128 ~all", TXT "$Id: isc.org,v 1.1801 2013-05-08 00:18:57 plosher Exp $", RRSIG, MX mx.pao1.isc.org. 10, MX mx.ams1.isc.org. 10, RRSIG, A 149.20.64.42, RRSIG, RRSIG, SOA, RRSIG[|domain]
-$ 14:40:59.360593 IP master.wondershare.cn.domain &gt; attack.wondershare.cn.39772: Flags [P.], seq 2897:3315, ack 28, win 114, options [nop,nop,TS val 82842605 ecr 83179159], length 41811977 updateMA*-| [11008q],,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,[|domain]
-$ 14:40:59.360857 IP attack.wondershare.cn.39772 &gt; master.wondershare.cn.domain: Flags [.], ack 1449, win 137, options [nop,nop,TS val 83179160 ecr 82842605], length 0
-$ 14:40:59.360875 IP attack.wondershare.cn.39772 &gt; master.wondershare.cn.domain: Flags [.], ack 2897, win 160, options [nop,nop,TS val 83179160 ecr 82842605], length 0
-$ 14:40:59.360881 IP attack.wondershare.cn.39772 &gt; master.wondershare.cn.domain: Flags [.], ack 3315, win 182, options [nop,nop,TS val 83179160 ecr 82842605], length 0
-$ 14:40:59.362728 IP attack.wondershare.cn.39772 &gt; master.wondershare.cn.domain: Flags [F.], seq 28, ack 3315, win 182, options [nop,nop,TS val 83179162 ecr 82842605], length 0
-$ 14:40:59.362875 IP master.wondershare.cn.domain &gt; attack.wondershare.cn.39772: Flags [F.], seq 3315, ack 29, win 114, options [nop,nop,TS val 82842608 ecr 83179162], length 0
-$ 14:40:59.363453 IP attack.wondershare.cn.39772 &gt; master.wondershare.cn.domain: Flags [.], ack 3316, win 182, options [nop,nop,TS val 83179163 ecr 82842608], length 0
+$ 14:40:59.359333 IP attack.test.cn.39772 &gt; master.test.cn.domain: Flags [S], seq 1455644106, win 14600, options [mss 1460,sackOK,TS val 83179159 ecr 0,nop,wscale 7], length 0
+$ 14:40:59.359389 IP master.test.cn.domain &gt; attack.test.cn.39772: Flags [S.], seq 1716101542, ack 1455644107, win 14480, options [mss 1460,sackOK,TS val 82842604 ecr 83179159,nop,wscale 7], length 0
+$ 14:40:59.359656 IP attack.test.cn.39772 &gt; master.test.cn.domain: Flags [.], ack 1, win 115, options [nop,nop,TS val 83179159 ecr 82842604], length 0
+$ 14:40:59.359693 IP attack.test.cn.39772 &gt; master.test.cn.domain: Flags [P.], seq 1:28, ack 1, win 115, options [nop,nop,TS val 83179159 ecr 82842604], length 2728735+ ANY? isc.org. (25)
+$ 14:40:59.359705 IP master.test.cn.domain &gt; attack.test.cn.39772: Flags [.], ack 28, win 114, options [nop,nop,TS val 82842604 ecr 83179159], length 0
+$ 14:40:59.360556 IP master.test.cn.domain &gt; attack.test.cn.39772: Flags [.], seq 1:2897, ack 28, win 114, options [nop,nop,TS val 82842605 ecr 83179159], length 289628735 28/4/8 RRSIG, SPF, RRSIG, RRSIG, DNSKEY, DNSKEY, RRSIG, NAPTR, RRSIG, AAAA 2001:4f8:0:2::d, RRSIG, TXT "v=spf1 a mx ip4:204.152.184.0/21 ip4:149.20.0.0/16 ip6:2001:04F8::0/32 ip6:2001:500:60::65/128 ~all", TXT "$Id: isc.org,v 1.1801 2013-05-08 00:18:57 plosher Exp $", RRSIG, MX mx.pao1.isc.org. 10, MX mx.ams1.isc.org. 10, RRSIG, A 149.20.64.42, RRSIG, RRSIG, SOA, RRSIG[|domain]
+$ 14:40:59.360593 IP master.test.cn.domain &gt; attack.test.cn.39772: Flags [P.], seq 2897:3315, ack 28, win 114, options [nop,nop,TS val 82842605 ecr 83179159], length 41811977 updateMA*-| [11008q],,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,[|domain]
+$ 14:40:59.360857 IP attack.test.cn.39772 &gt; master.test.cn.domain: Flags [.], ack 1449, win 137, options [nop,nop,TS val 83179160 ecr 82842605], length 0
+$ 14:40:59.360875 IP attack.test.cn.39772 &gt; master.test.cn.domain: Flags [.], ack 2897, win 160, options [nop,nop,TS val 83179160 ecr 82842605], length 0
+$ 14:40:59.360881 IP attack.test.cn.39772 &gt; master.test.cn.domain: Flags [.], ack 3315, win 182, options [nop,nop,TS val 83179160 ecr 82842605], length 0
+$ 14:40:59.362728 IP attack.test.cn.39772 &gt; master.test.cn.domain: Flags [F.], seq 28, ack 3315, win 182, options [nop,nop,TS val 83179162 ecr 82842605], length 0
+$ 14:40:59.362875 IP master.test.cn.domain &gt; attack.test.cn.39772: Flags [F.], seq 3315, ack 29, win 114, options [nop,nop,TS val 82842608 ecr 83179162], length 0
+$ 14:40:59.363453 IP attack.test.cn.39772 &gt; master.test.cn.domain: Flags [.], ack 3316, win 182, options [nop,nop,TS val 83179163 ecr 82842608], length 0
 </code></p>
 
 <p>That's a 64 byte query that resulted in a 3,620 byte response.
@@ -341,45 +371,73 @@ And there are UDP and TCP.</p>
 
 <h2>Backup my former configure files</h2>
 
-<p><code>
- [root@_master_192.168.10.112  etc]$ pwd
- /var/named/chroot/etc
- [root@_master_192.168.10.112  etc]$ cp -P named.conf named.conf.20130509
- [root@_slave_192.168.10.111  etc]$ cp -P named.conf named.conf.20130509
-</code></p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>backup_configure_files - awesome.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'> <span class="o">[</span><span class="n">root</span><span class="err">@</span><span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">master_192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>  <span class="n">etc</span><span class="o">]</span><span class="err">$</span> <span class="n">pwd</span>
+</span><span class='line'> <span class="sr">/var/n</span><span class="n">amed</span><span class="o">/</span><span class="n">chroot</span><span class="o">/</span><span class="n">etc</span>
+</span><span class='line'> <span class="o">[</span><span class="n">root</span><span class="err">@</span><span class="o">&lt;</span><span class="sr">/em&gt;master_192.168.10.112  etc]$ cp -P named.conf named.conf.20130509</span>
+</span><span class='line'><span class="sr"> [root@_slave_192.168.10.111  etc]$ cp -P named.conf named.conf.20130509</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h2>Change the configuration files</h2>
 
 <h3>Recursiver</h3>
 
-<p><code>
- ...
- Options {
- ...
- //  allow-query { any; };
- //  allow-recursion { any; };
-   recursion no;
-   additional-from-cache no;
-   allow-query { none; };
-   version "None of your business";
- ...
- }
- ...
- view "lan192" {
-   match-clients { key lan192;zone1; };
-   allow-query { zone1; };
-   recursion yes;
-   additional-from-cache yes;
- }
- view "lan10" {
-   match-clients { key lan10;zone2; };
-   allow-query { zone2; };
-   recursion yes;
-   additional-from-cache yes;
- ...
- }
- ...
-</code></p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>named.conf - awesome.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'> <span class="no">Options</span> <span class="p">{</span>
+</span><span class='line'> <span class="sr">/&lt;em&gt; ... &lt;/em</span><span class="o">&gt;</span><span class="sr">/</span>
+</span><span class='line'><span class="sr"> /</span><span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span>  <span class="n">allow</span><span class="o">-</span><span class="n">query</span> <span class="p">{</span> <span class="n">any</span><span class="p">;</span> <span class="p">};</span> <span class="o">&lt;</span><span class="sr">/em&gt;/</span>
+</span><span class='line'> <span class="sr">/&lt;em&gt;  allow-recursion { any; }; &lt;/em</span><span class="o">&gt;</span><span class="sr">/</span>
+</span><span class='line'><span class="sr">   recursion no;</span>
+</span><span class='line'><span class="sr">   additional-from-cache no;</span>
+</span><span class='line'><span class="sr">   allow-query { none; };</span>
+</span><span class='line'><span class="sr"> /</span><span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span> <span class="o">.</span><span class="n">.</span><span class="o">.</span> <span class="o">&lt;</span><span class="sr">/em&gt;/</span>
+</span><span class='line'> <span class="p">}</span>
+</span><span class='line'> <span class="sr">/&lt;em&gt; ... &lt;/em</span><span class="o">&gt;</span><span class="sr">/</span>
+</span><span class='line'><span class="sr"> view &quot;lan192&quot; {</span>
+</span><span class='line'><span class="sr">   match-clients { key lan192;zone1; };</span>
+</span><span class='line'><span class="sr">   allow-query { zone1; };</span>
+</span><span class='line'><span class="sr">   recursion yes;</span>
+</span><span class='line'><span class="sr">   additional-from-cache yes;</span>
+</span><span class='line'><span class="sr"> /</span><span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span> <span class="o">.</span><span class="n">.</span><span class="o">.</span> <span class="o">&lt;</span><span class="sr">/em&gt;/</span>
+</span><span class='line'> <span class="p">}</span>
+</span><span class='line'> <span class="n">view</span> <span class="s2">&quot;lan10&quot;</span> <span class="p">{</span>
+</span><span class='line'>   <span class="n">match</span><span class="o">-</span><span class="n">clients</span> <span class="p">{</span> <span class="n">key</span> <span class="n">lan10</span><span class="p">;</span><span class="n">zone2</span><span class="p">;</span> <span class="p">};</span>
+</span><span class='line'>   <span class="n">allow</span><span class="o">-</span><span class="n">query</span> <span class="p">{</span> <span class="n">zone2</span><span class="p">;</span> <span class="p">};</span>
+</span><span class='line'>   <span class="n">recursion</span> <span class="n">yes</span><span class="p">;</span>
+</span><span class='line'>   <span class="n">additional</span><span class="o">-</span><span class="n">from</span><span class="o">-</span><span class="n">cache</span> <span class="n">yes</span><span class="p">;</span>
+</span><span class='line'> <span class="sr">/&lt;em&gt; ... &lt;/em</span><span class="o">&gt;</span><span class="sr">/</span>
+</span><span class='line'><span class="sr"> }</span>
+</span><span class='line'><span class="sr"> /</span><span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span> <span class="o">.</span><span class="n">.</span><span class="o">.</span> <span class="o">&lt;</span><span class="sr">/em&gt;/</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <h4>Check named.conf file and restart the server.</h4>
 
@@ -387,11 +445,204 @@ And there are UDP and TCP.</p>
 
 <p>.Did it.</p>
 
-<h3>Response Rate Limiting</h3>
+<h3>DNS Response Rate Limiting</h3>
 
 <p>http://www.redbarn.org/dns/ratelimits <a href="http://www.redbarn.org/dns/ratelimits">link1</a><br />
-http://ss.vix.su/~vjs/rrlrpz.html <a href="http://ss.vix.su/~vjs/rrlrpz.html">link2</a><br />
-I'm going to do it later......</p>
+http://ss.vix.su/~vjs/rrlrpz.html <a href="http://ss.vix.su/~vjs/rrlrpz.html">link2</a><br /></p>
+
+<h4>master_192.168.10.112_named.conf</h4>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>named.conf - awesome.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'> <span class="sr">/&lt;em&gt; ... &lt;/em</span><span class="o">&gt;</span><span class="sr">/</span>
+</span><span class='line'><span class="sr"> options {</span>
+</span><span class='line'><span class="sr"> /</span><span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span> <span class="o">.</span><span class="n">.</span><span class="o">.</span> <span class="o">&lt;</span><span class="sr">/em&gt;/</span>
+</span><span class='line'>  <span class="n">rate</span><span class="o">-</span><span class="n">limit</span> <span class="p">{</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;pre&gt;&lt;code&gt; responses-per-second 5;</span>
+</span><span class='line'><span class="sr"> window 5;</span>
+</span><span class='line'><span class="sr">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;</span><span class="sr">/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;  };</span>
+</span><span class='line'><span class="sr"> };</span>
+</span><span class='line'><span class="sr"> /</span><span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span> <span class="o">.</span><span class="n">.</span><span class="o">.</span> <span class="o">&lt;</span><span class="sr">/em&gt;/</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h4>slave no changes.</h4>
+
+<h4>Restart the M/S servers.</h4>
+
+<h4>TEST</h4>
+
+<h5>Test Scripts.</h5>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>dig112.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="k">while</span> :
+</span><span class='line'><span class="k">do</span>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;pre&gt;&lt;code&gt;dig @192.168.10.112 +short +tries<span class="o">=</span>1 +time<span class="o">=</span>1 bbs.test.cn a
+</span><span class='line'>&lt;/code&gt;&lt;/pre&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;done
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>dig111.sh </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="k">while</span> :
+</span><span class='line'><span class="k">do</span>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;pre&gt;&lt;code&gt;dig @192.168.10.111 +short +tries<span class="o">=</span>1 +time<span class="o">=</span>1 bbs.test.cn a
+</span><span class='line'>&lt;/code&gt;&lt;/pre&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;done
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h5>Do it.</h5>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>I did it - awesome.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="err">$</span> <span class="o">[</span><span class="n">root</span><span class="vi">@attack</span> <span class="nb">test</span><span class="o">]</span><span class="c1"># source dig111.sh</span>
+</span><span class='line'><span class="err">$</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>
+</span><span class='line'><span class="err">$</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>
+</span><span class='line'><span class="err">$</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>
+</span><span class='line'><span class="err">$</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>
+</span><span class='line'><span class="err">$</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>
+</span><span class='line'><span class="err">$</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>
+</span><span class='line'><span class="err">$</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>
+</span><span class='line'><span class="err">$</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>
+</span><span class='line'><span class="err">$</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>
+</span><span class='line'><span class="err">$</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>
+</span><span class='line'><span class="err">$</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>
+</span><span class='line'><span class="err">$</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>
+</span><span class='line'><span class="err">$</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>                <span class="o">//.</span><span class="n">.</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">.</span>
+</span><span class='line'><span class="err">$</span> <span class="o">^</span><span class="n">C</span>
+</span><span class='line'><span class="err">$</span> <span class="o">[</span><span class="n">root</span><span class="vi">@attack</span> <span class="nb">test</span><span class="o">]</span><span class="c1">#</span>
+</span><span class='line'><span class="err">$</span>
+</span><span class='line'><span class="err">$</span>
+</span><span class='line'><span class="err">$</span> <span class="o">[</span><span class="n">root</span><span class="vi">@attack</span> <span class="nb">test</span><span class="o">]</span><span class="c1"># source dig112.sh     //Ctrl+c can&#39;t stop the process. Except close the shell.</span>
+</span><span class='line'><span class="err">$</span> <span class="o">[</span><span class="n">root</span><span class="vi">@attack</span> <span class="nb">test</span><span class="o">]</span><span class="c1"># source dig112.sh &gt;&gt; results.txt   //Then close the shell window.</span>
+</span><span class='line'><span class="err">$</span> <span class="o">[</span><span class="n">root</span><span class="vi">@attack</span> <span class="nb">test</span><span class="o">]</span><span class="c1"># cat results.txt</span>
+</span><span class='line'><span class="err">$</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>
+</span><span class='line'><span class="err">$</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>
+</span><span class='line'><span class="err">$</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>
+</span><span class='line'><span class="err">$</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>
+</span><span class='line'><span class="err">$</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>
+</span><span class='line'><span class="err">$</span> <span class="p">;;</span> <span class="no">Truncated</span><span class="p">,</span> <span class="n">retrying</span> <span class="k">in</span> <span class="no">TCP</span> <span class="n">mode</span><span class="o">.</span>
+</span><span class='line'><span class="err">$</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>
+</span><span class='line'><span class="err">$</span> <span class="p">;;</span> <span class="n">connection</span> <span class="n">timed</span> <span class="n">out</span><span class="p">;</span> <span class="n">no</span> <span class="n">servers</span> <span class="n">could</span> <span class="n">be</span> <span class="n">reached</span>
+</span><span class='line'><span class="err">$</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>
+</span><span class='line'><span class="err">$</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>
+</span><span class='line'><span class="err">$</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>
+</span><span class='line'><span class="err">$</span> <span class="p">;;</span> <span class="no">Truncated</span><span class="p">,</span> <span class="n">retrying</span> <span class="k">in</span> <span class="no">TCP</span> <span class="n">mode</span><span class="o">.</span>
+</span><span class='line'><span class="err">$</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>
+</span><span class='line'><span class="err">$</span> <span class="p">;;</span> <span class="n">connection</span> <span class="n">timed</span> <span class="n">out</span><span class="p">;</span> <span class="n">no</span> <span class="n">servers</span> <span class="n">could</span> <span class="n">be</span> <span class="n">reached</span>
+</span><span class='line'><span class="err">$</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>
+</span><span class='line'><span class="err">$</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>
+</span><span class='line'><span class="err">$</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>
+</span><span class='line'><span class="err">$</span> <span class="p">;;</span> <span class="no">Truncated</span><span class="p">,</span> <span class="n">retrying</span> <span class="k">in</span> <span class="no">TCP</span> <span class="n">mode</span><span class="o">.</span>
+</span><span class='line'><span class="err">$</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>
+</span><span class='line'><span class="err">$</span> <span class="p">;;</span> <span class="n">connection</span> <span class="n">timed</span> <span class="n">out</span><span class="p">;</span> <span class="n">no</span> <span class="n">servers</span> <span class="n">could</span> <span class="n">be</span> <span class="n">reached</span>
+</span><span class='line'><span class="err">$</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>
+</span><span class='line'><span class="err">$</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>
+</span><span class='line'><span class="err">$</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>
+</span><span class='line'><span class="err">$</span> <span class="p">;;</span> <span class="no">Truncated</span><span class="p">,</span> <span class="n">retrying</span> <span class="k">in</span> <span class="no">TCP</span> <span class="n">mode</span><span class="o">.</span>
+</span><span class='line'><span class="err">$</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>
+</span><span class='line'><span class="err">$</span> <span class="p">;;</span> <span class="no">Truncated</span><span class="p">,</span> <span class="n">retrying</span> <span class="k">in</span> <span class="no">TCP</span> <span class="n">mode</span><span class="o">.</span>
+</span><span class='line'><span class="err">$</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>
+</span><span class='line'><span class="err">$</span> <span class="p">;;</span> <span class="no">Truncated</span><span class="p">,</span> <span class="n">retrying</span> <span class="k">in</span> <span class="no">TCP</span> <span class="n">mode</span><span class="o">.</span>
+</span><span class='line'><span class="err">$</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>
+</span><span class='line'><span class="err">$</span> <span class="p">;;</span> <span class="n">connection</span> <span class="n">timed</span> <span class="n">out</span><span class="p">;</span> <span class="n">no</span> <span class="n">servers</span> <span class="n">could</span> <span class="n">be</span> <span class="n">reached</span>
+</span><span class='line'><span class="err">$</span> <span class="p">;;</span> <span class="no">Truncated</span><span class="p">,</span> <span class="n">retrying</span> <span class="k">in</span> <span class="no">TCP</span> <span class="n">mode</span><span class="o">.</span>
+</span><span class='line'><span class="err">$</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>
+</span><span class='line'><span class="err">$</span> <span class="p">;;</span> <span class="n">connection</span> <span class="n">timed</span> <span class="n">out</span><span class="p">;</span> <span class="n">no</span> <span class="n">servers</span> <span class="n">could</span> <span class="n">be</span> <span class="n">reached</span>
+</span><span class='line'><span class="err">$</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>
+</span><span class='line'><span class="err">$</span> <span class="mi">192</span><span class="o">.</span><span class="mi">168</span><span class="o">.</span><span class="mi">10</span><span class="o">.</span><span class="mi">112</span>
+</span><span class='line'><span class="err">$</span> <span class="p">;;</span> <span class="no">Truncated</span><span class="p">,</span> <span class="n">retrying</span> <span class="k">in</span> <span class="no">TCP</span> <span class="n">mode</span><span class="o">.</span>
+</span><span class='line'><span class="err">$</span> <span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">.</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h4>It's so nice...</h4>
 
 <h3>References</h3>
 
