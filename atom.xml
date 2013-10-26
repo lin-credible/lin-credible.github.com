@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Lin's linux blog]]></title>
+  <title><![CDATA[Colin's linux blog]]></title>
   <link href="http://lin-credible.github.io/atom.xml" rel="self"/>
   <link href="http://lin-credible.github.io/"/>
   <updated>2013-06-24T15:13:01+08:00</updated>
