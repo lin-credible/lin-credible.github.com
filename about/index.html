@@ -27,7 +27,7 @@
   cursor: pointer;
   //fill: #E0EEEE;
   //fill: #fff;
-  stroke: #EB3E61;
+  stroke: #FFEFDB;
   stroke-width: 1px;
 }
 
@@ -578,7 +578,7 @@ this.redraw=function(){
 			.transition()
 			.duration(1000)			
 			.style("stroke-width", function(d){
-				if(d.faked) {return 1;}
+				if(d.faked) {return 1.5;}
 				if(d.ref.edge_width)
 					return Math.max(1,boxHeight / 2 * d.ref.edge_width);//won't become invisible if too thin
 				else
@@ -622,8 +622,8 @@ this.redraw=function(){
 		.attr("class", "node")
 		.attr("id", function(d){return "node-"+d.id})
 		.attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; })					
-			.append("rect")//make nodes as rectangles OR:
-			//.append("circle").attr('r',50) //make nodes as circles
+			//.append("rect")//make nodes as rectangles OR:
+			.append("circle").attr('r',48) //make nodes as circles
 			.attr('class', 'nodebox')
 				.attr("x", -boxWidth/2)
 				.attr("y", -boxHeight/2)
