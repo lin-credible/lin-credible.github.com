@@ -708,6 +708,31 @@ this.redraw=function(){
 		.attr("y", -boxHeight/2 + fontSize + 2*lineSpace - 20)
 		.attr("text-anchor", "middle")
 	
+	newNodes.append("svg:image")
+        .attr("xlink:href", function(d){
+        		if(d.stage=="child"){
+        			return "https://cloud.githubusercontent.com/assets/3191641/5186157/83e86588-74ff-11e4-9716-271f6149eda5.jpg"
+        		}else if(d.stage =="middle"){
+        			return "https://cloud.githubusercontent.com/assets/3191641/5185918/ccdea54c-74fd-11e4-9dc2-786ea9cf7154.jpg"
+        		}else if(d.stage =="middle_high"){
+    				return "https://cloud.githubusercontent.com/assets/3191641/5185928/d37de0fc-74fd-11e4-9ddc-2606af184164.jpg"
+        		}else if(d.stage =="high"){
+    				return "https://cloud.githubusercontent.com/assets/3191641/5185925/d0963b46-74fd-11e4-8585-b3c174114963.jpg"
+        		}else if(d.stage == "university"){
+        			return "https://cloud.githubusercontent.com/assets/3191641/5186541/ed746c7a-7501-11e4-9639-21a5574c705d.jpg"
+        		}else if(d.stage == "work"){
+        			return "https://cloud.githubusercontent.com/assets/3191641/5186017/887dcc9c-74fe-11e4-9c70-5e41d03d16a5.jpg"
+        		}else{
+				return "https://cloud.githubusercontent.com/assets/3191641/5186057/d8f06626-74fe-11e4-89fa-ed1d5a76e8ef.png"
+        		}
+			})
+        .attr("x", -30)
+    	.attr("y",-20)
+        .attr("width", "30")
+        .attr("height", "30")
+
+	
+	
 	
 	//副标题
 	//node subhead 
@@ -836,6 +861,7 @@ function refresh(){
 	"0":{
 		id:0,
 		name:"Born",
+		stage:"child",
 		layout:"Hunan",
 		//load:Math.random(),
 		load:0.2,
@@ -852,7 +878,7 @@ function refresh(){
 			},
 			{
 				from:0,
-				to:5,
+				to:6,
 				//edge_width:Math.random(),
 				edge_width:0.1,
 				
@@ -862,6 +888,7 @@ function refresh(){
 	"1":{
 		id:1,
 		name:"Primary school",
+		stage:"middle",
 		layout: "Naughty",
 		//load:Math.random(),
 		load:0.2,
@@ -878,6 +905,7 @@ function refresh(){
 	"2":{
 		id:2,
 		name:"Junior high school",
+		stage:"middle_high",
 		layout: "Very Happy",
 		//load:Math.random(),
 		load:0.3,
@@ -894,6 +922,7 @@ function refresh(){
 	"3":{
 		id:3,
 		name:"Senior middle school",
+		stage:"high",
 		layout:"Start Thinking",
 		load:0.5,
 		color:"#FFAEB9",
@@ -909,6 +938,7 @@ function refresh(){
 	"4":{
 		id:4,
 		name:"University",
+		stage:"university",
 		layout: "Miss",
 		load:0.5,
 		color:"#FFA54F",
@@ -919,15 +949,30 @@ function refresh(){
 				to:5,
 				edge_width:0.1,
 			},
+			{
+				from:4,
+				to:6,
+				//edge_width:Math.random(),
+				edge_width:0.1,
+				
+			}
 		]
 	},
-	"5":{
-		id:5,
-		name:"Work",
-		layout: "Experience",
-		load:0.6,
-		color:"#71C671",
-		confusionmatrix: [['Linux'],['Code']],
+	"6":{
+		id:6,
+		name:"Future",
+		stage:"future",
+		layout: "Don't konw?",
+		load:0.8,
+		color:"#C1FFC1",
+		confusionmatrix: [['Life'],['Dream']],
+		ref:[
+			{
+				from:5,				
+				to:6,
+				edge_width:0.1,
+			},
+		]
 	}
 };
 	
