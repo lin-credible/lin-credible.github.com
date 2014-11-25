@@ -726,10 +726,10 @@ this.redraw=function(){
 				return "https://cloud.githubusercontent.com/assets/3191641/5186057/d8f06626-74fe-11e4-89fa-ed1d5a76e8ef.png"
         		}
 			})
-        .attr("x", -30)
-    	.attr("y",-20)
-        .attr("width", "30")
-        .attr("height", "30")
+        .attr("x", -10)
+    	.attr("y",-50)
+        .attr("width", "35")
+        .attr("height", "35")
 
 	
 	
@@ -950,12 +950,27 @@ function refresh(){
 				edge_width:0.1,
 			},
 			{
-				from:4,
+				from:4,				
 				to:6,
-				//edge_width:Math.random(),
 				edge_width:0.1,
 				
 			}
+		]
+	},
+	"5":{
+		id:5,
+		name:"Uwork",
+		stage:"work",
+		layout: "Experience",
+		load:0.8,
+		color:"#7CCD7C",
+		confusionmatrix: [['Linux'],['Code']],
+		ref:[
+			{
+				from:5,				
+				to:6,
+				edge_width:0.1,
+			},
 		]
 	},
 	"6":{
@@ -965,14 +980,7 @@ function refresh(){
 		layout: "Don't konw?",
 		load:0.8,
 		color:"#C1FFC1",
-		confusionmatrix: [['Life'],['Dream']],
-		ref:[
-			{
-				from:5,				
-				to:6,
-				edge_width:0.1,
-			},
-		]
+		confusionmatrix: [['Life'],['Dream']]
 	}
 };
 	
