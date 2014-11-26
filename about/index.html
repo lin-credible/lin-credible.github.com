@@ -160,6 +160,7 @@ $(document).bind('DOMNodeInserted', function(event) {
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
 <span class='line-number'>11</span>
+<span class='line-number'>12</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>$ [root@server ~]# 
 </span><span class='line'>$ mysql&gt;help contents;
 </span><span class='line'>$ #!/bin/bash
@@ -170,7 +171,8 @@ $(document).bind('DOMNodeInserted', function(event) {
 </span><span class='line'>$ :!r sample.conf
 </span><span class='line'>$ sed -e s:\{\"abc\":\\n\{\"abc\":g
 </span><span class='line'>$ rewrite  ... 301
-</span><span class='line'>$ <? .* ?>
+</span><span class='line'>$ include "colin_sb.c"
+</span><span class='line'>$ php.ini a.py xxx docker...
 </span><span class='line'>$ ...</span></code></pre></td></tr></table></div></figure>
 
 <h2>All izz well</h2>
@@ -939,7 +941,7 @@ function refresh(){
 		id:4,
 		name:"University",
 		stage:"university",
-		layout: "Miss",
+		layout: "Friends & Miss",
 		load:0.5,
 		color:"#FFA54F",
 		confusionmatrix: [['Study'],['Thanks']],
@@ -959,9 +961,9 @@ function refresh(){
 	},
 	"5":{
 		id:5,
-		name:"Uwork",
+		name:"Work",
 		stage:"work",
-		layout: "Experience",
+		layout: "Experience & Thanks",
 		load:0.8,
 		color:"#7CCD7C",
 		confusionmatrix: [['Linux'],['Code']],
