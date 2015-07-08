@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Colin's blog</title>
+  <meta name="author" content="Taolinran">
+
+  
+  <meta name="description" content="Systems Affected Domain Name System DNS servers Overview A Domain Name Server DNS Amplification attack is a popular form of Distributed Denial of &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://lin-credible.github.io">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Colin's linux blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--<script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Colin's linux blog" type="application/atom+xml">
+  <link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<!--<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">-->
+  
+  
+  
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<!--<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+function addBlankTargetForLinks () {
+  $('a[href^="http"]').each(function(){
+      $(this).attr('target', '_blank');
+  });
+}
+$(document).bind('DOMNodeInserted', function(event) {
+  addBlankTargetForLinks();
+});
+-->
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-40050631-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Colin</a></h1>
+  
+    <h2>You only live once</h2>
+    
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com.hk/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:lin-credible.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about">About me</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/09/dns-amplification-attacks/">Dns-amplification-attacks</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-09T10:10:00+08:00" pubdate data-updated="true">May 9<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/05/09/dns-amplification-attacks/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="/images/anonymous/anonymoushackers_a.jpg" alt="alt text" /><br /></p>
+
+<h3>Systems Affected</h3>
+
+<p>Domain Name System <strong><em>DNS</em></strong> servers</p>
+
+<h3>Overview</h3>
+
+<p>A Domain Name Server DNS Amplification attack is a popular form of Distributed Denial of Service DDoS that relies on the use of publically accessible open recursive DNS servers to overwhelm a victim system with DNS response traffic.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/05/09/dns-amplification-attacks/">Continue &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/08/dns-and-selinux/">DNS and SELinux</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-08T16:10:00+08:00" pubdate data-updated="true">May 8<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/05/08/dns-and-selinux/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="/images/selinux.jpg" alt="alt text" /><br />
+<a href="http://wiki.centos.org/HowTos/SELinux">CentOS Wiki about SELinux</a><br /></p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/05/08/dns-and-selinux/">Continue &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/07/the-art-of-banning-ping-command/">The Art of Banning Ping Command and SYN Flood</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-07T10:07:00+08:00" pubdate data-updated="true">May 7<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/05/07/the-art-of-banning-ping-command/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>1. The theory of ping.</h2>
+
+<p><img src="/images/ping.jpg" alt="alt text" /><br /></p>
+
+<h2>2. kernel about</h2>
+
+<h3>help doc</h3>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>yum install -y kernel-doc.noarch
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/05/07/the-art-of-banning-ping-command/">Continue &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/02/controlling-the-nameserver/">Controlling the Nameserver</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-02T14:24:00+08:00" pubdate data-updated="true">May 2<span>nd</span>, 2013</time>
+        
+         | <a href="/blog/2013/05/02/controlling-the-nameserver/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>  Traditionally, administrators have controlled the BIND nameserver, named, with Unix signals. The nameserver interprets the receipt of certain
+signals as instructions to take particular actions, such as reloading all the primary zones that have changed. However, there are a limited number
+of signals available, and signals offer no means of passing along additional information such as the domain name of a particular zone to reload.</p>
+
+<p>  In BIND 8.2, the ISC introduced a method of controlling the nameserver by sending messages to it on a special control channel. The control channel
+can be either a Unix domain socket or a TCP port that the nameserver listens on for messages. Because the control channel isn&#8217;t limited to a finite
+number of discrete signals, it&#8217;s more flexible and powerful. The ISC says that the control channel is the way of the future and that administrators
+should use it, rather than signals, for all nameserver management.</p>
+
+<p>  You send messages to a nameserver via the control channel using a program called ndc (in BIND 8) or rndc (in BIND 9). Prior to BIND 8.2, ndc was
+simply a shell script that allowed you to substitute convenient arguments (such as reload) for signals (such as HUP).</p>
+
+<pre><code>my test structure
+</code></pre>
+
+<p><img src="/images/rndc.jpg" alt="alt text" /><br /></p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/05/02/controlling-the-nameserver/">Continue &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/01/happy-51/">Happy 51</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-01T15:35:00+08:00" pubdate data-updated="true">May 1<span>st</span>, 2013</time>
+        
+         | <a href="/blog/2013/05/01/happy-51/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>The world is a book and those who do not travel read only one page!<br />
+<img src="/images/sea.jpg" alt="alt text" /><br />
+Life is the sum of all your choices.<br /></p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/05/01/happy-51/">Continue &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/2/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <script charset="Shift_JIS" src="http://chabudai.sakura.ne.jp/blogparts/honehoneclock/honehone_clock_tr.js"></script>
+<iframe width="100%" height="550" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=550&fansRow=1&ptype=1&speed=300&skin=10&isTitle=1&noborder=1&isWeibo=1&isFans=0&uid=2116612302&verifier=c3e417d3&dpc=1"></iframe><section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/05/09/dns-amplification-attacks/">DNS Amplification Attacks</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/08/dns-and-selinux/">DNS and SELinux</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/07/the-art-of-banning-ping-command/">The Art of Banning Ping Command and SYN Flood</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/02/controlling-the-nameserver/">Controlling the Nameserver</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/01/happy-51/">happy 51</a>
+      </li>
+    
+  </ul>
+</section>
+<!--
+<section>
+  <h1>Categories</h1>
+  <ul id="categories">
+    <li class='category'><a href='/blog/categories/linux-security/'>linux-security (3)</a></li>
+<li class='category'><a href='/blog/categories/linux-services/'>linux-services (2)</a></li>
+<li class='category'><a href='/blog/categories/tittle-tattle/'>tittle-tattle (3)</a></li>
+
+  </ul>
+</section>
+-->
+<section>
+  <h1>Categories</h1>
+    <ul id="category-list"><li class='category'><a href='/blog/categories/linux-security/'>linux-security (3)</a></li>
+<li class='category'><a href='/blog/categories/linux-services/'>linux-services (2)</a></li>
+<li class='category'><a href='/blog/categories/tittle-tattle/'>tittle-tattle (3)</a></li>
+</ul>
+</section><section>
+  <h1>Nice links</h1>
+  <ul>
+    <li>
+      <a href="http://blog.csdn.net/c__ilikeyouma" target="_blank"><img src="/images/logo/lin_credible.jpg" /></a>
+    </li>
+    <li>
+      <a href="http://www.anonymoushackers.org/blog" target="_blank"><img src="/images/logo/anonymous.jpg" /></a>
+    </li>
+    <li>
+      <a href="http://coolshell.cn/" target="_blank"><img src="/images/logo/coolshell.jpg" /></a>
+    </li>
+	<li>
+      <a href="http://www.infoq.com/" target="_blank"><img src="/images/logo/infoQ.jpg" /></a>
+    </li>
+    <li>
+      <a href="http://dbanotes.net/" target="_blank"><img src="/images/logo/dbanotes.jpg" /></a>
+    </li>
+	<li>
+      <a href="http://www.dbthink.com/" target="_blank"><img src="/images/logo/dbthink.jpg" /></a>
+    </li>
+	 <li>
+      <a href="http://www.mysqlpub.com/forum.php" target="_blank"><img src="/images/logo/mysqlpub.jpg" /></a>
+    </li>
+	<li>
+      <a href="http://mindhacks.cn/" target="_blank"><img src="/images/logo/mindhacks.jpg" /></a>
+    </li>
+	<li>
+      <a href="http://blog.linuxhonker.com/" target="_blank"><img src="/images/logo/linuxhonker.jpg" /></a>
+    </li>
+	<li>
+      <a href="http://blog.yufeng.info/" target="_blank"><img src="/images/logo/yufeng.jpg" /></a>
+    </li>
+	<li>
+      <a href="http://www.commandlinefu.com/commands/browse" target="_blank"><img src="/images/logo/commandline.jpg" /></a>
+    </li>
+	<li>
+      <a href="http://dillinger.io/" target="_blank"><img src="/images/logo/dillinger.jpg" /></a>
+    </li>
+	<li>
+      <a href="http://www.jiagulun.com/" target="_blank"><img src="/images/logo/jiagulun.jpg" /></a>
+    </li>
+	<li>
+      <a href="http://blog.csdn.net/signmem" target="_blank"><img src="/images/logo/TerryTsang.jpg" /></a>
+    </li>
+	<li>
+      <a href="http://kumu-linux.github.io/" target="_blank"><img src="/images/logo/kumulinux.jpg" /></a>
+    </li>
+	<li>
+      <a href="http://blog.sina.com.cn/u/2116612302" target="_blank"><img src="/images/logo/sina.jpg" /></a>
+    </li>
+  </ul>
+</section>
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/113704455548006694120?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Taolinran -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'linblog';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
