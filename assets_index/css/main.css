@@ -271,7 +271,8 @@ a:after {
    ========================================================================== */
 
 #headerwrap {
-	background: url(../img/stupid_colin.jpg) no-repeat center top; 
+	/*background: url(../img/bg_new.jpg) no-repeat center top;*/
+	background: url(../img/stupid_colin.jpg) no-repeat center top;
 	/*background: url(../img/future.jpg) no-repeat center top;*/
 	margin-top: -50px;
 	padding-top:120px;
@@ -417,7 +418,7 @@ a:after {
 }
 
 .divider2 {
-	background-image: url('../img/bg/divider2.jpg')
+	 background-image: url('../img/bg/divider2.jpg')
 }
 
 .divider3 {
