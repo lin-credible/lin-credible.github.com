@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>drawLittleHuang</title>
+	<link rel="stylesheet" type="text/css" href="drawQQ.css">
+	<style>
+	.link line {
+	  stroke: #696969;
+	}
+
+	.link line.separator {
+	  stroke: #fff;
+	  stroke-width: 2px;
+	}
+
+	.node circle {
+	  stroke: #fff;
+	  stroke-width: 1px;
+	}
+
+	.node text {
+	  font: 10px sans-serif;
+	  pointer-events: none;
+	}
+	</style>
+</head>
+<body>
+	<div class="wrapper"><!-- 容器 -->
+		<div class="littleQ"><!-- QQ -->
+
+			<div class="headQ"><!-- 头 -->
+			</div>
+
+			<div class="scarfQ"><!-- 围巾 -->
+			</div>
+
+			<div class="scarf_drop"><!-- 打结围巾 -->
+			</div>
+			<div class="scarf_drop_left"><!-- 打结围巾 -->
+			</div>
+
+			<div class="bodyQ"><!-- 身体 -->
+			</div>
+
+			<div id="bellyQ" class="bellyQ"><!-- 肚子 -->
+			</div>
+
+			<div class="hair"><!-- 头发 -->
+				<span class="left_hair_one"></span>
+				<span class="left_hair_two"></span>
+			</div>
+			<div class="eyes"><!-- 眼睛 -->
+				<div class="leftEye"><!-- 左眼 -->
+					<div class="left_blackEye">
+						<div class="left_white"></div>
+					</div>
+				</div>
+				<div class="rightEye"><!-- 右眼 -->
+					<div class="right_blackEye">
+						<div class="right_white"></div>
+					</div>
+				</div>
+			</div>
+			<div class="mouse"><!-- 嘴巴 -->
+				<div class="mouse_shape"></div>
+			</div>
+
+			<div class="big_mouse"><!-- 大嘴巴 -->
+			</div>
+
+			<div class="hands"><!-- 双手 -->
+				<div class="leftHand"></div>
+				<div class="rightHand"></div>
+			</div>
+			<div class="feet"><!-- 双脚 -->
+				<div class="left_foot"></div>
+				<div class="right_foot"></div>
+			</div>
+			<div class="groundShadow"></div><!-- 脚底阴影 -->
+		</div>
+	</div>
+</body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+
+var width = 200,
+    height = 210;
+
+var color = d3.scale.category20();
+
+var radius = d3.scale.sqrt()
+    .range([0, 6]);
+
+var svg = d3.select("#bellyQ").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+var force = d3.layout.force()
+    .size([width, height])
+    .charge(-100)
+    .linkDistance(function(d) { return radius(d.source.size) + radius(d.target.size) + 4; });
+
+d3.json("mydata11.json", function(graph) {
+  force
+      .nodes(graph.nodes)
+      .links(graph.links)
+      .on("tick", tick)
+      .start();
+
+  var link = svg.selectAll(".link")
+      .data(graph.links)
+    .enter().append("g")
+      .attr("class", "link");
+
+  link.append("line")
+      .style("stroke-width", function(d) { return (d.bond * 2 - 1) * 2 + "px"; });
+
+  link.filter(function(d) { return d.bond > 1; }).append("line")
+      .attr("class", "separator");
+
+  var node = svg.selectAll(".node")
+      .data(graph.nodes)
+    .enter().append("g")
+      .attr("class", "node")
+      .call(force.drag);
+
+  node.append("circle")
+      .attr("r", function(d) { return radius(d.size); })
+      .style("fill", function(d) { return color(d.atom);});
+
+  node.append("text")
+      .attr("dy", ".35em")
+      .attr("text-anchor", "middle")
+      .style("fill", function(d) {
+      	if(d.atom == 'Colin'){
+      		return "red";
+      	}else{
+      		return "black";
+      	}
+      })
+      .text(function(d) { return d.atom;});
+
+  function tick() {
+    link.selectAll("line")
+        .attr("x1", function(d) { return d.source.x; })
+        .attr("y1", function(d) { return d.source.y; })
+        .attr("x2", function(d) { return d.target.x; })
+        .attr("y2", function(d) { return d.target.y; });
+
+    node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+  }
+});
+</script>
+</html>
