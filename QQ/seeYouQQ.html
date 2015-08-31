@@ -39,6 +39,7 @@
 
 			<div class="scarf_drop"><!-- 打结围巾 -->
 			</div>
+
 			<div class="scarf_drop_left"><!-- 打结围巾 -->
 			</div>
 
@@ -109,6 +110,8 @@ d3.json("mydata11.json", function(graph) {
       .links(graph.links)
       .on("tick", tick)
       .start();
+
+  console.log(graph);
 
   var link = svg.selectAll(".link")
       .data(graph.links)
