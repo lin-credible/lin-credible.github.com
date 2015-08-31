@@ -16,6 +16,7 @@ body {
     padding-top: 150px;
     
 	background-image: url(../img/header-bg.jpg);
+	/*background-image: url(../img/bg_new.jpg);*/
 	background-repeat: no-repeat;
 	background-position: center center;
 	background-attachment: fixed;
