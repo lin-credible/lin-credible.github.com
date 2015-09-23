@@ -1,9 +1,9 @@
 {
   "nodes": [
-    {"atom": "Colin", "size": 5},
-    {"atom": "Daliang", "size": 5},
-    {"atom": "Michael", "size": 5},
-    {"atom": "Coati", "size": 5},
+    {"atom": "Colin", "size": 6},
+    {"atom": "Daliang", "size": 4},
+    {"atom": "Michael", "size": 4},
+    {"atom": "Coati", "size": 4},
     {"atom": "Ensen", "size": 4},
     {"atom": "Dantest", "size": 3},
     {"atom": "deamon", "size": 3},
@@ -19,12 +19,12 @@
     {"atom": "Tishu", "size": 3},
     {"atom": "Jack", "size": 3},
     {"atom": "Paul", "size": 2},
-    {"atom": "DD", "size": 2},
+    {"atom": "Dennis", "size": 2},
     {"atom": "Carney", "size": 2},
     {"atom": "Pecan", "size": 2}
   ],
   "links": [
-    {"source": 0, "target": 1,  "bond": 2},
+    {"source": 0, "target": 1,  "bond": 1},
     {"source": 0, "target": 2,  "bond": 1},
     {"source": 1, "target": 2,  "bond": 1},
     {"source": 2, "target": 3,  "bond": 1},
