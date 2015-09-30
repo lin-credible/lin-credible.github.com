@@ -1,8 +1,8 @@
 # lin-credible.github.com
 
-[My own site:lin-credible.github.io](http://lin-credible.github.io/)
+My brief introduction web site: [lin-credible.github.io](http://lin-credible.github.io/)
 
-I do nothing, Here is the project: http://blacktie.co/2013/10/victoria-simple-vcard/. Thanks so much. It let me have a beautiful individual web site. 
+I do nothing, Here is [the project](http://blacktie.co/2013/10/victoria-simple-vcard/). Thanks so much. It let me have a beautiful individual web site. 
 
 Above all, I'm Colin, I'm a newbie!
 
