@@ -53,9 +53,10 @@
 					  	<h3>ColinTao</h3>
 					  	<h5>Like to study</h5>
 					  	<hr>
-					  	<p>I'm not a real programmer, but I try my best. I don't know where I'm going, but I'm on my way! </p> 
-					  	<p>When it comes to coding no one is the best and if you really enjoy it you’ll always keep progressing.</p>
-					  	<p>Freedom is not free!</p>
+					  	<p>I'm not a real programmer, but I try my best. I don't know where I'm going, but I'm on my way! When it comes to coding no one is the best and if you really enjoy it you’ll always keep progressing.</p>
+					  	<canvas id="canvas" style="display:block;margin:10px auto;">
+					        Your browser can't support 'canvas', you should change browser!
+					    </canvas>
 					  	<p class="pull-right red"><i class="icon-heart"></i></p>
 					  </div><!-- tab about -->
 					  
@@ -148,7 +149,6 @@
     	</div><!-- col-lg-6 -->
     </div><!-- /.container -->
 
-
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
@@ -158,7 +158,345 @@
 	$('#myTab a').click(function (e) {
 	  e.preventDefault()
 	  $(this).tab('show')
-	})	
+	})
+
+	var WINDOW_WIDTH = 300;
+	var WINDOW_HEIGHT = 55;
+	var RADIUS = 1.5;
+	var MARGIN_TOP = 2;
+	var MARGIN_LEFT = 5;
+
+	// var endTime = new Date(2015,11,01,10,10,10);
+	
+	var now = new Date();
+    var endTime = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
+      now.getHours(),
+      now.getMinutes(),
+      now.getSeconds() + 60*60
+      );
+   	var NewBegin;
+
+    var curShowTimeSeconds = 0;
+
+	var balls = [];
+	var colors = ["#33B5E5","#0099CC","#AA66CC","#9933CC","#99CC00","#669900","#FFBB33","#FF8800","#FF4444","#CC0000"];
+
+	var digit =
+	    [
+	        [
+	            [0,0,1,1,1,0,0],
+	            [0,1,1,0,1,1,0],
+	            [1,1,0,0,0,1,1],
+	            [1,1,0,0,0,1,1],
+	            [1,1,0,0,0,1,1],
+	            [1,1,0,0,0,1,1],
+	            [1,1,0,0,0,1,1],
+	            [1,1,0,0,0,1,1],
+	            [0,1,1,0,1,1,0],
+	            [0,0,1,1,1,0,0]
+	        ],//0
+	        [
+	            [0,0,0,1,1,0,0],
+	            [0,1,1,1,1,0,0],
+	            [0,0,0,1,1,0,0],
+	            [0,0,0,1,1,0,0],
+	            [0,0,0,1,1,0,0],
+	            [0,0,0,1,1,0,0],
+	            [0,0,0,1,1,0,0],
+	            [0,0,0,1,1,0,0],
+	            [0,0,0,1,1,0,0],
+	            [1,1,1,1,1,1,1]
+	        ],//1
+	        [
+	            [0,1,1,1,1,1,0],
+	            [1,1,0,0,0,1,1],
+	            [0,0,0,0,0,1,1],
+	            [0,0,0,0,1,1,0],
+	            [0,0,0,1,1,0,0],
+	            [0,0,1,1,0,0,0],
+	            [0,1,1,0,0,0,0],
+	            [1,1,0,0,0,0,0],
+	            [1,1,0,0,0,1,1],
+	            [1,1,1,1,1,1,1]
+	        ],//2
+	        [
+	            [1,1,1,1,1,1,1],
+	            [0,0,0,0,0,1,1],
+	            [0,0,0,0,1,1,0],
+	            [0,0,0,1,1,0,0],
+	            [0,0,1,1,1,0,0],
+	            [0,0,0,0,1,1,0],
+	            [0,0,0,0,0,1,1],
+	            [0,0,0,0,0,1,1],
+	            [1,1,0,0,0,1,1],
+	            [0,1,1,1,1,1,0]
+	        ],//3
+	        [
+	            [0,0,0,0,1,1,0],
+	            [0,0,0,1,1,1,0],
+	            [0,0,1,1,1,1,0],
+	            [0,1,1,0,1,1,0],
+	            [1,1,0,0,1,1,0],
+	            [1,1,1,1,1,1,1],
+	            [0,0,0,0,1,1,0],
+	            [0,0,0,0,1,1,0],
+	            [0,0,0,0,1,1,0],
+	            [0,0,0,1,1,1,1]
+	        ],//4
+	        [
+	            [1,1,1,1,1,1,1],
+	            [1,1,0,0,0,0,0],
+	            [1,1,0,0,0,0,0],
+	            [1,1,1,1,1,1,0],
+	            [0,0,0,0,0,1,1],
+	            [0,0,0,0,0,1,1],
+	            [0,0,0,0,0,1,1],
+	            [0,0,0,0,0,1,1],
+	            [1,1,0,0,0,1,1],
+	            [0,1,1,1,1,1,0]
+	        ],//5
+	        [
+	            [0,0,0,0,1,1,0],
+	            [0,0,1,1,0,0,0],
+	            [0,1,1,0,0,0,0],
+	            [1,1,0,0,0,0,0],
+	            [1,1,0,1,1,1,0],
+	            [1,1,0,0,0,1,1],
+	            [1,1,0,0,0,1,1],
+	            [1,1,0,0,0,1,1],
+	            [1,1,0,0,0,1,1],
+	            [0,1,1,1,1,1,0]
+	        ],//6
+	        [
+	            [1,1,1,1,1,1,1],
+	            [1,1,0,0,0,1,1],
+	            [0,0,0,0,1,1,0],
+	            [0,0,0,0,1,1,0],
+	            [0,0,0,1,1,0,0],
+	            [0,0,0,1,1,0,0],
+	            [0,0,1,1,0,0,0],
+	            [0,0,1,1,0,0,0],
+	            [0,0,1,1,0,0,0],
+	            [0,0,1,1,0,0,0]
+	        ],//7
+	        [
+	            [0,1,1,1,1,1,0],
+	            [1,1,0,0,0,1,1],
+	            [1,1,0,0,0,1,1],
+	            [1,1,0,0,0,1,1],
+	            [0,1,1,1,1,1,0],
+	            [1,1,0,0,0,1,1],
+	            [1,1,0,0,0,1,1],
+	            [1,1,0,0,0,1,1],
+	            [1,1,0,0,0,1,1],
+	            [0,1,1,1,1,1,0]
+	        ],//8
+	        [
+	            [0,1,1,1,1,1,0],
+	            [1,1,0,0,0,1,1],
+	            [1,1,0,0,0,1,1],
+	            [1,1,0,0,0,1,1],
+	            [0,1,1,1,0,1,1],
+	            [0,0,0,0,0,1,1],
+	            [0,0,0,0,0,1,1],
+	            [0,0,0,0,1,1,0],
+	            [0,0,0,1,1,0,0],
+	            [0,1,1,0,0,0,0]
+	        ],//9
+	        [
+	            [0,0,0,0],
+	            [0,0,0,0],
+	            [0,1,1,0],
+	            [0,1,1,0],
+	            [0,0,0,0],
+	            [0,0,0,0],
+	            [0,1,1,0],
+	            [0,1,1,0],
+	            [0,0,0,0],
+	            [0,0,0,0]
+	        ]//:
+	    ];
+
+	window.onload = function(){
+
+	    var canvas = document.getElementById('canvas');
+	    var context = canvas.getContext("2d");
+
+	    canvas.width = WINDOW_WIDTH;
+	    canvas.height = WINDOW_HEIGHT;
+
+	    curShowTimeSeconds = getCurrentShowTimeSeconds()
+	    setInterval(
+	        function(){
+	            render( context );
+	            update();
+	            if(NewBegin){
+	            	var answer = confirm('Hi, you have read my site for about one hour, do you want to continue?');
+            		if (answer) {
+            			endTime = new Date(
+					      now.getFullYear(),
+					      now.getMonth(),
+					      now.getDate(),
+					      now.getHours(),
+					      now.getMinutes(),
+					      now.getSeconds() + 60*60
+					    );
+            		}
+	            }
+	        }
+	        ,
+	        50
+	    );
+	}
+
+	function getCurrentShowTimeSeconds() {
+	    var curTime = new Date();
+	    var ret = endTime.getTime() - curTime.getTime();
+	    ret = Math.round( ret/1000 )
+
+	    return ret >= 0 ? ret : 0;
+	}
+
+	function update(){
+
+	    var nextShowTimeSeconds = getCurrentShowTimeSeconds();
+
+	    var nextHours = parseInt( nextShowTimeSeconds / 3600 , 10);
+	    var nextMinutes = parseInt( (nextShowTimeSeconds - nextHours * 3600)/60, 10);
+	    var nextSeconds = nextShowTimeSeconds % 60;
+
+	    var curHours = parseInt( curShowTimeSeconds / 3600, 10);
+	    var curMinutes = parseInt( (curShowTimeSeconds - curHours * 3600)/60, 10);
+	    var curSeconds = curShowTimeSeconds % 60;
+
+	    if( nextSeconds != curSeconds ){
+	        if( parseInt(curHours/10) != parseInt(nextHours/10) ){
+	            addBalls( MARGIN_LEFT + 0 , MARGIN_TOP , parseInt(curHours/10) );
+	        }
+	        if( parseInt(curHours%10) != parseInt(nextHours%10) ){
+	            addBalls( MARGIN_LEFT + 15*(RADIUS+1) , MARGIN_TOP , parseInt(curHours/10) );
+	        }
+
+	        if( parseInt(curMinutes/10) != parseInt(nextMinutes/10) ){
+	            addBalls( MARGIN_LEFT + 39*(RADIUS+1) , MARGIN_TOP , parseInt(curMinutes/10) );
+	        }
+	        if( parseInt(curMinutes%10) != parseInt(nextMinutes%10) ){
+	            addBalls( MARGIN_LEFT + 54*(RADIUS+1) , MARGIN_TOP , parseInt(curMinutes%10) );
+	        }
+
+	        if( parseInt(curSeconds/10) != parseInt(nextSeconds/10) ){
+	            addBalls( MARGIN_LEFT + 78*(RADIUS+1) , MARGIN_TOP , parseInt(curSeconds/10) );
+	        }
+	        if( parseInt(curSeconds%10) != parseInt(nextSeconds%10) ){
+	            addBalls( MARGIN_LEFT + 93*(RADIUS+1) , MARGIN_TOP , parseInt(nextSeconds%10) );
+	        }
+
+	        curShowTimeSeconds = nextShowTimeSeconds;
+	    }
+
+	    updateBalls();
+
+	    console.log( balls.length);
+	}
+
+	function updateBalls(){
+
+	    for( var i = 0 ; i < balls.length ; i ++ ){
+
+	        balls[i].x += balls[i].vx;
+	        balls[i].y += balls[i].vy;
+	        balls[i].vy += balls[i].g;
+
+	        if( balls[i].y >= WINDOW_HEIGHT-RADIUS ){
+	            balls[i].y = WINDOW_HEIGHT-RADIUS;
+	            balls[i].vy = - balls[i].vy*0.75;
+	        }
+	    }
+
+	    var cnt = 0;
+	    for( var i = 0 ; i < balls.length ; i ++ )
+	        if( balls[i].x + RADIUS > 0 && balls[i].x -RADIUS < WINDOW_WIDTH )
+	            balls[cnt++] = balls[i]
+
+	    while( balls.length > cnt ){
+	        balls.pop();
+	    }
+	}
+
+	function addBalls( x , y , num ){
+
+	    for( var i = 0  ; i < digit[num].length ; i ++ )
+	        for( var j = 0  ; j < digit[num][i].length ; j ++ )
+	            if( digit[num][i][j] == 1 ){
+	                var aBall = {
+	                    x:x+j*2*(RADIUS+1)+(RADIUS+1),
+	                    y:y+i*2*(RADIUS+1)+(RADIUS+1),
+	                    g:1.5+Math.random(),
+	                    vx:Math.pow( -1 , Math.ceil( Math.random()*1000 ) ) * 4,
+	                    vy:-5,
+	                    color: colors[ Math.floor( Math.random()*colors.length ) ]
+	                }
+
+	                balls.push( aBall )
+	            }
+	}
+
+	function render( cxt ){
+
+	    cxt.clearRect(0,0,WINDOW_WIDTH, WINDOW_HEIGHT);
+
+	    var hours = parseInt( curShowTimeSeconds / 3600, 10);
+	    var minutes = parseInt( (curShowTimeSeconds - hours * 3600)/60, 10)
+	    var seconds = curShowTimeSeconds % 60
+
+	    if(minutes === 0){
+          NewBegin = true;
+        }else{
+          NewBegin = false;
+        }
+
+	    renderDigit( MARGIN_LEFT , MARGIN_TOP , parseInt(hours/10, 10) , cxt )
+	    renderDigit( MARGIN_LEFT + 15*(RADIUS+1) , MARGIN_TOP , parseInt(hours%10, 10) , cxt )
+	    renderDigit( MARGIN_LEFT + 30*(RADIUS + 1) , MARGIN_TOP , 10 , cxt )
+	    renderDigit( MARGIN_LEFT + 39*(RADIUS+1) , MARGIN_TOP , parseInt(minutes/10, 10) , cxt);
+	    renderDigit( MARGIN_LEFT + 54*(RADIUS+1) , MARGIN_TOP , parseInt(minutes%10, 10) , cxt);
+	    renderDigit( MARGIN_LEFT + 69*(RADIUS+1) , MARGIN_TOP , 10 , cxt);
+	    renderDigit( MARGIN_LEFT + 78*(RADIUS+1) , MARGIN_TOP , parseInt(seconds/10, 10) , cxt);
+	    renderDigit( MARGIN_LEFT + 93*(RADIUS+1) , MARGIN_TOP , parseInt(seconds%10, 10) , cxt);
+
+	    for( var i = 0 ; i < balls.length ; i ++ ){
+	        cxt.fillStyle=balls[i].color;
+
+	        cxt.beginPath();
+	        cxt.arc( balls[i].x , balls[i].y , RADIUS , 0 , 2*Math.PI , true );
+	        cxt.closePath();
+
+	        cxt.fill();
+	    }
+	}
+
+	function renderDigit( x , y , num , cxt ){
+
+	    cxt.fillStyle = "rgb(0,102,153)";
+
+	    console.log(num);
+
+	    for( var i = 0 ; i < digit[num].length ; i ++ )
+	        for(var j = 0 ; j < digit[num][i].length ; j ++ )
+	            if( digit[num][i][j] == 1 ){
+	                cxt.beginPath();
+	                cxt.arc( x+j*2*(RADIUS+1)+(RADIUS+1) , y+i*2*(RADIUS+1)+(RADIUS+1) , RADIUS , 0 , 2*Math.PI )
+	                cxt.closePath()
+
+	                cxt.fill()
+	            }
+	}
+
+
+
 	</script>    
     
   </body>
