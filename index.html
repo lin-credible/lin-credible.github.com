@@ -336,7 +336,7 @@
 	            if(NewBegin){
 	            	var answer = confirm('Hi, you have read my site for about one hour, do you want to continue?');
             		if (answer) {
-            			endTime = new Date(
+	        			endTime = new Date(
 					      now.getFullYear(),
 					      now.getMonth(),
 					      now.getDate(),
@@ -344,6 +344,8 @@
 					      now.getMinutes(),
 					      now.getSeconds() + 60*60
 					    );
+					    answer = false;
+					    NewBegin = false;
             		}
 	            }
 	        }
