@@ -452,7 +452,7 @@
 	    var minutes = parseInt( (curShowTimeSeconds - hours * 3600)/60, 10)
 	    var seconds = curShowTimeSeconds % 60
 
-	    if(minutes === 0){
+	    if(minutes === 0 && seconds === 0){
           NewBegin = true;
         }else{
           NewBegin = false;
