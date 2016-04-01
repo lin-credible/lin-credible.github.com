@@ -1,506 +1,112 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="shortcut icon" href="assets_index/ico/favicon.ico">
+	<head>
 
-    <title>Colin</title>
+		<meta charset="utf-8">
 
-    <!-- Bootstrap core CSS -->
-    <link href="assets_new/css/bootstrap.css" rel="stylesheet">
-    <link href="assets_new/css/font-awesome.min.css" rel="stylesheet">
+		<title>Colin</title>
 
-    <!-- Custom styles for this template -->
-    <link href="assets_new/css/main.css" rel="stylesheet">
-    
-    <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,700' rel='stylesheet' type='text/css'>
+		<meta name="description" content="A context-shift transition inspired by iOS. Created using JavaScript, CSS 3D transforms and CSS Animations.">
+		<meta name="author" content="Hakim El Hattab">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="assets_new/js/html5shiv.js"></script>
-      <script src="assets_new/js/respond.min.js"></script>
-    <![endif]-->
-  </head>
+		<link rel="stylesheet" href="css/kontext.css">
+		<link rel="stylesheet" href="css/demo.css">
 
-  <body>
+	</head>
+	<body>
+
+		<article class="kontext">
+			<div class="layer one show">
+				<h2>Ab<span style="color:steelblue;">o</span>ut me</h2>
+				<img class="img-responsive" style="border-radius: 10px;height: 50%;vertical-align: middle;" src="./bak/assets_new/img/me_newest.png" alt="">
+				<!-- <p></p> -->
+				<a class="github-ribbon" href="https://github.com/lin-credible" target="_blank"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Follow me on GitHub"></a>
+			</div>
+			<div class="layer two">
+				<h2>You don't run</h2>
+			</div>
+			<div class="layer three">
+				<h2>You can't win</h2>
+			</div>
+		</article>
+
+		<ul class="bullets"></ul>
+
+		<!-- <div class="share">
+			<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://lab.hakim.se/kontext" data-text="A context-shifting page transition by @hakimel" data-size="" data-related="hakimel" data-count="none">Tweet</a>
+		</div> -->
+
+		<div class="credit"> I'm <a href="https://twitter.com/JerrmyLinuxJS" target="_blank">ColinTao</a></div>
+
+		<script src="js/kontext.js"></script>
+		<script>
+			// Create a new instance of kontext
+			var k = kontext( document.querySelector( '.kontext' ) );
 
 
-    <div class="container">
-    	<div class="col-lg-6 col-lg-offset-3">
-    	
-    		<!-- ===== vCard Navigation ===== -->
-    		<div class="row w">
-    			<div class="col-md-4">
-    				<img class="img-responsive" src="assets_new/img/me_newest.png" alt="">
-					<ul class="nav nav-tabs nav-stacked" id="myTab">
-					  <li class="active"><a href="#about">About</a></li>
-					  <li><a href="#profile">Profile</a></li>
-					  <li><a href="#portfolio">Portfolio</a></li>
-					  <li><a href="#contact">Contact</a></li>
-					</ul>    			
-				</div><!-- col-md-4 -->
+			// API METHODS:
 
-    		<!-- ===== vCard Content ===== -->
-    			<div class="col-md-8">
-	    			<div class="tab-content">
-	    			  <!-- ===== First Tab ===== -->
-					  <div class="tab-pane active" id="about">
-					  	<h3>_ColinTao</h3>
-					  	<h5>Keep thinking and coding</h5>
-					  	<hr>
-					  	<p>I'm not a real programmer, but I try my best. When it comes to coding no one is the best and if you really enjoy it you’ll always keep progressing.</p>
-					  	<canvas id="canvas" style="display:block;margin:10px auto;">
-					        Your browser can't support 'canvas', you should change browser!
-					    </canvas>
-					  	<p class="pull-right red"><i class="icon-heart"></i></p>
-					  </div><!-- tab about -->
-					  
-	    			  <!-- ===== Second Tab ===== -->
-					  <div class="tab-pane" id="profile">
-					  	<h4><i class="icon-briefcase"></i> Job Experience</h4>
-					  	<p class="sm">
-					  		<grey>Tencent.</grey> | Aug 2013 - Aug 2015.<br/>
-					  		<grey>Wondershare.</grey> | Nov 2012 - July 2013.<br/>
-					  	</p>
-					  
-						  <h4><i class="icon-file-text-alt"></i> Education</h4>
-					  	<p class="sm">
-					  		<grey>Computer Science</grey> | Hunan University Of _ _
-					  		<br/><small>(Attended from 2009 to 2013)</small>
-					  	</p>
-					  	
-						  <h4><i class="icon-trophy"></i> Awards</h4>
-					  	<p class="sm">
-					  		<grey>National Scholarship</grey> | 2011.<br/>
-					  	</p>
-					  	<!-- // <script charset="Shift_JIS" src="http://chabudai.sakura.ne.jp/blogparts/honehoneclock/honehone_clock_tr.js"></script> -->
-					  </div><!-- Tab Profile -->
-					  
-	    			  <!-- ===== Third Tab ===== -->
-					  <div class="tab-pane" id="portfolio">
-						  <div class="row">
-							  <div class="col-xs-6 centered">
-							  	<img class="img-responsive" src="assets_new/img/p01.png" alt="">
-							  	<a href="https://github.com/lin-credible" target="_blank"><h6><i class="icon-link"></i> github</h6></a>
-							  </div><!-- col-xs-6 -->
-							  <div class="col-xs-6 centered">
-							  	<img class="img-responsive" src="assets_new/img/p02.png" alt="">
-							  	<a href="http://blog.csdn.net/lin_credible" target="_blank"><h6><i class="icon-book"></i> blog</h6></a>
-							  </div><!-- col-xs-6 -->
-						  </div><!-- row -->
-						  
-						  <div class="row">
-						  	<br>	
-							  <div class="col-xs-6 centered">
-							  	<img class="img-responsive" src="assets_new/img/p04.png" alt="">
-							  	<h6><i class="icon-road"></i> TEAM</h6>
-							  </div>
-							  <div class="col-xs-6 centered">
-							  	<img class="img-responsive" src="assets_new/img/p03.png" alt="">
-							  	<h6><i class="icon-heart"></i> LOVE</h6>
-							  </div>
-						  </div>
-					  </div><!-- /Tab Portfolio -->
-					  
-	    			  <!-- ===== Fourth Tab ===== -->
-					  <div class="tab-pane" id="contact">
-						  <h4>Contact Information</h4>
-						  <hr>
-						  <div class="row">
-							  <div class="col-xs-6">
-								  <p class="sm">
-								  	<i class="icon-globe"></i> - lin-credible.github.io <br/>
-									<i class="icon-envelope"></i> - linuxtaolinran@gmail
-								  </p>
-							  </div><!-- col-xs-6 -->
-							  
-							  <div class="col-xs-6">
-								  <p class="sm">
-								  	<i class="icon-phone"></i> - +86 13.*[\d\s]+61<br/>
-								  </p>
-							  </div><!-- col-xs-6 -->
-						  </div><!-- row -->
-						  
-						  <h4>Social Links</h4>
-						  <hr>
-						  <div class="row">
-							  <div class="col-xs-6">
-								  <p class="sm">
-								  	<i class="icon-facebook"></i> - <a href="https://www.facebook.com/LinuxColinTao" target="_blank">@LinuxColinTao</a><br/>QQ: - 420234961
-								  </p>
-							  </div><!-- col-xs-6 -->
-							  
-							  <div class="col-xs-6">
-								  <p class="sm">
-								  	<i class="icon-twitter"></i> - <a href="https://twitter.com/JerrmyLinuxJS" target="_blank">@JerrmyLinuxJS</a><br/>Wechat: - Lin_credible
-									
-								  </p>
-							  </div><!-- col-xs-6 -->
-						  </div><!-- row -->
-					  </div><!-- Tab Contact -->
-					  
-					</div><!-- Tab Content -->
-    			</div><!-- col-md-8 -->
-    		</div><!-- row w -->
-    	</div><!-- col-lg-6 -->
-    </div><!-- /.container -->
+			// k.prev(); // Show prev layer
+			// k.next(); // Show next layer
+			// k.show( 3 ); // Show specific layer
+			// k.getIndex(); // Index of current layer
+			// k.getTotal(); // Total number of layers
 
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="assets_new/js/jquery.js"></script>
-    <script src="assets_new/js/bootstrap.min.js"></script>
-	<script>
-	$('#myTab a').click(function (e) {
-	  e.preventDefault()
-	  $(this).tab('show')
-	})
 
-	var WINDOW_WIDTH = 300;
-	var WINDOW_HEIGHT = 55;
-	var RADIUS = 1.5;
-	var MARGIN_TOP = 2;
-	var MARGIN_LEFT = 5;
+			// DEMO-SPECIFIC:
 
-	// var endTime = new Date(2015,11,01,10,10,10);
-	
-	var now = new Date();
-    var endTime = new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate(),
-      now.getHours(),
-      now.getMinutes(),
-      now.getSeconds() + 25
-      );
-   	var NewBegin;
+			var bulletsContainer = document.body.querySelector( '.bullets' );
 
-    var curShowTimeSeconds = 0;
+			// Create one bullet per layer
+			for( var i = 0, len = k.getTotal(); i < len; i++ ) {
+				var bullet = document.createElement( 'li' );
+				bullet.className = i === 0 ? 'active' : '';
+				bullet.setAttribute( 'index', i );
+				bullet.onclick = function( event ) { k.show( event.target.getAttribute( 'index' ) ) };
+				bullet.ontouchstart = function( event ) { k.show( event.target.getAttribute( 'index' ) ) };
+				bulletsContainer.appendChild( bullet );
+			}
 
-	var balls = [];
-	var colors = ["#33B5E5","#0099CC","#AA66CC","#9933CC","#99CC00","#669900","#FFBB33","#FF8800","#FF4444","#CC0000"];
+			// Update the bullets when the layer changes
+			k.changed.add( function( layer, index ) {
+				var bullets = document.body.querySelectorAll( '.bullets li' );
+				for( var i = 0, len = bullets.length; i < len; i++ ) {
+					bullets[i].className = i === index ? 'active' : '';
+				}
+			} );
 
-	var digit =
-	    [
-	        [
-	            [0,0,1,1,1,0,0],
-	            [0,1,1,0,1,1,0],
-	            [1,1,0,0,0,1,1],
-	            [1,1,0,0,0,1,1],
-	            [1,1,0,0,0,1,1],
-	            [1,1,0,0,0,1,1],
-	            [1,1,0,0,0,1,1],
-	            [1,1,0,0,0,1,1],
-	            [0,1,1,0,1,1,0],
-	            [0,0,1,1,1,0,0]
-	        ],//0
-	        [
-	            [0,0,0,1,1,0,0],
-	            [0,1,1,1,1,0,0],
-	            [0,0,0,1,1,0,0],
-	            [0,0,0,1,1,0,0],
-	            [0,0,0,1,1,0,0],
-	            [0,0,0,1,1,0,0],
-	            [0,0,0,1,1,0,0],
-	            [0,0,0,1,1,0,0],
-	            [0,0,0,1,1,0,0],
-	            [1,1,1,1,1,1,1]
-	        ],//1
-	        [
-	            [0,1,1,1,1,1,0],
-	            [1,1,0,0,0,1,1],
-	            [0,0,0,0,0,1,1],
-	            [0,0,0,0,1,1,0],
-	            [0,0,0,1,1,0,0],
-	            [0,0,1,1,0,0,0],
-	            [0,1,1,0,0,0,0],
-	            [1,1,0,0,0,0,0],
-	            [1,1,0,0,0,1,1],
-	            [1,1,1,1,1,1,1]
-	        ],//2
-	        [
-	            [1,1,1,1,1,1,1],
-	            [0,0,0,0,0,1,1],
-	            [0,0,0,0,1,1,0],
-	            [0,0,0,1,1,0,0],
-	            [0,0,1,1,1,0,0],
-	            [0,0,0,0,1,1,0],
-	            [0,0,0,0,0,1,1],
-	            [0,0,0,0,0,1,1],
-	            [1,1,0,0,0,1,1],
-	            [0,1,1,1,1,1,0]
-	        ],//3
-	        [
-	            [0,0,0,0,1,1,0],
-	            [0,0,0,1,1,1,0],
-	            [0,0,1,1,1,1,0],
-	            [0,1,1,0,1,1,0],
-	            [1,1,0,0,1,1,0],
-	            [1,1,1,1,1,1,1],
-	            [0,0,0,0,1,1,0],
-	            [0,0,0,0,1,1,0],
-	            [0,0,0,0,1,1,0],
-	            [0,0,0,1,1,1,1]
-	        ],//4
-	        [
-	            [1,1,1,1,1,1,1],
-	            [1,1,0,0,0,0,0],
-	            [1,1,0,0,0,0,0],
-	            [1,1,1,1,1,1,0],
-	            [0,0,0,0,0,1,1],
-	            [0,0,0,0,0,1,1],
-	            [0,0,0,0,0,1,1],
-	            [0,0,0,0,0,1,1],
-	            [1,1,0,0,0,1,1],
-	            [0,1,1,1,1,1,0]
-	        ],//5
-	        [
-	            [0,0,0,0,1,1,0],
-	            [0,0,1,1,0,0,0],
-	            [0,1,1,0,0,0,0],
-	            [1,1,0,0,0,0,0],
-	            [1,1,0,1,1,1,0],
-	            [1,1,0,0,0,1,1],
-	            [1,1,0,0,0,1,1],
-	            [1,1,0,0,0,1,1],
-	            [1,1,0,0,0,1,1],
-	            [0,1,1,1,1,1,0]
-	        ],//6
-	        [
-	            [1,1,1,1,1,1,1],
-	            [1,1,0,0,0,1,1],
-	            [0,0,0,0,1,1,0],
-	            [0,0,0,0,1,1,0],
-	            [0,0,0,1,1,0,0],
-	            [0,0,0,1,1,0,0],
-	            [0,0,1,1,0,0,0],
-	            [0,0,1,1,0,0,0],
-	            [0,0,1,1,0,0,0],
-	            [0,0,1,1,0,0,0]
-	        ],//7
-	        [
-	            [0,1,1,1,1,1,0],
-	            [1,1,0,0,0,1,1],
-	            [1,1,0,0,0,1,1],
-	            [1,1,0,0,0,1,1],
-	            [0,1,1,1,1,1,0],
-	            [1,1,0,0,0,1,1],
-	            [1,1,0,0,0,1,1],
-	            [1,1,0,0,0,1,1],
-	            [1,1,0,0,0,1,1],
-	            [0,1,1,1,1,1,0]
-	        ],//8
-	        [
-	            [0,1,1,1,1,1,0],
-	            [1,1,0,0,0,1,1],
-	            [1,1,0,0,0,1,1],
-	            [1,1,0,0,0,1,1],
-	            [0,1,1,1,0,1,1],
-	            [0,0,0,0,0,1,1],
-	            [0,0,0,0,0,1,1],
-	            [0,0,0,0,1,1,0],
-	            [0,0,0,1,1,0,0],
-	            [0,1,1,0,0,0,0]
-	        ],//9
-	        [
-	            [0,0,0,0],
-	            [0,0,0,0],
-	            [0,1,1,0],
-	            [0,1,1,0],
-	            [0,0,0,0],
-	            [0,0,0,0],
-	            [0,1,1,0],
-	            [0,1,1,0],
-	            [0,0,0,0],
-	            [0,0,0,0]
-	        ]//:
-	    ];
+			document.addEventListener( 'keyup', function( event ) {
+				if( event.keyCode === 37 ) k.prev();
+				if( event.keyCode === 39 ) k.next();
+			}, false );
 
-	window.onload = function(){
+			var touchX = 0;
+			var touchConsumed = false;
 
-	    var canvas = document.getElementById('canvas');
-	    var context = canvas.getContext("2d");
+			document.addEventListener( 'touchstart', function( event ) {
+				touchConsumed = false;
+				lastX = event.touches[0].clientX;
+			}, false );
 
-	    canvas.width = WINDOW_WIDTH;
-	    canvas.height = WINDOW_HEIGHT;
+			document.addEventListener( 'touchmove', function( event ) {
+				event.preventDefault();
 
-	    curShowTimeSeconds = getCurrentShowTimeSeconds()
-	    setInterval(
-	        function(){
-	            render( context );
-	            update();
-	        //     if(NewBegin){
-	        //     	var answer = confirm('Hi, you have read my site for about one hour, do you want to continue?');
-         //    		if (answer) {
-	        // 			endTime = new Date(
-					    //   now.getFullYear(),
-					    //   now.getMonth(),
-					    //   now.getDate(),
-					    //   now.getHours(),
-					    //   now.getMinutes(),
-					    //   now.getSeconds() + 60*60
-					    // );
-					    // answer = false;
-					    // NewBegin = false;
-         //    		}
-	        //     }
-	        }
-	        ,
-	        50
-	    );
-	}
+				if( !touchConsumed ) {
+					if( event.touches[0].clientX > lastX + 10 ) {
+						k.prev();
+						touchConsumed = true;
+					}
+					else if( event.touches[0].clientX < lastX - 10 ) {
+						k.next();
+						touchConsumed = true;
+					}
+				}
+			}, false );
 
-	function getCurrentShowTimeSeconds() {
-	    var curTime = new Date();
-	    var ret = endTime.getTime() - curTime.getTime();
-	    ret = Math.round( ret/1000 )
+		</script>
 
-	    return ret >= 0 ? ret : 0;
-	}
+		<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="http://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 
-	function update(){
-
-	    var nextShowTimeSeconds = getCurrentShowTimeSeconds();
-
-	    var nextHours = parseInt( nextShowTimeSeconds / 3600 , 10);
-	    var nextMinutes = parseInt( (nextShowTimeSeconds - nextHours * 3600)/60, 10);
-	    var nextSeconds = nextShowTimeSeconds % 60;
-
-	    var curHours = parseInt( curShowTimeSeconds / 3600, 10);
-	    var curMinutes = parseInt( (curShowTimeSeconds - curHours * 3600)/60, 10);
-	    var curSeconds = curShowTimeSeconds % 60;
-
-	    if( nextSeconds != curSeconds ){
-	        if( parseInt(curHours/10) != parseInt(nextHours/10) ){
-	            addBalls( MARGIN_LEFT + 0 , MARGIN_TOP , parseInt(curHours/10) );
-	        }
-	        if( parseInt(curHours%10) != parseInt(nextHours%10) ){
-	            addBalls( MARGIN_LEFT + 15*(RADIUS+1) , MARGIN_TOP , parseInt(curHours/10) );
-	        }
-
-	        if( parseInt(curMinutes/10) != parseInt(nextMinutes/10) ){
-	            addBalls( MARGIN_LEFT + 39*(RADIUS+1) , MARGIN_TOP , parseInt(curMinutes/10) );
-	        }
-	        if( parseInt(curMinutes%10) != parseInt(nextMinutes%10) ){
-	            addBalls( MARGIN_LEFT + 54*(RADIUS+1) , MARGIN_TOP , parseInt(curMinutes%10) );
-	        }
-
-	        if( parseInt(curSeconds/10) != parseInt(nextSeconds/10) ){
-	            addBalls( MARGIN_LEFT + 78*(RADIUS+1) , MARGIN_TOP , parseInt(curSeconds/10) );
-	        }
-	        if( parseInt(curSeconds%10) != parseInt(nextSeconds%10) ){
-	            addBalls( MARGIN_LEFT + 93*(RADIUS+1) , MARGIN_TOP , parseInt(nextSeconds%10) );
-	        }
-
-	        curShowTimeSeconds = nextShowTimeSeconds;
-	    }
-
-	    updateBalls();
-	}
-
-	function updateBalls(){
-
-	    for( var i = 0 ; i < balls.length ; i ++ ){
-
-	        balls[i].x += balls[i].vx;
-	        balls[i].y += balls[i].vy;
-	        balls[i].vy += balls[i].g;
-
-	        if( balls[i].y >= WINDOW_HEIGHT-RADIUS ){
-	            balls[i].y = WINDOW_HEIGHT-RADIUS;
-	            balls[i].vy = - balls[i].vy*0.75;
-	        }
-	    }
-
-	    var cnt = 0;
-	    for( var i = 0 ; i < balls.length ; i ++ )
-	        if( balls[i].x + RADIUS > 0 && balls[i].x -RADIUS < WINDOW_WIDTH )
-	            balls[cnt++] = balls[i]
-
-	    while( balls.length > cnt ){
-	        balls.pop();
-	    }
-	}
-
-	function addBalls( x , y , num ){
-
-	    for( var i = 0  ; i < digit[num].length ; i ++ )
-	        for( var j = 0  ; j < digit[num][i].length ; j ++ )
-	            if( digit[num][i][j] == 1 ){
-	                var aBall = {
-	                    x:x+j*2*(RADIUS+1)+(RADIUS+1),
-	                    y:y+i*2*(RADIUS+1)+(RADIUS+1),
-	                    g:1.5+Math.random(),
-	                    vx:Math.pow( -1 , Math.ceil( Math.random()*1000 ) ) * 4,
-	                    vy:-5,
-	                    color: colors[ Math.floor( Math.random()*colors.length ) ]
-	                }
-
-	                balls.push( aBall )
-	            }
-	}
-
-	function render( cxt ){
-
-	    cxt.clearRect(0,0,WINDOW_WIDTH, WINDOW_HEIGHT);
-
-	    var hours = parseInt( curShowTimeSeconds / 3600, 10);
-	    var minutes = parseInt( (curShowTimeSeconds - hours * 3600)/60, 10)
-	    var seconds = curShowTimeSeconds % 60
-
-	    if(minutes === 0 && seconds === 0){
-          NewBegin = true;
-        }else{
-          NewBegin = false;
-        }
-
-	    renderDigit( MARGIN_LEFT , MARGIN_TOP , parseInt(hours/10, 10) , cxt )
-	    renderDigit( MARGIN_LEFT + 15*(RADIUS+1) , MARGIN_TOP , parseInt(hours%10, 10) , cxt )
-	    renderDigit( MARGIN_LEFT + 30*(RADIUS + 1) , MARGIN_TOP , 10 , cxt )
-	    renderDigit( MARGIN_LEFT + 39*(RADIUS+1) , MARGIN_TOP , parseInt(minutes/10, 10) , cxt);
-	    renderDigit( MARGIN_LEFT + 54*(RADIUS+1) , MARGIN_TOP , parseInt(minutes%10, 10) , cxt);
-	    renderDigit( MARGIN_LEFT + 69*(RADIUS+1) , MARGIN_TOP , 10 , cxt);
-	    renderDigit( MARGIN_LEFT + 78*(RADIUS+1) , MARGIN_TOP , parseInt(seconds/10, 10) , cxt);
-	    renderDigit( MARGIN_LEFT + 93*(RADIUS+1) , MARGIN_TOP , parseInt(seconds%10, 10) , cxt);
-
-	    for( var i = 0 ; i < balls.length ; i ++ ){
-	        cxt.fillStyle=balls[i].color;
-
-	        cxt.beginPath();
-	        cxt.arc( balls[i].x , balls[i].y , RADIUS , 0 , 2*Math.PI , true );
-	        cxt.closePath();
-
-	        cxt.fill();
-	    }
-	}
-
-	function renderDigit( x , y , num , cxt ){
-
-	    cxt.fillStyle = "#0f86c4";
-
-	    for( var i = 0 ; i < digit[num].length ; i ++ )
-	        for(var j = 0 ; j < digit[num][i].length ; j ++ )
-	            if( digit[num][i][j] == 1 ){
-	                cxt.beginPath();
-	                cxt.arc( x+j*2*(RADIUS+1)+(RADIUS+1) , y+i*2*(RADIUS+1)+(RADIUS+1) , RADIUS , 0 , 2*Math.PI )
-	                cxt.closePath()
-
-	                cxt.fill()
-	            }
-	}
-
-	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-  ga('create', 'UA-40050631-1', 'auto');
-  ga('send', 'pageview');
-
-	</script>    
-    
-  </body>
+	</body>
 </html>
