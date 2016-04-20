@@ -12,4 +12,4 @@ Yeah, I'm not a real programmer, but I try my best.
 
 I like Linux, like JS, like coding, etc.
 
-NO LICENCE
+NO LICENCE (If you like, you can fork and download them freely)
