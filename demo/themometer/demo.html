@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+	<meta charset="UTF-8"/>
+	<head>
+		<link rel="stylesheet" type="text/css" href="demo.css" />
+		<script src="jquery-3.1.1.min.js"></script>
+	</head>
+	<body>
+		<div class="main">
+            <div class="tool-bar">
+                <button data-demo-action="add-thermometer">添加温度计</button>
+                <span class="error-tips">最多只能显示 <span class="max-limit">5</span> 个温度计</span>
+            </div>
+            <div class="tips-bar">
+                <span>问题: 哪个温度最低？哪个温度最高？</span>
+            </div>
+		  	<div class="box">
+                <div class="trigger" data-move-action="trigger" data-index="1"><span class="arrow"></span></div>
+                <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150px" height="400px">
+                    <text x="10" y="30">20</text>
+                    <text x="10" y="100">10</text>
+                    <text x="10" y="170">0</text>
+                    <text x="10" y="240">10</text>
+                    <text x="10" y="310">20</text>
+                    <line x1="36" y1="25" x2="64" y2="25" stroke="#1a1b1e" stroke-width="2"></line>
+                    <line x1="46" y1="60" x2="64" y2="60" stroke="#1a1b1e" stroke-width="2"></line>
+                    <line x1="36" y1="95" x2="64" y2="95" stroke="#1a1b1e" stroke-width="2"></line>
+                    <line x1="46" y1="130" x2="64" y2="130" stroke="#1a1b1e" stroke-width="2"></line>
+                    <line x1="36" y1="165" x2="64" y2="165" stroke="#1a1b1e" stroke-width="2"></line>
+                    <line x1="46" y1="200" x2="64" y2="200" stroke="#1a1b1e" stroke-width="2"></line>
+                    <line x1="36" y1="235" x2="64" y2="235" stroke="#1a1b1e" stroke-width="2"></line>
+                    <line x1="46" y1="270" x2="64" y2="270" stroke="#1a1b1e" stroke-width="2"></line>
+                    <line x1="36" y1="305" x2="64" y2="305" stroke="#1a1b1e" stroke-width="2"></line>
+                    <line x1="64" y1="24" x2="64" y2="306" stroke="#1a1b1e" stroke-width="1" />
+                    <rect x="65" y="165" width="20" height="200" rx="5" style="stroke: none; fill: #e81c4f;"></rect>
+                    <circle cx="75" cy="370" r="20" fill="#e81c4f" stroke="firebrick" stroke-width="0"></circle>
+                </svg>
+                <div class="show-result" data-show-id="1">0&#176;C</div>
+            </div>
+
+		</div>
+		<script src="demo.js"></script>
+	</body>
+</html>
