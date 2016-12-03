@@ -64,12 +64,18 @@ body {
 	background: url("../img/background.jpg");
 }
 
-	.layer.one .img-me {
+	.layer.one img.img-me {
 		margin-top: 80px;
 		border-radius: 8px;
 		border: 4px solid #fff;
 		height: 100px;
 		width: 100px;
+		transition: .5s filter;
+		filter: sepia() saturate(3) hue-rotate(310deg);
+	}
+
+	.layer.one img.img-me:hover, img:focus {
+		filter: none;
 	}
 
 	.layer.one h2 {
@@ -139,6 +145,7 @@ body {
 		padding: 15px;
 		border: 2px solid #fff;
 		border-radius: 10px;
+		background-color: rgba(255,255,255,0.26);
 	}
 
 		.layer.two .card-wrapper .card-item {
@@ -191,7 +198,7 @@ body {
 			display: none;
   			height: 40px;
   			width: 100%;
-  			border: 2px dotted white;
+  			border: 2px dashed white;
   			border-radius: 8px;
   			top: 200px;
   			left: 0px;
@@ -236,7 +243,6 @@ body {
 	background: url("../img/background3.jpg");
 }
 
-
 	.layer.three .img-code {
 		margin-top: 120px;
 	  	border-radius: 8px;
@@ -259,7 +265,11 @@ body {
   		border: 4px solid #fff;
   		cursor: none;
   		font-size: 2.35em;
-  		background-color: rgba(0,0,0,0.4);
+  		background-color: rgba(74,144,226,0.4);
+	}
+
+	.layer.three .talk-cheap .red-underline {
+		border-bottom: 3px dashed #fff;
 	}
 
 	.layer.three .show-words {
@@ -272,16 +282,22 @@ body {
 		color: #f4900c;
 	}
 
-	.layer.three .blue-underline {
-		border-bottom: 2px solid #f4900c;
+	.layer.three .blue-circle {
+		border: 1.5px dashed #f4900c;
+  		border-radius: 8px;
+  		padding: 2px;
+  		color: #f4900c;
 	}
 
 	.layer.three .red {
 		color: #e81c4f;
 	}
 
-	.layer.three .red-underline {
-		border-bottom: 2px solid #e81c4f;
+	.layer.three .red-circle {
+		border: 1.5px dashed #e81c4f;
+  		border-radius: 8px;
+  		padding: 2px;
+  		color: #e81c4f;
 	}
 
 	.layer.three .border-circle {
@@ -317,11 +333,11 @@ body {
 
 		.bullets li.active {
 			cursor: default;
-			// background: #fff;
 			background-image: url(../img/icon.jpg);
 			background-size: contain;
 			background-repeat: no-repeat;
-			background-position:center;
+			background-position: center;
+			filter: saturate(2);
 		}
 
 @media screen and (max-width: 400px) {

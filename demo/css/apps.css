@@ -1,0 +1,95 @@
+html {
+  	min-width: 1040px;
+  	margin: 0;
+}
+
+body {
+  	font: 16px/1.5em "Helvetica Neue", Helvetica, sans-serif;
+  	margin: 1em 0 4em 0;
+}
+
+.apps {
+	text-align: center;
+}
+
+.apps a {
+	color: #fff;
+	text-decoration: none;
+}
+
+.apps .apps-header h1 {
+	color: #555;
+  	font-size: 64px;
+  	font-weight: 200;
+  	letter-spacing: -2px;
+  	white-space: nowrap;
+  	margin-top: 40px;
+  	margin-left: 50px;
+}
+
+.apps .apps-examples {
+	background: rgba(221,221,221,0.5);
+  	height: 460px;
+  	margin-bottom: 2em;
+  	overflow: hidden;
+  	padding: 0;
+  	position: relative;
+  	border-top: solid 1px #fff;
+  	border-bottom: solid 1px #fff;
+}
+
+	.apps .apps-examples:before {
+	  	bottom: -16px;
+	  	box-shadow: 0px -8px 16px rgba(0,0,0,.3);
+	}
+
+	.apps .apps-examples:after {
+	  	top: -16px;
+	  	box-shadow: 0px 8px 16px rgba(0,0,0,.3);
+	}
+
+	.apps .apps-examples:after, .apps .apps-examples:before {
+	  	content: "";
+	  	display: block;
+	  	width: 100%;
+	  	position: absolute;
+	  	background: white;
+	  	height: 16px;
+	  	z-index: 2;
+	}
+
+	.apps .apps-examples .apps-examples-deep {
+		-webkit-transform-style: preserve-3d;
+	    -moz-transform-style: preserve-3d;
+	    transform-style: preserve-3d;
+	    -webkit-backface-visibility: hidden;
+	    -moz-backface-visibility: hidden;
+	    backface-visibility: hidden;
+	}
+
+	.apps .apps-examples .canvas-show {
+		display: block;
+		margin: -120px auto;
+	}
+
+	.apps .apps-examples .abs {
+		position: absolute;
+  		font-size: 40px;
+  		color: #fff;
+  		text-shadow: 1px 1px black, 2px 2px black, 3px 3px black, 4px 4px black, 5px 5px black, 6px 6px black, 7px 7px black, 8px 8px black;
+	}
+
+	.apps .apps-examples .abs.qq {
+		top: 100px;
+  		left: calc(50% - 50px);
+	}
+
+	.apps .apps-examples .abs.tp {
+		top: 175px;
+  		left: calc(50% + 235px);
+	}
+
+	.apps .apps-examples .abs.topo {
+		top: 240px;
+  		left: calc(50% - 305px);
+	}
