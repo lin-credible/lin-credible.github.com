@@ -127,7 +127,12 @@ body {
 		color: #fff;
 	}
 
+	.layer.two .heart-red {
+		border-bottom: 4px dashed #e81c4f;
+	}
+
 	.layer.two .card-wrapper {
+		position: relative;
 		width: 75%;
 		text-align: center;
 		margin: 80px auto;
@@ -137,13 +142,14 @@ body {
 	}
 
 		.layer.two .card-wrapper .card-item {
+			position: initial;
 			display: inline-block;
 			margin: 10px;
 			width: 100px;
 			padding: 20px 5px;
 			border-radius: 5px;
 			border: 2px solid #fff;
-			cursor: pointer;
+			cursor: alias;
 			top: 25%;
   			font-size: 2.25em;
 		}
@@ -180,6 +186,51 @@ body {
 			background: rgba(244,144,12,0.9);
 		}
 
+		.layer.two .card-wrapper .card-item .card-desc {
+			position: absolute;
+			display: none;
+  			height: 40px;
+  			width: 100%;
+  			border: 2px dotted white;
+  			border-radius: 8px;
+  			top: 200px;
+  			left: 0px;
+ 	 		padding: 30px 0px;
+  			font-size: 0.8em;
+		}
+
+		.layer.two .card-wrapper .card-item.red .card-desc.red {
+			background-color: rgba(223,40,88,0.66);	
+		}
+
+		.layer.two .card-wrapper .card-item .card-desc.green {
+			background-color: rgba(45,208,142,0.66);
+		}
+
+		.layer.two .card-wrapper .card-item .card-desc.blue {
+			background-color: rgba(88,151,224,0.66);	
+		}
+
+		.layer.two .card-wrapper .card-item .card-desc.yellow {
+			background-color: rgba(243,152,33,0.66);
+		}
+
+		.layer.two .card-wrapper .card-item.red:hover .card-desc.red {
+			display: inline-block;
+		}
+
+		.layer.two .card-wrapper .card-item.green:hover .card-desc.green {
+			display: inline-block;
+		}
+
+		.layer.two .card-wrapper .card-item.blue:hover .card-desc.blue {
+			display: inline-block;
+		}
+
+		.layer.two .card-wrapper .card-item.yellow:hover .card-desc.yellow {
+			display: inline-block;
+		}
+
 .layer.three {
 	// background: #64b9d2;
 	background: url("../img/background3.jpg");
@@ -193,9 +244,27 @@ body {
 	  	height: 35%;
 	}
 
+	.layer.three .talk-cheap {
+		position: initial;
+		top: auto;
+  		margin-top: 100px;
+  		margin-left: auto;
+  		margin-right: auto;
+  		display: block;
+  		width: 600px;
+  		width: px;
+  		height: 49px;
+  		padding: 120px 30px;
+  		border-radius: 10px;
+  		border: 4px solid #fff;
+  		cursor: none;
+  		font-size: 2.35em;
+  		background-color: rgba(0,0,0,0.4);
+	}
+
 	.layer.three .show-words {
 		top: auto;
-	  	margin-top: 25px;
+	  	margin-top: 35px;
 	  	font-size: 1.36em;
 	}
 
