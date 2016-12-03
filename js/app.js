@@ -1,5 +1,6 @@
 /**
- *
+ * My Personal Page
+ * author: linuxtaolinran@gmail.com
  */
 
 var theParent = document.querySelector("#cardsMother");
@@ -9,6 +10,7 @@ function gotoLink(e) {
 	if (e.target !== e.currentTarget) {
 		var url = e.target.getAttribute('data-url');
 		if (url !== null) {
+			/* statistic something... */
 			window.open(url, '_blank');
 		}
 	}	
