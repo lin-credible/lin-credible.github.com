@@ -167,5 +167,3 @@ kontext.Signal.prototype.dispatch = function() {
 		f.apply( null, args );
 	} );
 }
-
-
