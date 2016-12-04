@@ -367,14 +367,14 @@ body{
 	border-radius: 20px 10px 21px 15px;
 	background: #000;
 	position: absolute;
-	left:-36px;
-	top:14px;
-	-webkit-transform:rotate(5deg);
+	left: -36px;
+  	top: 15px;
+    -webkit-transform: rotate(0deg);
 }
 .feet .left_foot:after{
 	border-radius: 10px 20px 15px 21px;
-	left:13px;
-	-webkit-transform:rotate(-5deg);
+	left: 12px;
+    -webkit-transform: rotate(0deg);
 }
 .groundShadow{
 	width: 200px;
