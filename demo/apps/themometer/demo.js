@@ -219,6 +219,15 @@ $(document).ready(function() {
 
               var indexTmp = eleTmp.data('pre-show-id');
               app.initZero(indexTmp);
+
+              /* 清空结果的样式 */
+            });
+
+            var trueResults = $('.show-result');
+
+            $.each(trueResults, function(i, item) {
+              var eleTmp2 = $(item);
+              eleTmp2.removeClass('success error warning');
             });
 
             break;
