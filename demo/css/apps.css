@@ -114,6 +114,6 @@ body {
 		color: rgba(25,207,134,0.7);
 	}
 
-	.apps .apps-examples .abs.topo {
+	.apps .apps-examples .abs.topo > a {
 		color: #4a90e2;
 	}
