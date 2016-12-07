@@ -219,8 +219,6 @@ $(document).ready(function() {
 
               var indexTmp = eleTmp.data('pre-show-id');
               app.initZero(indexTmp);
-
-              /* 清空结果的样式 */
             });
 
             var trueResults = $('.show-result');
@@ -251,7 +249,6 @@ $(document).ready(function() {
           case 'trigger':
 
             var isDragging = false;
-            /* 0, 1, 2, 3 */
 
             var index = $this.data('index');
 
@@ -285,12 +282,7 @@ $(document).ready(function() {
             .mouseup(function() {
               var wasDragging = isDragging;
               isDragging = false;
-              /**/
             });
-
-            // $this.drag(function(e){
-
-            // });
 
             break;
         }
