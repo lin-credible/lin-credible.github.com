@@ -44,6 +44,8 @@ body {
 .layer {
 	text-align: center;
 	text-shadow: 1px 1px 0px rgba( 0, 0, 0, 0.1 );
+	background-repeat: no-repeat;
+    background-size: 100% 100%;
 }
 
 .layer h2 {
@@ -61,7 +63,7 @@ body {
 
 .layer.one {
 	// background: #dc6c5f;
-	background: url("../img/background.jpg");
+	background-image: url("../img/background.jpg");
 }
 
 	.layer.one img.img-me {
@@ -113,7 +115,7 @@ body {
 
 .layer.two {
 	// background: #95dc84;
-	background: url("../img/background2.jpg");
+	background-image: url("../img/background2.jpg");
 }
 
 	.layer.two h2 {
@@ -240,7 +242,7 @@ body {
 
 .layer.three {
 	// background: #64b9d2;
-	background: url("../img/background3.jpg");
+	background-image: url("../img/background3.jpg");
 }
 
 	.layer.three .img-code {
