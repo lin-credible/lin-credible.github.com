@@ -9,9 +9,15 @@ theParent.addEventListener("click", gotoLink, false);
 function gotoLink(e) {
 	if (e.target !== e.currentTarget) {
 		var url = e.target.getAttribute('data-url');
+		    action = e.target.getAttribute('data-colin-action');
 		if (url !== null) {
 			/* statistic something... */
-			window.open(url);
+			if (action !== 'demo') {
+				window.open(url);
+			} else {
+				/* 实在拿不出手 */
+			}
+			
 		}
 	}	
     e.stopPropagation();
