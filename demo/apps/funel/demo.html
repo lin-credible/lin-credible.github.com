@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="../themometer/demo.css" />
+	<style>
+
+		html {
+		    font-family: STHeitiSC-Light,'微软雅黑','宋体','新宋体',sans-serif;
+		    font-size:14px;
+		    -webkit-text-size-adjust: 100%;
+		    -ms-text-size-adjust: 100%;
+		}
+
+		.main {
+		    margin: 20px 30px;
+		    padding: 10px 15px;
+		    border-radius: 4px;
+		    border: 1px solid #e1e8ed;
+		    text-align: center;
+		}
+
+		.code {
+			border: 1px solid #ddd;
+  			text-align: left;
+  			background-color: #e9e8e8;
+  			width: 250px;
+  			border-radius: 10px;
+  			margin: 20px auto;
+		}
+	</style>
+	<script src="../../js/jquery-3.1.1.min.js"></script>
+</head>
+<body>
+	<div class="main">
+		<pre class="code">
+  var data = [
+    {percent: 0.1},
+    {percent: 0.3},
+    {percent: 0.1},
+    {percent: 0.25},
+    {percent: 0.15},
+    {percent: 0.05},
+    {percent: 0.05}
+  ];
+  		</pre>
+		<div id="svg_panel"></div>
+	</div>
+	<script src="funel.js"></script>
+</body>
+</html>
