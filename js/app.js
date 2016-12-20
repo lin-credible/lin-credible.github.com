@@ -12,12 +12,7 @@ function gotoLink(e) {
 		    action = e.target.getAttribute('data-colin-action');
 		if (url !== null) {
 			/* statistic something... */
-			if (action !== 'demo') {
-				window.open(url);
-			} else {
-				/* 实在拿不出手 */
-			}
-			
+			window.open(url);
 		}
 	}	
     e.stopPropagation();
