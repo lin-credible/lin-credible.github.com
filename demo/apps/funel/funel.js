@@ -4,14 +4,14 @@
     日期：2016-12-16
 ---------------------------------------------*/
 
+/* global app: true */
+
 /*-------------------------------------------
     说明：辅助对象
 ---------------------------------------------*/
 
 (function(root){
   var app = (function() {
-  /* eslint-enable */
-
       /*-------------------------------------------
           私有变量
       ---------------------------------------------*/
@@ -37,7 +37,6 @@
     */
 
       return {
-        
         /*-------------------------------------------
           Func: 生成漏斗图
           params: [{}]
@@ -55,9 +54,11 @@
                     {percent: 0.143},
                     {percent: 0.143}
                 ],
-                funelOpacity = 0.2,
+                funelOpacity = 0.2;
+                /*
                 hoverOpacity = 0.5,
                 w3Default = 60;
+                */
 
             /* 测试 */
             /*
@@ -93,11 +94,13 @@
 
                 if (funelOpacity !== 1) {
                     data = defaultData;
+                    /*
                     hoverOpacity = 0.2;
+                    */
                 }
 
-                var p0 = 0,
-                    len = data.length;
+                var p0 = 0;
+                    /* len = data.length; */
                 $.each(data, function(i, item){
                     /* 正常漏斗组成 */
                     var p1 = item.percent,
@@ -144,7 +147,7 @@
         },
 
       };
-  }());
+  })();
 
   root.app = app;
 
