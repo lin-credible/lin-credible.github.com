@@ -1,0 +1,38 @@
+{
+  "root": true,
+  "extends": "airbnb/legacy",
+  "env": {
+    "browser": true,
+    "jquery": true,
+    "node": true
+  },
+  "globals": {
+    "$": false,
+    "d3": false,
+    "app": false,
+  },
+  "rules": {
+    "camelcase": 0,
+    "comma-dangle": 0,
+    "comma-spacing": 0,
+    "default-case": 0,
+    "dot-notation": [2, {"allowKeywords": false}],
+    "func-names": 0,
+    "indent": 0,
+    "max-len": 0,
+    "no-multi-spaces": 0,
+    "no-nested-ternary": 0,
+    "no-param-reassign": 0,
+    "no-shadow": 0,
+    "no-use-before-define": [2, "nofunc"],
+    "object-curly-spacing": 0,
+    "one-var": 0,
+    "padded-blocks": 0,
+    "space-before-blocks": 0,
+    "space-before-function-paren": 0,
+    "spaced-comment": 0,
+    "vars-on-top": 0,
+    "wrap-iife": [2, "inside"],
+    "no-underscore-dangle": 0
+  }
+}

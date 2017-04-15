@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <meta charset="UTF-8"/>
+    <head>
+        <link rel="stylesheet" type="text/css" href="demo.css" />
+        <script src="../../js/jquery-3.1.1.min.js"></script>
+    </head>
+    <body>
+        <div class="main">
+            <div class="tool-bar">
+                <div class="btn-chelun-group float-right">
+                    <button data-demo-action="generate" data-type="translation" class="button">简单平移</button>
+                    <button data-demo-action="generate" data-type="symmetry" class="button">中心对称</button>
+                    <button data-demo-action="generate" data-type="line-symmetry" class="button disabled" disabled>按对称线</button>
+                </div>
+                <button class="redrawlines" data-demo-action="redraw-center-line">重画对称线</button>
+                <button class="reload" data-demo-action="reload">刷新页面</button>
+            </div>
+
+            <div class="box content-area">
+            	<div class="draw draw-left" id="draw_left_area" data-demo-action="draw-left">
+            		<span class="show-tips">绘图区域</span>
+				</div>
+            </div>
+            <div class="box content-area center-area">
+            	<div class="draw draw-line" id="draw_center_line" data-demo-action="draw-line" data-move-action="center-line">
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="150px" height="460px">
+                        <line id="center_line" x1="0" y1="0" x2="0" y2="0" stroke="#03A9F4" stroke-width="2"></line>
+                    </svg>
+            		<span class="show-tips">对称线</span>
+				</div>
+            </div>
+            <div class="box content-area">
+            	<div class="draw draw-result" id="draw_right_area">
+                    <span class="show-tips">无操作</span>
+                </div>
+            </div>
+        </div>
+        <script src="demo.js"></script>
+    </body>
+</html>

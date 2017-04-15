@@ -1,0 +1,183 @@
+html {
+    font-family: STHeitiSC-Light,'微软雅黑','宋体','新宋体',sans-serif;
+    font-size:14px;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+}
+
+.main {
+    margin: 20px 30px;
+    padding: 10px 15px;
+    border-radius: 4px;
+    border: 1px solid #e1e8ed;
+    text-align: center;
+}
+
+.main .tool-bar {
+    position: relative;
+    height: 35px;
+    border-bottom: 1px solid #e1e8ed;
+}
+
+.main .tool-bar button {
+    position: absolute;
+    cursor: pointer;
+    margin-bottom: 15px;
+    font-size: 14px;
+    border-radius: 2px;
+    border: 1px solid #fff;
+    background-color: #fff;
+}
+
+.main .tool-bar .btn-chelun-group {
+    position: absolute;
+    font-size: 12px;
+    margin: 0 3px;
+}
+
+    .main .tool-bar .btn-chelun-group .button {
+        position: relative;
+        padding: 2px 5px;
+        color: #262626;
+        background-color: #fff;
+        border: 1px solid #2196f3 !important;
+        margin: 0 -3px;
+        min-width: 30px;
+    }
+
+    .main .tool-bar .btn-chelun-group .button.select {
+        color: #fff;
+        background-color: #03a9f4;
+    }
+
+    .main .tool-bar .btn-chelun-group .button.disabled {
+        padding: 2px 5px;
+        color: #777 !important;
+        background-color: #ddd !important;
+        border: 1px solid #2196f3 !important;
+        margin: 0 -3px;
+        min-width: 30px;
+    }
+
+    .main .tool-bar .btn-chelun-group .button:hover {
+        color: #fff;
+        background-color: #03a9f4;
+    }
+
+    .main .tool-bar button:visited,
+    .main .tool-bar button:active,
+    .main .tool-bar button:focus,
+    .main .tool-bar button:hover
+    {
+        outline: none !important;
+    }
+
+
+.main .tool-bar button.redrawlines {
+    right: 80px;
+}
+
+.main .tool-bar button.reload {
+    right: 0px;
+}
+
+.main .tool-bar button.redrawlines:hover,
+.main .tool-bar button.reload:hover {
+    border-color: #eee;
+    background-color: #eee;
+}
+
+
+.box {
+    position: relative;
+    height: 425px;
+    width: 150px;
+    display: inline-block;
+    color: #03a9f4;
+    margin: 15px;
+    background-color: #fff;
+    border-radius: 2px;
+}
+
+.box.content-area {
+	width: calc(50% - 160px);
+}
+
+.box.center-area {
+	width: 150px !important;
+	margin: 10px !important;
+}
+
+.box.content-area .draw {
+	background: rgba(221,221,221,0.5);
+  	height: 460px;
+  	margin-bottom: 2em;
+  	overflow: hidden;
+  	padding: 0;
+  	position: relative;
+  	border-top: solid 1px #fff;
+  	border-bottom: solid 1px #fff;
+}
+
+	.box.content-area .draw:before {
+	  	bottom: -16px;
+	  	box-shadow: 0px -8px 16px rgba(0,0,0,.3);
+	}
+
+	.box.content-area .draw:after {
+	  	top: -16px;
+	  	box-shadow: 0px 8px 16px rgba(0,0,0,.3);
+	}
+
+	.box.content-area .draw:after, .box.content-area .draw:before {
+	  	content: "";
+	  	display: block;
+	  	width: 100%;
+	  	position: absolute;
+	  	background: white;
+	  	height: 16px;
+	  	z-index: 2;
+	}
+
+	.box.content-area .draw.draw-line:hover {
+		cursor: pointer;
+	}
+
+	.box.content-area .draw.draw-left:hover {
+		cursor: pointer;
+	}
+
+	.box.content-area .draw.draw-result:hover {
+		cursor: none;
+	}
+
+    .box.content-area .draw .point {
+        position: absolute;
+        background: #03A9F4;
+        border-radius: 50%;
+        width: 15px;
+        height: 15px;
+        text-align: center;
+    }
+
+    .box.content-area .draw .point .point-words {
+        margin-top: 3px;
+        font-size: 10px;
+        color: #fff;
+    }
+
+	.box.content-area .draw .show-tips {
+		visibility: hidden;
+		position: absolute;
+  		top: calc(50% - 20px);
+  		left: calc(50% - 55px);
+  		font-size: 37px;
+  		color: rgba(173, 173, 173, 0.5);
+	}
+
+	.box.content-area .draw.draw-line:hover .show-tips,
+    .box.content-area .draw.draw-left:hover .show-tips,
+    .box.content-area .draw.draw-result:hover .show-tips
+    {
+		visibility: visible;
+	}
