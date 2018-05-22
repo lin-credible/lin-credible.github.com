@@ -29,13 +29,13 @@ html {
     background-color: #fff;
 }
 
-.main .tool-bar .btn-chelun-group {
+.main .tool-bar .btn-demo-group {
     position: absolute;
     font-size: 12px;
     margin: 0 3px;
 }
 
-    .main .tool-bar .btn-chelun-group .button {
+    .main .tool-bar .btn-demo-group .button {
         position: relative;
         padding: 2px 5px;
         color: #262626;
@@ -45,12 +45,12 @@ html {
         min-width: 30px;
     }
 
-    .main .tool-bar .btn-chelun-group .button.select {
+    .main .tool-bar .btn-demo-group .button.select {
         color: #fff;
         background-color: #03a9f4;
     }
 
-    .main .tool-bar .btn-chelun-group .button.disabled {
+    .main .tool-bar .btn-demo-group .button.disabled {
         padding: 2px 5px;
         color: #777 !important;
         background-color: #ddd !important;
@@ -59,7 +59,7 @@ html {
         min-width: 30px;
     }
 
-    .main .tool-bar .btn-chelun-group .button:hover {
+    .main .tool-bar .btn-demo-group .button:hover {
         color: #fff;
         background-color: #03a9f4;
     }
