@@ -1,0 +1,1 @@
+{"version":3,"sources":["components/hello/index.css"],"names":[],"mappings":"AAAA,OACE,SAAW","file":"static/css/admin.4f9502d8.css","sourcesContent":[".hello {\n  color: red;\n}\n\n\n\n\n// WEBPACK FOOTER //\n// ./src/components/hello/index.css"],"sourceRoot":""}
