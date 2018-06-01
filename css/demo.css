@@ -4,7 +4,7 @@ body {
 	height: 100%;
 	padding: 0;
 	margin: 0;
-	overflow: hidden;
+    overflow: hidden;
 }
 
 body {
@@ -62,8 +62,8 @@ body {
 }
 
 .layer.one {
-	// background: #dc6c5f;
-	background-image: url("../img/background.jpg");
+	background: #002833;
+	/* background-image: url("../img/background.jpg"); */
 }
 
 	.layer.one img.img-me {
@@ -71,8 +71,9 @@ body {
 		border-radius: 8px;
 		border: 4px solid #fff;
 		height: 100px;
-		width: 100px;
-		transition: .5s filter;
+        width: 100px;
+        cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="18" style="font-size:14px"><text y="16">🏀</text></svg>'), auto;
+        transition: .5s filter;
 		filter: sepia() saturate(3) hue-rotate(310deg);
 	}
 
@@ -80,11 +81,11 @@ body {
 		filter: none;
 	}
 
-	.layer.one h2 {
+	.layer.one h3 {
 		top: auto;
 		margin-top: 50px;
 		margin: 0;
-		font-size: 6.25em;
+		font-size: 3.25em;
 	}
 
 	.layer.one .bold {
@@ -109,19 +110,23 @@ body {
 
 	.layer.one .desc {
 		margin: 0;
-		margin-top: 25;
+		margin-top: 25px;
 		font-size: 2.25em;
-	}
+    }
+
+    .layer.one .desc.block {
+        display: block;
+    }
 
 .layer.two {
-	// background: #95dc84;
-	background-image: url("../img/background2.jpg");
+	background: #002833;
+	/* background-image: url("../img/background2.jpg"); */
 }
 
 	.layer.two h2 {
 		top: 50px;
 		margin: 0;
-		font-size: 5.25em;
+		font-size: 4.25em;
 	}
 
 	.layer.two .memo {
@@ -158,11 +163,11 @@ body {
 			padding: 20px 5px;
 			border-radius: 5px;
 			border: 2px solid #fff;
-			cursor: pointer;
-			top: 25%;
+            top: 25%;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="18" style="font-size:14px"><text y="16">🐎</text></svg>'), auto;
   			font-size: 2.25em;
 		}
-			
+
 		.layer.two .card-wrapper .card-item.blue {
 			background: rgba(74, 144, 226, 0.6);
 		}
@@ -209,7 +214,7 @@ body {
 		}
 
 		.layer.two .card-wrapper .card-item.red .card-desc.red {
-			background-color: rgba(223,40,88,0.66);	
+			background-color: rgba(223,40,88,0.66);
 		}
 
 		.layer.two .card-wrapper .card-item .card-desc.green {
@@ -217,7 +222,7 @@ body {
 		}
 
 		.layer.two .card-wrapper .card-item .card-desc.blue {
-			background-color: rgba(88,151,224,0.66);	
+			background-color: rgba(88,151,224,0.66);
 		}
 
 		.layer.two .card-wrapper .card-item .card-desc.yellow {
@@ -241,8 +246,8 @@ body {
 		}
 
 .layer.three {
-	// background: #64b9d2;
-	background-image: url("../img/background3.jpg");
+	background: #002833;
+	/* background-image: url("../img/background3.jpg"); */
 }
 
 	.layer.three .img-code {
