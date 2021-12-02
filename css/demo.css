@@ -62,7 +62,7 @@ body {
 }
 
 .layer.one {
-	background: #002833;
+	background: #272936;
 	/* background-image: url("../img/background.jpg"); */
 }
 
@@ -119,7 +119,7 @@ body {
     }
 
 .layer.two {
-	background: #002833;
+	background: #272936;
 	/* background-image: url("../img/background2.jpg"); */
 }
 
@@ -159,12 +159,12 @@ body {
 			position: initial;
 			display: inline-block;
 			margin: 10px;
-			width: 100px;
+			width: 150px;
 			padding: 20px 5px;
 			border-radius: 5px;
 			border: 2px solid #fff;
             top: 25%;
-            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="18" style="font-size:14px"><text y="16">🐎</text></svg>'), auto;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="18" style="font-size:14px"><text y="16">🏀</text></svg>'), auto;
   			font-size: 2.25em;
 		}
 
