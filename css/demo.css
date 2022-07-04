@@ -81,7 +81,7 @@ body {
 		filter: none;
 	}
 
-	.layer.one h3 {
+	.layer h3 {
 		top: auto;
 		margin-top: 50px;
 		margin: 0;
@@ -246,8 +246,14 @@ body {
 		}
 
 .layer.three {
-	background: #002833;
-	/* background-image: url("../img/background3.jpg"); */
+  background-color: #272936;
+	background-image: url("../img/Malaysia.jpg");
+  background-repeat: no-repeat;
+  -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+  background-position: center;
 }
 
 	.layer.three .img-code {
@@ -310,6 +316,19 @@ body {
 	.layer.three .border-circle {
 		border-bottom: 2px dashed #fff;
 	}
+
+.layer.four {
+  background-color: #272936;
+  background-image: url("../img/Xinjiang.jpg");
+  background-repeat: no-repeat;
+  -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+  background-position: center;
+}
+
+
 
 .bullets {
 	position: absolute;
