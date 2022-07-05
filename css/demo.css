@@ -63,11 +63,17 @@ body {
 
 .layer.one {
 	background: #272936;
-	background-image: url("../img/background.jpg");
+	background-image: url("../img/bg1.jpg");
+  background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-position: center;
 }
 
 	.layer.one img.img-me {
-		margin-top: 80px;
+		margin: 80px auto 30px;
 		border-radius: 8px;
 		border: 4px solid #fff;
 		height: 100px;
@@ -124,7 +130,13 @@ body {
 
 .layer.two {
 	background: #272936;
-	background-image: url("../img/background2.jpg");
+	background-image: url("../img/bg2.jpg");
+  background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-position: center;
 }
 
 	.layer.two h2 {
@@ -251,7 +263,7 @@ body {
 
 .layer.three {
   background-color: #272936;
-	background-image: url("../img/Malaysia.jpg");
+	background-image: url("../img/bg3.jpg");
   background-repeat: no-repeat;
   -webkit-background-size: cover;
     -moz-background-size: cover;
@@ -275,10 +287,10 @@ body {
       width: 68%;
       padding: 120px 30px;
       border-radius: 10px;
-      border: 4px solid #fff;
       cursor: none;
       font-size: 2.35em;
       background-color: rgba(74, 144, 226, 0.4);
+      box-shadow: rgb(50 50 93 / 25%) 0px 50px 100px -20px, rgb(0 0 0 / 30%) 0px 30px 60px -30px, rgb(10 37 64 / 35%) 0px -2px 6px 0px inset;
 	}
 
 	.layer .talk-cheap .red-underline {
@@ -325,6 +337,39 @@ body {
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
+  background-position: center;
+}
+
+.layer.five {
+  background-color: #272936;
+  background-image: url("../img/bg4.jpg");
+  background-repeat: no-repeat;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  background-position: center;
+}
+
+.layer.six {
+  background-color: #272936;
+  background-image: url("../img/bg6.jpg");
+  background-repeat: no-repeat;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  background-position: center;
+}
+
+.layer.seven {
+  background-color: #272936;
+  background-image: url("../img/bg5.jpg");
+  background-repeat: no-repeat;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
   background-position: center;
 }
 
