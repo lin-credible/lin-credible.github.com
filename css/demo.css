@@ -371,11 +371,7 @@ body {
 
 		.bullets li.active {
 			cursor: default;
-			background-image: url(../img/colin666.jpg);
-			background-size: contain;
-			background-repeat: no-repeat;
-			background-position: center;
-			filter: saturate(2);
+      background-color: #fff;
 		}
 
 @media screen and (max-width: 400px) {
