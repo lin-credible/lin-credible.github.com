@@ -79,9 +79,16 @@ document.addEventListener('touchmove', function(event) {
 
 /** change bg colors */
 function changeColors() {
-  var bgColors = ["#262A56", "#B8621B", "#B46060", "#146C94", "#40513B"];
-  bgs = document.getElementsByClassName("layer");
-  var randNum =  Math.floor(Math.random()*4);
+  var bgColors = [
+    "#262A56",
+    "#B8621B",
+    "#B46060",
+    "#146C94",
+    "#40513B",
+    "#5D3891",
+  ];
+  bgs = document.getElementsByClassName("bgc");
+  var randNum =  Math.floor(Math.random()*5);
   for (var i = 0; i < bgs.length; i++) {
     bgs[i].style.backgroundColor = bgColors[randNum + i];
   }

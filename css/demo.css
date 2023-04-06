@@ -5,6 +5,7 @@ body {
 	padding: 0;
 	margin: 0;
   overflow: hidden;
+  font-family: 'Raleway', sans-serif;
 }
 
 body {
@@ -267,10 +268,6 @@ body {
 		}
 
 .layer.three {
-  /*
-  background-color: #222;
-  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAGklEQVQIW2NkYGD4D8SMQAwGcAY2AbBKDBUAVuYCBQPd34sAAAAASUVORK5CYII=);
-  */
   background-color: #272936;
 	background-image: url("../img/Xinjiang.webp");
   background-repeat: no-repeat;
@@ -341,14 +338,8 @@ body {
 	}
 
 .layer.four {
-  background-color: #272936;
-  background-image: url("../img/bg2.webp");
-  background-repeat: no-repeat;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-  background-position: center;
+  background-color: #393053;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAGklEQVQIW2NkYGD4D8SMQAwGcAY2AbBKDBUAVuYCBQPd34sAAAAASUVORK5CYII=);
 }
 
 .bullets {
@@ -380,7 +371,7 @@ body {
 
 		.bullets li.active {
 			cursor: default;
-			background-image: url(../img/icon.jpg);
+			background-image: url(../img/colin666.jpg);
 			background-size: contain;
 			background-repeat: no-repeat;
 			background-position: center;
@@ -520,5 +511,48 @@ body {
 
   100% {
     transform: rotate(0deg);
+  }
+}
+
+.text-container {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.text-container h1 {
+  margin: 0;
+  font-size: 100px;
+  color: rgba(225, 225, 225, .01);
+  background-image: url("../img/photo-0406.avif");
+  background-repeat: repeat;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  -o-background-clip: text;
+  animation: animate 15s ease-in-out infinite;
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: 900;
+}
+
+@keyframes animate {
+  0%,
+  100% {
+    background-position: left top;
+  }
+
+  25% {
+    background-position: right bottom;
+  }
+
+  50% {
+    background-position: left bottom;
+  }
+
+  75% {
+    background-position: right top;
   }
 }
