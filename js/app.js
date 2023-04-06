@@ -5,7 +5,7 @@
 
 var theParent = document.querySelector("#cardsMother");
 theParent.addEventListener("click", gotoLink, false);
- 
+
 function gotoLink(e) {
 	if (e.target !== e.currentTarget) {
 		var url = e.target.getAttribute('data-url');
@@ -14,7 +14,7 @@ function gotoLink(e) {
 			/* statistic something... */
 			window.open(url);
 		}
-	}	
+	}
     e.stopPropagation();
 }
 
@@ -76,6 +76,17 @@ document.addEventListener('touchmove', function(event) {
 		}
 	}
 }, false);
+
+/** change bg colors */
+function changeColors() {
+  var bgColors = ["#262A56", "#B8621B", "#B46060", "#146C94", "#40513B"];
+  bgs = document.getElementsByClassName("layer");
+  var randNum =  Math.floor(Math.random()*4);
+  for (var i = 0; i < bgs.length; i++) {
+    bgs[i].style.backgroundColor = bgColors[randNum + i];
+  }
+}
+changeColors();
 /*
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
