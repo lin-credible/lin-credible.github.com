@@ -533,13 +533,6 @@ body {
   font-weight: 900;
 }
 
-@media only screen and (max-width: 600px) {
-  .text-container h1 {
-    font-size: 60px;
-    font-weight: 400;
-  }
-}
-
 @keyframes animate-text {
   0%,
   100% {
@@ -556,5 +549,15 @@ body {
 
   75% {
     background-position: right top;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  body {
+    font-size: 12px;
+  }
+  .text-container h1 {
+    font-size: 60px;
+    font-weight: 400;
   }
 }
