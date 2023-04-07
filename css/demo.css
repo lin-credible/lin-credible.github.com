@@ -5,14 +5,13 @@ body {
 	padding: 0;
 	margin: 0;
   overflow: hidden;
-  font-family: 'Raleway', sans-serif;
+  font-family: 'Gill Sans','Raleway', sans-serif;
 }
 
 body {
 	background-color: #222;
 	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAGklEQVQIW2NkYGD4D8SMQAwGcAY2AbBKDBUAVuYCBQPd34sAAAAASUVORK5CYII=);
 	background-repeat: repeat;
-	font-family: "Microsoft YaHei", Helvetica, sans-serif;
 	font-size: 16px;
 	color: #fff;
 }
@@ -528,13 +527,13 @@ body {
   -webkit-background-clip: text;
   -moz-background-clip: text;
   -o-background-clip: text;
-  animation: animate 15s ease-in-out infinite;
+  animation: animate-text 15s ease-in-out infinite;
   text-align: center;
   text-transform: uppercase;
-  font-weight: 900;
+  font-weight: 800;
 }
 
-@keyframes animate {
+@keyframes animate-text {
   0%,
   100% {
     background-position: left top;
