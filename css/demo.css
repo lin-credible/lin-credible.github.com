@@ -5,7 +5,7 @@ body {
 	padding: 0;
 	margin: 0;
   overflow: hidden;
-  font-family: 'Gill Sans','Raleway', sans-serif;
+  font-family: fantasy, 'Gill Sans','Raleway', sans-serif;
 }
 
 body {
@@ -519,7 +519,7 @@ body {
 
 .text-container h1 {
   margin: 0;
-  font-size: 100px;
+  font-size: 120px;
   color: rgba(225, 225, 225, .01);
   background-image: url("../img/photo-0406.avif");
   background-repeat: repeat;
@@ -530,7 +530,14 @@ body {
   animation: animate-text 15s ease-in-out infinite;
   text-align: center;
   text-transform: uppercase;
-  font-weight: 800;
+  font-weight: 900;
+}
+
+@media only screen and (max-width: 600px) {
+  .text-container h1 {
+    font-size: 60px;
+    font-weight: 400;
+  }
 }
 
 @keyframes animate-text {
