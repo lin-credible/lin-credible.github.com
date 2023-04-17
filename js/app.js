@@ -92,6 +92,8 @@ function changeColors() {
   for (var i = 0; i < bgs.length; i++) {
     bgs[i].style.backgroundColor = bgColors[randNum + i];
   }
+  cc = document.getElementById("colin-header");
+  cc.setAttribute("fill", bgColors[randNum]);
 }
 changeColors();
 /*
