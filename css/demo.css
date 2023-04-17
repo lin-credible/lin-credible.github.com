@@ -556,3 +556,16 @@ body {
     font-weight: 400;
   }
 }
+
+.colin-svg {
+  background-color: #fff;
+  border-radius: 50%;
+  margin-top: 88px;
+  margin-bottom: 50px;
+  transition: .5s filter;
+  filter: brightness(80%);
+}
+
+.colin-svg:hover {
+  filter: sepia() saturate(3) hue-rotate(310deg) brightness(105%);
+}
