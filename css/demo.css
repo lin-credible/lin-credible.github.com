@@ -80,8 +80,8 @@ body {
 		border: 4px solid #fff;
 		height: 100px;
     width: 100px;
-    transition: .5s filter;
-		filter: sepia() saturate(3) hue-rotate(310deg);
+    /* transition: .5s filter; */
+		/* filter: sepia() saturate(3) hue-rotate(310deg); */
 	}
 
 	.layer.one img.img-me:hover, img:focus {
