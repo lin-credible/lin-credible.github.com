@@ -92,10 +92,13 @@ function changeColors() {
   for (var i = 0; i < bgs.length; i++) {
     bgs[i].style.backgroundColor = bgColors[randNum + i];
   }
-  cc = document.getElementById("colin-header");
-  cc.setAttribute("fill", bgColors[randNum]);
 }
-changeColors();
+
+window.onload = () => {
+  changeColors();
+  console.info("%c IT IS ALL BULLSHIT. BYE ~", "color: red;font-size: x-large");
+};
+
 /*
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
