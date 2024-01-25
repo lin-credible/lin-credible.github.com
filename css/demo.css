@@ -5,7 +5,7 @@ body {
 	padding: 0;
 	margin: 0;
   overflow: hidden;
-  font-family: 'Security Zines', fantasy, 'Gill Sans','Raleway', sans-serif;
+  font-family: 'Rosemary', 'Security Zines', fantasy, 'Gill Sans','Raleway', sans-serif;
   cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" style="font-size:20px"><text y="20">💩</text></svg>'), auto;
 }
 
@@ -92,7 +92,7 @@ body {
 		top: auto;
 		margin-top: 50px;
 		margin: 0;
-		font-size: 3.25em;
+		font-size: 4.25em;
 	}
 
 	.layer.one .bold {
@@ -104,7 +104,7 @@ body {
 	}
 
 	.layer.one .blue {
-		color: #0152d9;
+		color: #1877F2;
 	}
 
 	.layer.one .red {
@@ -126,7 +126,13 @@ body {
     }
 
     .layer.one .desc.block {
-        display: block;
+      display: block;
+    }
+
+    .layer.one .desc.underline {
+      text-decoration: underline;
+      text-decoration-color: #fff;
+      text-decoration-style: dashed;
     }
 
 .layer.two {

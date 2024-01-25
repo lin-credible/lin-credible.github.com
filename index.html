@@ -10,6 +10,17 @@
   <link rel="shortcut icon" href="favicon.ico">
   <link rel="stylesheet" href="css/kontext.css">
   <link rel="stylesheet" href="css/demo.css">
+  <style>
+    @font-face {
+      font-family: 'Rosemary';
+      src: url('css/Rosemary.ttf.woff') format('woff'),
+        url('css/Rosemary.ttf.svg#Rosemary') format('svg'),
+        url('css/Rosemary.ttf.eot'),
+        url('css/Rosemary.ttf.eot?#iefix') format('embedded-opentype');
+      font-weight: normal;
+      font-style: normal;
+    }
+  </style>
 </head>
 
 <body>
@@ -17,24 +28,11 @@
     <div class="layer one show bgc">
       <a><img class="img-responsive img-me" src="./img/colintao.jpg" alt="colin"></a>
       <h3>Hi, I'm col<span class="red">i</span>n.tao</h3>
+      <span class="desc block underline"><span class="red">@</span><span class="green">2</span><span
+          class="yellow">0</span><span class="green">2</span><span class="blue">4</span></span>
       <span class="desc block">Stay Hungry, Stay Foolish</span>
       <span class="desc block">I'm not a real programmer, I do my best</span>
       <div>
-        <div class="glowing">
-          <span style="--i:1;"></span>
-          <span style="--i:2;"></span>
-          <span style="--i:3;"></span>
-        </div>
-        <div class="glowing">
-          <span style="--i:1;"></span>
-          <span style="--i:2;"></span>
-          <span style="--i:3;"></span>
-        </div>
-        <div class="glowing">
-          <span style="--i:1;"></span>
-          <span style="--i:2;"></span>
-          <span style="--i:3;"></span>
-        </div>
         <div class="glowing">
           <span style="--i:1;"></span>
           <span style="--i:2;"></span>
@@ -92,7 +90,7 @@
       </div>
     </div>
   </article>
-  <ul class="bullets"></ul>
+  <ul class="bullets" onclick="changeColors()"></ul>
   <div class="credit">Contact Me: <a href="https://twitter.com/colintao404" target="_blank">Twitter</a> | <a
       href="mailto:linuxtaolinran@gmail.com" target="_blank">Send Mail</a>
   </div>

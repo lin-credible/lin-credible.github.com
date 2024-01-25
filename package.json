@@ -1,0 +1,17 @@
+{
+  "name": "lin-credible.github.com",
+  "version": "1.0.0",
+  "description": "When it comes to coding no one is the best and if you really enjoy it you’ll always keep progressing.",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "docs:dev": "vitepress dev blog",
+    "docs:build": "vitepress build blog",
+    "docs:preview": "vitepress preview blog"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "vitepress": "^1.0.0-rc.36"
+  }
+}
