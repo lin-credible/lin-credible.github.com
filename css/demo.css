@@ -555,7 +555,6 @@ body {
 @media only screen and (max-width: 600px) {
   body {
     font-size: 12px;
-    font-family: 'Gill Sans', 'Raleway', sans-serif;
   }
   .text-container h1 {
     font-size: 60px;
