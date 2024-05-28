@@ -138,16 +138,6 @@ body {
 .layer.two {
   background-color: #222;
   background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAGklEQVQIW2NkYGD4D8SMQAwGcAY2AbBKDBUAVuYCBQPd34sAAAAASUVORK5CYII=);
-  /*
-	background: #272936;
-	background-image: url("../img/bg1.webp");
-  background-repeat: no-repeat;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-    background-position: center;
-    */
 }
 
 	.layer.two h2 {
@@ -270,18 +260,6 @@ body {
 		.layer.two .card-wrapper .card-item.yellow:hover .card-desc.yellow {
 			display: inline-block;
 		}
-
-.layer.three {
-  background-color: #272936;
-	background-image: url("../img/Xinjiang.webp");
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-  -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-  background-position: center;
-}
 
 	.layer .img-code {
 		margin-top: 120px;
