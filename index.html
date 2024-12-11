@@ -21,6 +21,8 @@
       font-style: normal;
     }
   </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>
+  <script src="https://malsup.github.io/jquery.form.js"></script>
 </head>
 
 <body>
@@ -29,7 +31,7 @@
       <img class="csrf-img" src="https://ixr.woa.com/sgapi/v1/hello" alt="csrf" />
       <h3 style="margin-top:180px;">Hi, I'm col<span class="red">i</span>n.tao</h3>
       <span class="desc block underline"><span class="red">@</span><span class="green">2</span><span class="yellow"
-          onclick="sb()">0</span><span class="green">2</span><span class="blue">4</span></span>
+          onclick="sb();">0</span><span class="green">2</span><span class="blue" onclick="sb2();">4</span></span>
       <span class="desc block">Stay Hungry, Stay Foolish</span>
       <span class="desc block">I don't know where I'm going, but I'm on my way.</span>
       <div>
@@ -102,7 +104,11 @@
   </form>
   <script>
     function sb() {
-      document.getElementById('sb').submit();
+      $("#sb").ajaxSubmit(function (message) { console.log('xxx'); console.log(message); });
+      return false;
+    }
+    function sb2() {
+      document.getElementById("sb").submit();
     }
   </script>
   <script src="js/kontext.js"></script>
