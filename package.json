@@ -1,17 +1,26 @@
 {
   "name": "lin-credible.github.com",
-  "version": "1.0.0",
-  "description": "When it comes to coding no one is the best and if you really enjoy it you’ll always keep progressing.",
-  "main": "main.js",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "docs:dev": "vitepress dev blog",
-    "docs:build": "vitepress build blog",
-    "docs:preview": "vitepress preview blog"
+    "dev":       "vite",
+    "build":     "vue-tsc && vite build",
+    "preview":   "vite preview",
+    "typecheck": "vue-tsc --noEmit",
+    "deploy":    "npm run build && gh-pages -d dist -b main"
   },
-  "author": "",
-  "license": "ISC",
+  "dependencies": {
+    "vue": "^3.5.13"
+  },
   "devDependencies": {
-    "vitepress": "^1.0.0-rc.36"
+    "@vitejs/plugin-vue": "^5.2.1",
+    "autoprefixer": "^10.4.20",
+    "gh-pages": "^6.3.0",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^3.4.17",
+    "typescript": "~5.7.2",
+    "vite": "^6.3.5",
+    "vue-tsc": "^2.2.8"
   }
 }

@@ -1,103 +1,25 @@
 <!doctype html>
 <html lang="en">
-
-<head>
-  <meta charset="utf-8">
-  <title>Hi, I'm Colin.Tao</title>
-  <meta name="description" content="colintao's personal page.">
-  <meta name="author" content="I'm colintao">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <link rel="shortcut icon" href="favicon.ico">
-  <link rel="stylesheet" href="css/kontext.css">
-  <link rel="stylesheet" href="css/demo.css">
-  <style>
-    @font-face {
-      font-family: 'Rosemary';
-      src: url('css/Rosemary.ttf.woff') format('woff'),
-        url('css/Rosemary.ttf.svg#Rosemary') format('svg'),
-        url('css/Rosemary.ttf.eot'),
-        url('css/Rosemary.ttf.eot?#iefix') format('embedded-opentype');
-      font-weight: normal;
-      font-style: normal;
-    }
-  </style>
-</head>
-
-<body>
-  <article class="kontext">
-    <div class="layer one show bgc">
-      <h3 style="margin-top:180px;">Hi, I'm col<span class="red">i</span>n.tao</h3>
-      <span class="desc block underline"><span class="red">@</span><span class="green">2</span><span
-          class="yellow">0</span><span class="green">2</span><span class="blue">6</span></span>
-      <span class="desc block">Stay Hungry, Stay Foolish</span>
-      <span class="desc block">I don't know where I'm going, but I'm on my way.</span>
-      <div>
-        <div class="glowing">
-          <span style="--i:1;"></span>
-          <span style="--i:2;"></span>
-          <span style="--i:3;"></span>
-        </div>
-        <div class="glowing">
-          <span style="--i:1;"></span>
-          <span style="--i:2;"></span>
-          <span style="--i:3;"></span>
-        </div>
-        <div class="glowing">
-          <span style="--i:1;"></span>
-          <span style="--i:2;"></span>
-          <span style="--i:3;"></span>
-        </div>
-      </div>
-    </div>
-    <div class="layer two bgc">
-      <h2>Some <span class="heart-red">Words.</span></h2>
-      <div class="card-wrapper" id="cardsMother">
-        <p class="card-item blue">
-          Happy<span class="card-desc blue">Life, Liberty and the pursuit of Happiness</span>
-        </p>
-        <p class="card-item yellow">
-          Mind<span class="card-desc yellow">Mind and Heart</span>
-        </p>
-        <p class="card-item green">Creation<span class="card-desc green">Getting Things Done</span>
-        </p>
-        <p class="card-item red">
-          Curiosity<span class="card-desc red">I don't know where I'm going, but I'm on my way.</span>
-        </p>
-      </div>
-      <div>
-        <div class="glowing">
-          <span style="--i:1;"></span>
-          <span style="--i:2;"></span>
-          <span style="--i:3;"></span>
-        </div>
-        <div class="glowing">
-          <span style="--i:1;"></span>
-          <span style="--i:2;"></span>
-          <span style="--i:3;"></span>
-        </div>
-      </div>
-    </div>
-    <!--
-    <div class="layer four">
-      <div class="text-container">
-        <h1>学如不及<br />犹恐失之</h1>
-      </div>
-    </div>
-    <div class="layer three">
-      <div class="talk-cheap">
-        <p>It was the best of times</p>
-        <p>It was the worst of times</p>
-      </div>
-    </div>
-    -->
-  </article>
-  <ul class="bullets" onclick="changeColors()"></ul>
-  <div class="credit">Contact Me: <a href="https://twitter.com/colintao404" target="_blank">Twitter</a> | <a
-      href="mailto:linuxtaolinran@gmail.com" target="_blank">Send Mail</a>
-  </div>
-  <script src="js/kontext.js"></script>
-  <script src="js/app.js"></script>
-
-</body>
-
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Colin Tao — Developer & Builder</title>
+    <meta name="description" content="Personal homepage of Colin Tao." />
+    <meta property="og:title" content="Colin Tao — Developer & Builder" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://lin-credible.github.io/" />
+    <meta property="og:image" content="https://lin-credible.github.io/og-image.png" />
+    <!-- ⚠️ og:image 部署前必须补充真实图片（1200×630px） -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <style>
+      html { scroll-behavior: smooth; scroll-padding-top: 64px; }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
 </html>
