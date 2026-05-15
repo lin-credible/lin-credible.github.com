@@ -1,4 +1,0 @@
-User-agent: *
-Disallow: 
-
-Sitemap: http://lin-credible.github.io/sitemap.xml 
